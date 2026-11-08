@@ -1,0 +1,25 @@
+{
+  "name": "meet-us",
+  "version": "1.0.0",
+  "description": "MEET-US — Plataforma Universitária de Aprendizagem Colaborativa e Troca de Competências em Moçambique",
+  "main": "backend/src/server.js",
+  "scripts": {
+    "build": "npm --prefix frontend install && npm --prefix frontend run build && npm --prefix backend install",
+    "start": "node backend/src/server.js",
+    "dev:backend": "npm --prefix backend run dev",
+    "dev:frontend": "npm --prefix frontend run dev"
+  },
+  "keywords": [
+    "meet-us",
+    "mozambique",
+    "universities",
+    "education",
+    "peer-to-peer",
+    "webrtc",
+    "vue",
+    "quasar",
+    "nodejs"
+  ],
+  "author": "MEET-US Team",
+  "license": "ISC"
+}

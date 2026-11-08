@@ -1,5 +1,7 @@
 // backend/src/server.js
 require('dotenv').config();
+const path = require('path');
+const fs = require('fs');
 const http = require('http');
 const express = require('express');
 const cors = require('cors');
@@ -62,10 +64,23 @@ app.use('/api/notifications', notificationRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/posts', postRoutes);
 
-// 404 Handler
-app.use((req, res) => {
-  res.status(404).json({ message: `Rota ${req.method} ${req.url} não encontrada no backend.` });
-});
+// Servir Frontend SPA em Produção se já estiver compilado
+const frontendDist = path.join(__dirname, '../../frontend/dist/spa');
+if (fs.existsSync(frontendDist)) {
+  console.log('[Production] Frontend SPA ativo a partir de:', frontendDist);
+  app.use(express.static(frontendDist));
+  app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api') || req.path.startsWith('/socket.io')) {
+      return next();
+    }
+    res.sendFile(path.join(frontendDist, 'index.html'));
+  });
+} else {
+  // 404 Handler
+  app.use((req, res) => {
+    res.status(404).json({ message: `Rota ${req.method} ${req.url} não encontrada no backend.` });
+  });
+}
 
 // Global Error Handler
 app.use(errorHandler);
