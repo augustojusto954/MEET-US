@@ -1,11 +1,19 @@
 // frontend/src/router/routes.js
 
 const routes = [
-  // --- Vitrine Pública Principal (http://localhost:9000/) ---
+  // --- Página Principal Oficial no Root (http://localhost:9000/) ---
   {
     path: '/',
     name: 'home',
     component: () => import('src/pages/landing/LandingPage.vue')
+  },
+  {
+    path: '/landing',
+    redirect: '/'
+  },
+  {
+    path: '/principal',
+    redirect: '/'
   },
   {
     path: '/home',
