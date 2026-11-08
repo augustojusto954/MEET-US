@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MEET-US — Tela Oficial de Login (3paginaLogin.webp)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .hotspot {
+      position: absolute;
+      border: 2px dashed #10b981;
+      background: rgba(16, 185, 129, 0.15);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+    }
+    .hotspot:hover {
+      background: rgba(16, 185, 129, 0.35);
+      border-color: #059669;
+      transform: scale(1.02);
+    }
+    .hotspot-tag {
+      background: #059669;
+      color: white;
+      font-size: 11px;
+      font-weight: bold;
+      padding: 3px 8px;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body class="bg-slate-900 text-slate-100 antialiased min-h-screen flex flex-col">
+  <!-- Bar -->
+  <header class="bg-slate-800 border-b border-slate-700 px-6 py-4 flex items-center justify-between sticky top-0 z-50">
+    <div class="flex items-center gap-4">
+      <a href="index.html" class="text-slate-400 hover:text-white font-semibold text-sm flex items-center gap-1">
+        ← Central de Telas
+      </a>
+      <span class="text-slate-500">|</span>
+      <a href="code.html" class="text-slate-400 hover:text-white font-semibold text-sm">
+        Página Principal
+      </a>
+      <span class="text-slate-500">|</span>
+      <span class="font-bold text-white text-sm">Tela Oficial de Login (3paginaLogin.webp)</span>
+    </div>
+    <div class="flex items-center gap-3">
+      <a href="/auth/login" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-4 py-2 rounded-lg shadow transition-all">
+        Abrir Login Quasar Interativo
+      </a>
+    </div>
+  </header>
+
+  <!-- Viewer -->
+  <main class="flex-1 max-w-6xl mx-auto p-6 flex flex-col items-center">
+    <div class="text-center mb-6">
+      <h1 class="text-2xl font-bold text-white mb-1">Tela Oficial de Autenticação (3paginaLogin.webp)</h1>
+      <p class="text-slate-400 text-sm">Design oficial com Quasar — clique em qualquer elemento demarcado para navegar</p>
+    </div>
+
+    <!-- Image Container with Hotspots -->
+    <div class="relative rounded-2xl overflow-hidden shadow-2xl border border-slate-700 max-w-5xl bg-white">
+      <img src="3paginaLogin.webp" alt="Tela Oficial de Login MEET-US (3paginaLogin.webp)" class="w-full h-auto block"/>
+
+      <!-- Hotspot: Logotipo MEET-US (Voltar à Home) -->
+      <a href="/" class="hotspot" style="top: 3.5%; left: 2.5%; width: 16%; height: 9%;">
+        <span class="hotspot-tag">Voltar à Página Principal</span>
+      </a>
+
+      <!-- Hotspot: Área de Login / Cartão -->
+      <a href="/auth/login" class="hotspot" style="top: 20%; left: 8%; width: 38%; height: 14%;">
+        <span class="hotspot-tag">Bem-vindo de Volta</span>
+      </a>
+
+      <!-- Hotspot: Campo Email -->
+      <a href="/auth/login" class="hotspot" style="top: 38.5%; left: 10%; width: 34%; height: 7%;">
+        <span class="hotspot-tag">Campo Email</span>
+      </a>
+
+      <!-- Hotspot: Campo Palavra-passe -->
+      <a href="/auth/login" class="hotspot" style="top: 51.5%; left: 10%; width: 34%; height: 7%;">
+        <span class="hotspot-tag">Campo Palavra-passe</span>
+      </a>
+
+      <!-- Hotspot: Esqueceste a palavra-passe? -->
+      <a href="/auth/forgot" class="hotspot" style="top: 60.5%; left: 10%; width: 22%; height: 4%;">
+        <span class="hotspot-tag">Esqueceste a palavra-passe?</span>
+      </a>
+
+      <!-- Hotspot: Botão Entrar -->
+      <a href="/auth/login" class="hotspot" style="top: 66.5%; left: 10%; width: 34%; height: 7%;">
+        <span class="hotspot-tag">Botão Entrar</span>
+      </a>
+
+      <!-- Hotspot: Link Criar Conta -->
+      <a href="/auth/register" class="hotspot" style="top: 76.5%; left: 17%; width: 22%; height: 4%;">
+        <span class="hotspot-tag">Criar Nova Conta</span>
+      </a>
+
+      <!-- Hotspot: Fotografia dos Estudantes -->
+      <a href="/dashboard" class="hotspot" style="top: 22%; left: 48%; width: 50%; height: 72%;">
+        <span class="hotspot-tag">Estudantes em Colaboração</span>
+      </a>
+    </div>
+  </main>
+</body>
+</html>

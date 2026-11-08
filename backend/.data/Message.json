@@ -1,0 +1,101 @@
+[
+  {
+    "conversation_id": "1",
+    "sender_id": "2",
+    "type": "text",
+    "content": "Olá Edson! Vi que ensinas JavaScript & Vue.js. Podes ajudar-me no projeto semestral?",
+    "status": "read",
+    "_id": "cd49679b5e8a29150e85aae0",
+    "id": "cd49679b5e8a29150e85aae0",
+    "createdAt": "2026-11-05T03:27:13.217Z",
+    "updatedAt": "2026-11-05T03:27:13.217Z"
+  },
+  {
+    "conversation_id": "1",
+    "sender_id": "1",
+    "type": "text",
+    "content": "Com certeza! E tu podes ensinar-me um pouco da tua matéria?",
+    "status": "read",
+    "_id": "73bbf0ea08b20701d4abbf66",
+    "id": "73bbf0ea08b20701d4abbf66",
+    "createdAt": "2026-11-05T03:27:13.217Z",
+    "updatedAt": "2026-11-05T03:27:13.217Z"
+  },
+  {
+    "conversation_id": "1",
+    "sender_id": "2",
+    "type": "text",
+    "content": "Perfeito! Já preparei o ficheiro do Figma para a nossa sessão de sexta-feira.",
+    "status": "delivered",
+    "_id": "fd45b953fadd7b1b17ae3053",
+    "id": "fd45b953fadd7b1b17ae3053",
+    "createdAt": "2026-11-05T03:27:13.218Z",
+    "updatedAt": "2026-11-05T03:27:13.218Z"
+  },
+  {
+    "conversation_id": "2",
+    "sender_id": "3",
+    "type": "text",
+    "content": "Olá Edson! Vi que ensinas JavaScript & Vue.js. Podes ajudar-me no projeto semestral?",
+    "status": "read",
+    "_id": "991290618e24d6f7e4be727a",
+    "id": "991290618e24d6f7e4be727a",
+    "createdAt": "2026-11-05T03:27:13.218Z",
+    "updatedAt": "2026-11-05T03:27:13.218Z"
+  },
+  {
+    "conversation_id": "2",
+    "sender_id": "1",
+    "type": "text",
+    "content": "Com certeza! E tu podes ensinar-me um pouco da tua matéria?",
+    "status": "read",
+    "_id": "06aa65101dcc633401c22f15",
+    "id": "06aa65101dcc633401c22f15",
+    "createdAt": "2026-11-05T03:27:13.218Z",
+    "updatedAt": "2026-11-05T03:27:13.218Z"
+  },
+  {
+    "conversation_id": "2",
+    "sender_id": "3",
+    "type": "text",
+    "content": "Muito obrigado pela sessão de estudo!",
+    "status": "delivered",
+    "_id": "f9c3a7b4721c916fd968244f",
+    "id": "f9c3a7b4721c916fd968244f",
+    "createdAt": "2026-11-05T03:27:13.219Z",
+    "updatedAt": "2026-11-05T03:27:13.219Z"
+  },
+  {
+    "conversation_id": "3",
+    "sender_id": "4",
+    "type": "text",
+    "content": "Olá Edson! Vi que ensinas JavaScript & Vue.js. Podes ajudar-me no projeto semestral?",
+    "status": "read",
+    "_id": "d70852faf5c7aab9b06c8795",
+    "id": "d70852faf5c7aab9b06c8795",
+    "createdAt": "2026-11-05T03:27:13.219Z",
+    "updatedAt": "2026-11-05T03:27:13.219Z"
+  },
+  {
+    "conversation_id": "3",
+    "sender_id": "1",
+    "type": "text",
+    "content": "Com certeza! E tu podes ensinar-me um pouco da tua matéria?",
+    "status": "read",
+    "_id": "d325702333f8de2c659ea820",
+    "id": "d325702333f8de2c659ea820",
+    "createdAt": "2026-11-05T03:27:13.220Z",
+    "updatedAt": "2026-11-05T03:27:13.220Z"
+  },
+  {
+    "conversation_id": "3",
+    "sender_id": "4",
+    "type": "text",
+    "content": "Muito obrigado pela sessão de estudo!",
+    "status": "delivered",
+    "_id": "9c4f49fddbe0c0bd5564b129",
+    "id": "9c4f49fddbe0c0bd5564b129",
+    "createdAt": "2026-11-05T03:27:13.220Z",
+    "updatedAt": "2026-11-05T03:27:13.220Z"
+  }
+]

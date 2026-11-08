@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MEET-US — Tela 2: Dashboard do Estudante (2.webp)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .hotspot {
+      position: absolute;
+      border: 2px dashed #10b981;
+      background: rgba(16, 185, 129, 0.15);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .hotspot:hover {
+      background: rgba(16, 185, 129, 0.35);
+      border-color: #059669;
+      transform: scale(1.01);
+    }
+    .hotspot-tag {
+      background: #059669;
+      color: white;
+      font-size: 11px;
+      font-weight: bold;
+      padding: 3px 8px;
+      border-radius: 4px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+  </style>
+</head>
+<body class="bg-slate-900 text-slate-100 antialiased min-h-screen flex flex-col">
+  <!-- Bar -->
+  <header class="bg-slate-800 border-b border-slate-700 px-6 py-4 flex items-center justify-between sticky top-0 z-50">
+    <div class="flex items-center gap-4">
+      <a href="index.html" class="text-slate-400 hover:text-white font-semibold text-sm flex items-center gap-1">
+        ← Central de Telas
+      </a>
+      <span class="text-slate-500">|</span>
+      <a href="code.html" class="text-slate-400 hover:text-white font-semibold text-sm">
+        Página Principal
+      </a>
+      <span class="text-slate-500">|</span>
+      <span class="font-bold text-white text-sm">Tela 2: Dashboard</span>
+    </div>
+    <div class="flex items-center gap-3">
+      <a href="http://localhost:9000/dashboard" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-4 py-2 rounded-lg shadow transition-all">
+        Abrir Dashboard no Navegador
+      </a>
+    </div>
+  </header>
+
+  <!-- Viewer -->
+  <main class="flex-1 max-w-7xl mx-auto p-6 flex flex-col items-center">
+    <div class="text-center mb-6">
+      <h1 class="text-2xl font-bold text-white mb-1">Tela Oficial do Dashboard</h1>
+      <p class="text-slate-400 text-sm">Clique em qualquer secção para navegar para a funcionalidade correspondente</p>
+    </div>
+
+    <!-- Image Container with Hotspots -->
+    <div class="relative rounded-2xl overflow-hidden shadow-2xl border border-slate-700 w-full bg-slate-800">
+      <img src="2.webp" alt="Dashboard do Estudante MEET-US" class="w-full h-auto block"/>
+
+      <!-- Hotspot: Sidebar Navigation -->
+      <a href="http://localhost:9000/dashboard" target="_blank" class="hotspot" style="top: 0%; left: 0%; width: 17%; height: 100%;">
+        <span class="hotspot-tag">Menu Lateral (8 Secções)</span>
+      </a>
+
+      <!-- Hotspot: Barra de Pesquisa Superior -->
+      <a href="http://localhost:9000/students" target="_blank" class="hotspot" style="top: 2%; left: 18%; width: 60%; height: 6%;">
+        <span class="hotspot-tag">Pesquisar Pessoas & Competências</span>
+      </a>
+
+      <!-- Hotspot: Banner de Notificação Verde -->
+      <a href="http://localhost:9000/matching" target="_blank" class="hotspot" style="top: 30%; left: 18%; width: 52%; height: 10%;">
+        <span class="hotspot-tag">Ver 3 Compatibilidades</span>
+      </a>
+
+      <!-- Hotspot: Cartão Amélia Mondlane -->
+      <a href="http://localhost:9000/students" target="_blank" class="hotspot" style="top: 55%; left: 18%; width: 17%; height: 38%;">
+        <span class="hotspot-tag">Amélia Mondlane (94%)</span>
+      </a>
+
+      <!-- Hotspot: Cartão Celso Macuácua -->
+      <a href="http://localhost:9000/students" target="_blank" class="hotspot" style="top: 55%; left: 35.5%; width: 17%; height: 38%;">
+        <span class="hotspot-tag">Celso Macuácua (92%)</span>
+      </a>
+
+      <!-- Hotspot: Cartão Neusa Tembe -->
+      <a href="http://localhost:9000/students" target="_blank" class="hotspot" style="top: 55%; left: 53%; width: 17%; height: 38%;">
+        <span class="hotspot-tag">Neusa Tembe (91%)</span>
+      </a>
+
+      <!-- Hotspot: Coluna Lateral Direita -->
+      <a href="http://localhost:9000/calendar" target="_blank" class="hotspot" style="top: 10%; right: 1%; width: 27%; height: 85%;">
+        <span class="hotspot-tag">Sessões, Conexões & Ranking</span>
+      </a>
+    </div>
+  </main>
+</body>
+</html>

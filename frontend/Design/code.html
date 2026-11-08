@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>MEET-US - Ensina o que dominas. Aprende o que precisas.</title>
+  <!-- Tailwind CSS v3 CDN -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <!-- Tailwind Configuration for custom green shades -->
+  <script data-purpose="tailwind-config">
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            emerald: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+            },
+          }
+        }
+      }
+    }
+  </script>
+  <!-- Custom Styles -->
+  <style data-purpose="custom-styles">
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+    .cursor-pointer {
+      cursor: pointer;
+    }
+  </style>
+
+  <script>
+    function goTo(path) {
+      if (window.parent && window.parent !== window) {
+        try {
+          window.parent.postMessage({ type: 'MEETUS_NAVIGATE', path: path }, '*');
+        } catch (e) {}
+        window.top.location.href = path;
+      } else if (window.location.protocol === 'file:') {
+        if (path.includes('login') || path.includes('register')) {
+          window.location.href = 'login.html';
+        } else if (path.includes('dashboard')) {
+          window.location.href = 'dashboard.html';
+        } else if (path.includes('students') || path.includes('matching')) {
+          window.location.href = 'descobrir.html';
+        } else if (path.includes('designs')) {
+          window.location.href = 'index.html';
+        } else {
+          window.location.href = 'http://localhost:9000' + path;
+        }
+      } else {
+        window.location.href = path;
+      }
+    }
+  </script>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-emerald-500 selection:text-white">
+  <!-- BEGIN: MainHeader -->
+  <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-100 transition-all" data-purpose="site-header">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <!-- Logo -->
+      <div class="flex items-center gap-3">
+        <a class="text-2xl font-black tracking-tight text-emerald-600" href="#" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">MEET-US</a>
+        <span class="text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full hidden sm:inline-block">
+          🇲🇿 Moçambique
+        </span>
+      </div>
+      <!-- Navigation Links -->
+      <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
+        <a class="hover:text-emerald-600 transition-colors" href="#como-funciona">Como funciona</a>
+        <a class="hover:text-emerald-600 transition-colors" href="#competencias">Competências</a>
+        <a class="hover:text-emerald-600 transition-colors" href="#comunidade">Comunidade</a>
+        <a class="hover:text-emerald-600 transition-colors" href="#sobre">Sobre</a>
+      </nav>
+      <!-- Action Buttons -->
+      <div class="flex items-center gap-4">
+        <button onclick="goTo('/auth/login')" class="hidden sm:inline-flex text-sm font-semibold text-slate-700 hover:text-emerald-600 px-4 py-2 rounded-xl transition-colors cursor-pointer" data-purpose="login-btn">
+          Entrar
+        </button>
+        <button onclick="goTo('/auth/register')" class="text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 px-5 py-2.5 rounded-xl shadow-lg shadow-emerald-600/20 transition-all transform hover:-translate-y-0.5 cursor-pointer" data-purpose="signup-btn">
+          Cria conta
+        </button>
+      </div>
+    </div>
+  </header>
+  <!-- END: MainHeader -->
+
+  <!-- BEGIN: MainContent -->
+  <main>
+    <!-- BEGIN: HeroSection -->
+    <section class="relative overflow-hidden pt-12 pb-20 lg:pt-20 lg:pb-28" data-purpose="hero-section">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          <!-- Left Text Content -->
+          <div class="lg:col-span-6 space-y-6 text-center lg:text-left">
+            <span class="inline-block text-emerald-600 font-semibold text-sm tracking-wide uppercase bg-emerald-50 px-3 py-1 rounded-full">
+              Liga-te. Partilha. Aprende.
+            </span>
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-slate-900 leading-[1.1]">
+              Ensina o que dominas. <br class="hidden sm:inline"/>
+              <span class="text-emerald-600">Aprende o que precisas.</span>
+            </h1>
+            <p class="text-lg text-slate-600 max-w-xl mx-auto lg:mx-0">
+              A plataforma onde estudantes universitários de Moçambique partilham conhecimento, encontram parceiros de estudo e crescem juntos.
+            </p>
+            <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-4">
+              <button onclick="goTo('/auth/register')" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-8 py-4 rounded-xl shadow-xl shadow-emerald-600/25 transition-all transform hover:-translate-y-0.5 cursor-pointer">
+                Começar agora
+              </button>
+              <a href="#como-funciona" class="w-full sm:w-auto bg-white hover:bg-slate-50 text-slate-700 font-semibold px-8 py-4 rounded-xl border border-slate-200 shadow-sm transition-all text-center block">
+                Ver como funciona
+              </a>
+            </div>
+          </div>
+          <!-- Right Visual: Fotografia Oficial dos Estudantes (Sem bordas, Não flutuante, Grande) -->
+          <div class="lg:col-span-6 flex items-center justify-center">
+            <div class="w-full flex items-center justify-center">
+              <img src="/images/login-students.webp" alt="Estudantes universitários de Moçambique a colaborar - MEET-US" class="w-full max-w-xl h-auto block object-contain border-0 shadow-none select-none"/>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- END: HeroSection -->
+
+    <!-- BEGIN: StatsBar -->
+    <section class="bg-emerald-50/50 border-y border-emerald-100/60 py-8" data-purpose="statistics-bar">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+          <div onclick="goTo('/students')" class="cursor-pointer hover:scale-105 transition-transform">
+            <p class="text-3xl lg:text-4xl font-extrabold text-emerald-600">+5.000</p>
+            <p class="text-sm font-medium text-slate-600 mt-1">estudantes</p>
+          </div>
+          <div onclick="goTo('/students')" class="cursor-pointer hover:scale-105 transition-transform">
+            <p class="text-3xl lg:text-4xl font-extrabold text-emerald-600">12</p>
+            <p class="text-sm font-medium text-slate-600 mt-1">universidades</p>
+          </div>
+          <div onclick="goTo('/skills')" class="cursor-pointer hover:scale-105 transition-transform">
+            <p class="text-3xl lg:text-4xl font-extrabold text-emerald-600">+300</p>
+            <p class="text-sm font-medium text-slate-600 mt-1">competências</p>
+          </div>
+          <div onclick="goTo('/dashboard')" class="cursor-pointer hover:scale-105 transition-transform">
+            <p class="text-3xl lg:text-4xl font-extrabold text-emerald-600">+10.000</p>
+            <p class="text-sm font-medium text-slate-600 mt-1">sessões realizadas</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- END: StatsBar -->
+
+    <!-- BEGIN: HowItWorks -->
+    <section class="py-20 bg-white" id="como-funciona">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-2xl mx-auto mb-16">
+          <h2 class="text-3xl font-bold tracking-tight text-slate-900">Como funciona</h2>
+          <p class="text-slate-600 mt-3">Três passos simples para começares a evoluir academicamente com colegas da tua universidade.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <!-- Step 1 -->
+          <div onclick="goTo('/auth/register')" class="bg-slate-50 p-8 rounded-3xl border border-slate-100 relative group hover:border-emerald-500/50 hover:shadow-md transition-all cursor-pointer">
+            <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center font-bold text-xl mb-6 shadow-sm">
+              01
+            </div>
+            <h3 class="text-xl font-bold text-slate-900 mb-2">Cria o teu perfil</h3>
+            <p class="text-slate-600 text-sm leading-relaxed">
+              Diz-nos quem és, o que sabes ensinar e o que queres aprender. Personaliza o teu perfil académico.
+            </p>
+          </div>
+          <!-- Step 2 -->
+          <div onclick="goTo('/matching')" class="bg-slate-50 p-8 rounded-3xl border border-slate-100 relative group hover:border-emerald-500/50 hover:shadow-md transition-all cursor-pointer">
+            <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center font-bold text-xl mb-6 shadow-sm">
+              02
+            </div>
+            <h3 class="text-xl font-bold text-slate-900 mb-2">Encontra a tua compatibilidade</h3>
+            <p class="text-slate-600 text-sm leading-relaxed">
+              Descobre estudantes com competências e horários compatíveis contigo através do nosso algoritmo inteligente.
+            </p>
+          </div>
+          <!-- Step 3 -->
+          <div onclick="goTo('/calendar')" class="bg-slate-50 p-8 rounded-3xl border border-slate-100 relative group hover:border-emerald-500/50 hover:shadow-md transition-all cursor-pointer">
+            <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center font-bold text-xl mb-6 shadow-sm">
+              03
+            </div>
+            <h3 class="text-xl font-bold text-slate-900 mb-2">Agenda a tua sessão</h3>
+            <p class="text-slate-600 text-sm leading-relaxed">
+              Combina o melhor horário e começa a aprender ou a ensinar juntos num ambiente colaborativo.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- END: HowItWorks -->
+
+    <!-- BEGIN: PopularSkills -->
+    <section class="py-16 bg-slate-50 border-y border-slate-100" id="competencias">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="text-2xl font-bold tracking-tight text-slate-900 mb-8">Competências populares</h2>
+        <!-- Tags Grid -->
+        <div class="flex flex-wrap items-center justify-center gap-3">
+          <span onclick="goTo('/students?skill=Design de Interfaces')" class="bg-white hover:bg-emerald-50 text-slate-700 hover:text-emerald-600 font-medium px-6 py-3 rounded-full border border-slate-200 shadow-sm cursor-pointer transition-all">Design de Interfaces</span>
+          <span onclick="goTo('/students?skill=Programação')" class="bg-white hover:bg-emerald-50 text-slate-700 hover:text-emerald-600 font-medium px-6 py-3 rounded-full border border-slate-200 shadow-sm cursor-pointer transition-all">Programação</span>
+          <span onclick="goTo('/students?skill=Excel')" class="bg-white hover:bg-emerald-50 text-slate-700 hover:text-emerald-600 font-medium px-6 py-3 rounded-full border border-slate-200 shadow-sm cursor-pointer transition-all">Excel</span>
+          <span onclick="goTo('/students?skill=Inglês')" class="bg-white hover:bg-emerald-50 text-slate-700 hover:text-emerald-600 font-medium px-6 py-3 rounded-full border border-slate-200 shadow-sm cursor-pointer transition-all">Inglês</span>
+          <span onclick="goTo('/students?skill=Contabilidade')" class="bg-white hover:bg-emerald-50 text-slate-700 hover:text-emerald-600 font-medium px-6 py-3 rounded-full border border-slate-200 shadow-sm cursor-pointer transition-all">Contabilidade</span>
+          <span onclick="goTo('/students?skill=Fotografia')" class="bg-white hover:bg-emerald-50 text-slate-700 hover:text-emerald-600 font-medium px-6 py-3 rounded-full border border-slate-200 shadow-sm cursor-pointer transition-all">Fotografia</span>
+          <span onclick="goTo('/students?skill=Matemática')" class="bg-white hover:bg-emerald-50 text-slate-700 hover:text-emerald-600 font-medium px-6 py-3 rounded-full border border-slate-200 shadow-sm cursor-pointer transition-all">Matemática</span>
+          <span onclick="goTo('/students?skill=Marketing')" class="bg-white hover:bg-emerald-50 text-slate-700 hover:text-emerald-600 font-medium px-6 py-3 rounded-full border border-slate-200 shadow-sm cursor-pointer transition-all">Marketing</span>
+        </div>
+      </div>
+    </section>
+    <!-- END: PopularSkills -->
+
+    <!-- BEGIN: FeaturedStudents -->
+    <section class="py-20 bg-white" id="comunidade">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-2xl mx-auto mb-16">
+          <h2 class="text-3xl font-bold tracking-tight text-slate-900">Estudantes em destaque</h2>
+          <p class="text-slate-600 mt-3">Conhece alguns dos mentores mais ativos e bem avaliados da nossa comunidade.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <!-- Student Card 1 -->
+          <div onclick="goTo('/matching')" class="bg-slate-50 border border-slate-100 rounded-3xl p-6 shadow-sm hover:shadow-md transition-all cursor-pointer">
+            <div class="flex items-center gap-4 mb-6">
+              <img alt="Lúcia Nanttumbo" class="w-16 h-16 rounded-2xl object-cover shadow-sm" src="https://images.unsplash.com/photo-1589156280159-27698a70f29e?w=400&h=400&fit=crop&crop=faces"/>
+              <div>
+                <h3 class="font-bold text-slate-900 text-lg">Lúcia Nanttumbo</h3>
+                <p class="text-xs text-slate-500 font-medium">Engenharia Informática</p>
+                <p class="text-xs text-slate-400 mt-0.5">Maputo</p>
+              </div>
+            </div>
+            <div class="flex items-center justify-between pt-4 border-t border-slate-200/60">
+              <span class="text-xs font-semibold text-emerald-600 bg-emerald-100 px-3 py-1 rounded-full">92% compatível</span>
+              <div class="flex items-center gap-1.5 text-sm font-bold text-slate-700">
+                <svg class="w-4 h-4 text-amber-500 fill-amber-400" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg> 4,9
+              </div>
+            </div>
+          </div>
+          <!-- Student Card 2 -->
+          <div onclick="goTo('/matching')" class="bg-slate-50 border border-slate-100 rounded-3xl p-6 shadow-sm hover:shadow-md transition-all cursor-pointer">
+            <div class="flex items-center gap-4 mb-6">
+              <img alt="Carlos Mangue" class="w-16 h-16 rounded-2xl object-cover shadow-sm" src="https://images.unsplash.com/photo-1522529599102-193c0d76b5b6?w=400&h=400&fit=crop&crop=faces"/>
+              <div>
+                <h3 class="font-bold text-slate-900 text-lg">Carlos Mangue</h3>
+                <p class="text-xs text-slate-500 font-medium">Gestão de Empresas</p>
+                <p class="text-xs text-slate-400 mt-0.5">Beira</p>
+              </div>
+            </div>
+            <div class="flex items-center justify-between pt-4 border-t border-slate-200/60">
+              <span class="text-xs font-semibold text-emerald-600 bg-emerald-100 px-3 py-1 rounded-full">89% compatível</span>
+              <div class="flex items-center gap-1.5 text-sm font-bold text-slate-700">
+                <svg class="w-4 h-4 text-amber-500 fill-amber-400" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg> 4,9
+              </div>
+            </div>
+          </div>
+          <!-- Student Card 3 -->
+          <div onclick="goTo('/matching')" class="bg-slate-50 border border-slate-100 rounded-3xl p-6 shadow-sm hover:shadow-md transition-all cursor-pointer">
+            <div class="flex items-center gap-4 mb-6">
+              <img alt="Fátima Juma" class="w-16 h-16 rounded-2xl object-cover shadow-sm" src="https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?w=400&h=400&fit=crop&crop=faces"/>
+              <div>
+                <h3 class="font-bold text-slate-900 text-lg">Fátima Juma</h3>
+                <p class="text-xs text-slate-500 font-medium">Contabilidade e Auditoria</p>
+                <p class="text-xs text-slate-400 mt-0.5">Nampula</p>
+              </div>
+            </div>
+            <div class="flex items-center justify-between pt-4 border-t border-slate-200/60">
+              <span class="text-xs font-semibold text-emerald-600 bg-emerald-100 px-3 py-1 rounded-full">93% compatível</span>
+              <div class="flex items-center gap-1.5 text-sm font-bold text-slate-700">
+                <svg class="w-4 h-4 text-amber-500 fill-amber-400" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg> 4,9
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- END: FeaturedStudents -->
+
+    <!-- BEGIN: Testimonials -->
+    <section class="py-20 bg-slate-50 border-t border-slate-100" id="sobre">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-2xl mx-auto mb-16">
+          <h2 class="text-3xl font-bold tracking-tight text-slate-900">O que dizem os estudantes</h2>
+          <p class="text-slate-600 mt-3">Histórias reais de quem transformou a sua jornada académica com o MEET-US.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <!-- Testimonial 1 -->
+          <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col justify-between">
+            <p class="text-sm text-slate-600 leading-relaxed mb-6">
+              "Encontrei parcerias incríveis e melhorei muito nas cadeiras difíceis. A plataforma facilitou totalmente a minha rotina universitária."
+            </p>
+            <div class="flex items-center gap-3 pt-4 border-t border-slate-100">
+              <img alt="Nelson Tivane" class="w-10 h-10 rounded-full object-cover" src="https://images.unsplash.com/photo-1506277886164-e25aa3f4ef7f?w=400&h=400&fit=crop&crop=faces"/>
+              <div>
+                <h4 class="font-bold text-sm text-slate-900">Nelson Tivane</h4>
+                <p class="text-xs text-slate-500">Engenharia Civil, Maputo</p>
+              </div>
+            </div>
+          </div>
+          <!-- Testimonial 2 -->
+          <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col justify-between">
+            <p class="text-sm text-slate-600 leading-relaxed mb-6">
+              "Ensinar aqui ajudou-me a ganhar confiança e ainda fiz novas amizades na minha universidade. Recomendo a todos!"
+            </p>
+            <div class="flex items-center gap-3 pt-4 border-t border-slate-100">
+              <img alt="Ângela Sitoe" class="w-10 h-10 rounded-full object-cover" src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=400&h=400&fit=crop&crop=faces"/>
+              <div>
+                <h4 class="font-bold text-sm text-slate-900">Ângela Sitoe</h4>
+                <p class="text-xs text-slate-500">Medicina, Beira</p>
+              </div>
+            </div>
+          </div>
+          <!-- Testimonial 3 -->
+          <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col justify-between">
+            <p class="text-sm text-slate-600 leading-relaxed mb-6">
+              "A compatibilidade funciona mesmo. Economizo tempo e aprendo com pessoas que realmente entendem do assunto."
+            </p>
+            <div class="flex items-center gap-3 pt-4 border-t border-slate-100">
+              <img alt="Rui Zandamela" class="w-10 h-10 rounded-full object-cover" src="https://images.unsplash.com/photo-1520451644838-906a72aa7c86?w=400&h=400&fit=crop&crop=faces"/>
+              <div>
+                <h4 class="font-bold text-sm text-slate-900">Rui Zandamela</h4>
+                <p class="text-xs text-slate-500">Informática, Nampula</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- END: Testimonials -->
+
+    <!-- BEGIN: FinalCTA -->
+    <section class="bg-emerald-600 py-16" data-purpose="final-cta">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
+        <h2 class="text-3xl sm:text-4xl font-black text-white tracking-tight">Pronto para aprender algo novo?</h2>
+        <p class="text-emerald-100 max-w-xl mx-auto text-base">Junta-te a milhares de estudantes universitários em Moçambique hoje mesmo.</p>
+        <div>
+          <button onclick="goTo('/auth/register')" class="bg-white text-emerald-600 font-bold px-8 py-4 rounded-xl shadow-xl hover:bg-emerald-50 transition-all cursor-pointer">
+            Criar conta grátis
+          </button>
+        </div>
+      </div>
+    </section>
+    <!-- END: FinalCTA -->
+  </main>
+  <!-- END: MainContent -->
+
+  <!-- BEGIN: MainFooter -->
+  <footer class="bg-white border-t border-slate-200 py-12" data-purpose="site-footer">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+        <!-- Col 1: Brand -->
+        <div class="space-y-4">
+          <span class="text-2xl font-black tracking-tight text-emerald-600">MEET-US</span>
+          <p class="text-xs text-slate-500 leading-relaxed">
+            A plataforma onde estudantes universitários partilham conhecimento, encontram parceiros de estudo e crescem juntos.
+          </p>
+        </div>
+        <!-- Col 2: Navigation -->
+        <div>
+          <h4 class="font-bold text-sm text-slate-900 mb-4">Plataforma</h4>
+          <ul class="space-y-2 text-xs text-slate-600">
+            <li><a class="hover:text-emerald-600" href="#como-funciona">Como funciona</a></li>
+            <li><a class="hover:text-emerald-600" href="#competencias">Competências</a></li>
+            <li><a class="hover:text-emerald-600" href="#comunidade">Comunidade</a></li>
+            <li><a class="hover:text-emerald-600" href="#sobre">Sobre nós</a></li>
+          </ul>
+        </div>
+        <!-- Col 3: Partner Universities -->
+        <div>
+          <h4 class="font-bold text-sm text-slate-900 mb-4">Universidades parceiras</h4>
+          <div class="flex flex-wrap gap-2 text-xs font-semibold text-slate-600">
+            <span onclick="goTo('/students?univ=UEM')" class="bg-slate-100 hover:bg-emerald-50 hover:text-emerald-700 px-2.5 py-1 rounded-md cursor-pointer transition-colors">UEM</span>
+            <span onclick="goTo('/students?univ=UP')" class="bg-slate-100 hover:bg-emerald-50 hover:text-emerald-700 px-2.5 py-1 rounded-md cursor-pointer transition-colors">UP</span>
+            <span onclick="goTo('/students?univ=ISCTEM')" class="bg-slate-100 hover:bg-emerald-50 hover:text-emerald-700 px-2.5 py-1 rounded-md cursor-pointer transition-colors">ISCTEM</span>
+            <span onclick="goTo('/students?univ=UniLúrio')" class="bg-slate-100 hover:bg-emerald-50 hover:text-emerald-700 px-2.5 py-1 rounded-md cursor-pointer transition-colors">UniLúrio</span>
+            <span onclick="goTo('/students?univ=UniSave')" class="bg-slate-100 hover:bg-emerald-50 hover:text-emerald-700 px-2.5 py-1 rounded-md cursor-pointer transition-colors">UniSave</span>
+            <span onclick="goTo('/students?univ=A Politécnica')" class="bg-slate-100 hover:bg-emerald-50 hover:text-emerald-700 px-2.5 py-1 rounded-md cursor-pointer transition-colors">A Politécnica</span>
+          </div>
+        </div>
+        <!-- Col 4: Acesso Rápido -->
+        <div>
+          <h4 class="font-bold text-sm text-slate-900 mb-4">Acesso Rápido</h4>
+          <ul class="space-y-2 text-xs text-slate-600">
+            <li><a class="hover:text-emerald-600 font-semibold cursor-pointer" onclick="goTo('/auth/login')">➔ Iniciar Sessão</a></li>
+            <li><a class="hover:text-emerald-600 font-semibold cursor-pointer" onclick="goTo('/auth/register')">➔ Criar Conta</a></li>
+            <li><a class="hover:text-emerald-600 font-semibold cursor-pointer" onclick="goTo('/dashboard')">➔ Portal do Estudante</a></li>
+            <li><a class="hover:text-emerald-600 font-semibold cursor-pointer" onclick="goTo('/students')">➔ Descobrir Estudantes</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="border-t border-slate-100 pt-8 text-center text-xs text-slate-400">
+        © 2026 MEET-US Moçambique. Todos os direitos reservados.
+      </div>
+    </div>
+  </footer>
+  <!-- END: MainFooter -->
+</body>
+</html>

@@ -1,0 +1,32 @@
+[
+  {
+    "_id": "1",
+    "user_a": "1",
+    "user_b": "2",
+    "last_message": "Perfeito! Já preparei o ficheiro do Figma para a nossa sessão de sexta-feira.",
+    "last_message_at": "2026-11-05T02:57:13.216Z",
+    "id": "1",
+    "createdAt": "2026-11-05T03:27:13.216Z",
+    "updatedAt": "2026-11-05T03:27:13.216Z"
+  },
+  {
+    "_id": "2",
+    "user_a": "1",
+    "user_b": "3",
+    "last_message": "Muito obrigado pela sessão de estudo!",
+    "last_message_at": "2026-11-05T02:27:13.218Z",
+    "id": "2",
+    "createdAt": "2026-11-05T03:27:13.218Z",
+    "updatedAt": "2026-11-05T03:27:13.218Z"
+  },
+  {
+    "_id": "3",
+    "user_a": "1",
+    "user_b": "4",
+    "last_message": "Muito obrigado pela sessão de estudo!",
+    "last_message_at": "2026-11-05T01:57:13.219Z",
+    "id": "3",
+    "createdAt": "2026-11-05T03:27:13.219Z",
+    "updatedAt": "2026-11-05T03:27:13.219Z"
+  }
+]

@@ -1,0 +1,90 @@
+// frontend/src/stores/auth.js
+import { defineStore } from 'pinia'
+import { fakeAuth } from 'src/services/fake-api'
+import { api } from 'src/boot/axios'
+import { saveDatabase } from 'src/db'
+import { useMeetUsStore } from 'src/stores/meetus'
+
+const USE_FAKE = (import.meta.env.VITE_USE_FAKE_API || import.meta.env.USE_FAKE_API || 'false') === 'true'
+
+export const useAuthStore = defineStore('auth', {
+  state: () => ({
+    user: JSON.parse(localStorage.getItem('meetus_user') || 'null'),
+    token: localStorage.getItem('meetus_token') || null,
+    loading: false
+  }),
+
+  getters: {
+    isAuthenticated: (s) => !!s.token,
+    userId: (s) => s.user?.id || s.user?._id || null,
+    isAdmin: (s) => s.user?.role === 'admin'
+  },
+
+  actions: {
+    _persist() {
+      if (this.token) {
+        localStorage.setItem('meetus_token', this.token)
+        localStorage.setItem('meetus_user', JSON.stringify(this.user))
+      } else {
+        localStorage.removeItem('meetus_token')
+        localStorage.removeItem('meetus_user')
+      }
+      saveDatabase()
+    },
+
+    async login(payload) {
+      this.loading = true
+      try {
+        const res = USE_FAKE ? await fakeAuth.login(payload) : await api.post('/auth/login', payload)
+        this.token = res.data.token
+        this.user = res.data.user
+        this._persist()
+        try {
+          const meetusStore = useMeetUsStore()
+          meetusStore.setCurrentUser(this.user)
+        } catch (_) {}
+        return res.data
+      } finally { this.loading = false }
+    },
+
+    async register(payload) {
+      this.loading = true
+      try {
+        const res = USE_FAKE ? await fakeAuth.register(payload) : await api.post('/auth/register', payload)
+        this.token = res.data.token
+        this.user = res.data.user
+        this._persist()
+        try {
+          const meetusStore = useMeetUsStore()
+          meetusStore.setCurrentUser(this.user)
+        } catch (_) {}
+        return res.data
+      } finally { this.loading = false }
+    },
+
+    async fetchMe() {
+      if (!this.user?.id && !this.user?._id) return
+      try {
+        const res = USE_FAKE ? await fakeAuth.me(this.user.id || this.user._id) : await api.get('/auth/me')
+        this.user = res.data
+        this._persist()
+        try {
+          const meetusStore = useMeetUsStore()
+          meetusStore.setCurrentUser(this.user)
+        } catch (_) {}
+      } catch (err) {
+        console.warn('fetchMe error:', err.message)
+      }
+    },
+
+    logout() {
+      this.user = null
+      this.token = null
+      this._persist()
+      try {
+        const meetusStore = useMeetUsStore()
+        meetusStore.clearCurrentUser()
+      } catch (_) {}
+    }
+  }
+})

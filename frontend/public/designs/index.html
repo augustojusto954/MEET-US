@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MEET-US — Central de Telas & Design System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            emerald: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857'
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen">
+  <!-- Header -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <span class="text-2xl font-black tracking-tight text-emerald-600">MEET-US</span>
+        <span class="text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full">
+          Moçambique
+        </span>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="code.html" class="text-sm font-semibold text-slate-700 hover:text-emerald-600 px-4 py-2 rounded-xl border border-slate-200 hover:border-emerald-300 transition-all">
+          Página Principal
+        </a>
+        <a href="http://localhost:9000/" target="_blank" class="text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 px-5 py-2.5 rounded-xl shadow-lg shadow-emerald-600/20 transition-all">
+          Abrir Plataforma (localhost:9000)
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Intro Banner -->
+    <div class="bg-gradient-to-r from-emerald-600 to-emerald-700 text-white rounded-3xl p-8 sm:p-12 mb-12 shadow-xl shadow-emerald-600/10">
+      <div class="max-w-3xl">
+        <span class="inline-block text-xs font-bold uppercase tracking-wider bg-white/20 px-3 py-1 rounded-full mb-4">
+          Arquitetura Visual MEET-US
+        </span>
+        <h1 class="text-3xl sm:text-4xl font-black tracking-tight mb-4">
+          Todas as Telas de Design Clicáveis e Conectadas
+        </h1>
+        <p class="text-emerald-100 text-base sm:text-lg leading-relaxed">
+          Navegue pelas 4 interfaces principais da plataforma universitária de Moçambique. Todas as páginas possuem botões e áreas interativas que se comunicam diretamente com a aplicação.
+        </p>
+      </div>
+    </div>
+
+    <!-- Grid of 4 Screens -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <!-- Tela 1: Página Principal -->
+      <div class="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all group flex flex-col justify-between">
+        <div class="p-6">
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-xs font-bold text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full">
+              Tela 1 • Vitrine
+            </span>
+            <span class="text-xs font-semibold text-slate-500">code.html / screen.png</span>
+          </div>
+          <h2 class="text-xl font-bold text-slate-900 mb-2 group-hover:text-emerald-600 transition-colors">
+            Página Principal (Vitrine de Boas-Vindas)
+          </h2>
+          <p class="text-sm text-slate-600 mb-6">
+            Lema oficial "Ensina o que dominas. Aprende o que precisas", estatísticas de Moçambique, etapas de funcionamento e estudantes em destaque.
+          </p>
+          <div class="rounded-2xl overflow-hidden border border-slate-100 mb-4 bg-slate-50 relative group-hover:scale-[1.01] transition-transform">
+            <img src="screen.png" alt="Página Principal" class="w-full h-56 object-cover object-top"/>
+          </div>
+        </div>
+        <div class="p-6 pt-0 flex gap-3">
+          <a href="code.html" class="flex-1 text-center font-bold text-sm bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl transition-colors shadow-md shadow-emerald-600/20">
+            Abrir code.html Interativo
+          </a>
+          <a href="http://localhost:9000/" target="_blank" class="px-4 py-3 border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-sm rounded-xl transition-colors">
+            Ver Live
+          </a>
+        </div>
+      </div>
+
+      <!-- Tela 2: Autenticação -->
+      <div class="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all group flex flex-col justify-between">
+        <div class="p-6">
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-xs font-bold text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full">
+              Tela 2 • Login
+            </span>
+            <span class="text-xs font-semibold text-slate-500">3paginaLogin.webp</span>
+          </div>
+          <h2 class="text-xl font-bold text-slate-900 mb-2 group-hover:text-emerald-600 transition-colors">
+            Autenticação Académica (Login & Registo)
+          </h2>
+          <p class="text-sm text-slate-600 mb-6">
+            Entrada segura para estudantes das universidades UEM, UP, ISCTEM, UniSave e UniLúrio, com validações e credenciais institucionais.
+          </p>
+          <div class="rounded-2xl overflow-hidden border border-slate-100 mb-4 bg-slate-50 relative group-hover:scale-[1.01] transition-transform">
+            <img src="3paginaLogin.webp" alt="Tela Oficial de Login" class="w-full h-56 object-cover object-top"/>
+          </div>
+        </div>
+        <div class="p-6 pt-0 flex gap-3">
+          <a href="login.html" class="flex-1 text-center font-bold text-sm bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl transition-colors shadow-md shadow-emerald-600/20">
+            Abrir 3paginaLogin.webp Clicável
+          </a>
+          <a href="/auth/login" class="px-4 py-3 border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-sm rounded-xl transition-colors">
+            Ver Live
+          </a>
+        </div>
+      </div>
+
+      <!-- Tela 3: Dashboard do Estudante -->
+      <div class="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all group flex flex-col justify-between">
+        <div class="p-6">
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-xs font-bold text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full">
+              Tela 3 • Painel Central
+            </span>
+            <span class="text-xs font-semibold text-slate-500">2.webp</span>
+          </div>
+          <h2 class="text-xl font-bold text-slate-900 mb-2 group-hover:text-emerald-600 transition-colors">
+            Dashboard do Estudante (Eduardo Mondlane)
+          </h2>
+          <p class="text-sm text-slate-600 mb-6">
+            Painel do estudante com banner de notificações ("3 novas pessoas"), cartões de Amélia, Celso e Neusa, próximas sessões e ranking.
+          </p>
+          <div class="rounded-2xl overflow-hidden border border-slate-100 mb-4 bg-slate-50 relative group-hover:scale-[1.01] transition-transform">
+            <img src="2.webp" alt="Dashboard do Estudante" class="w-full h-56 object-cover object-top"/>
+          </div>
+        </div>
+        <div class="p-6 pt-0 flex gap-3">
+          <a href="dashboard.html" class="flex-1 text-center font-bold text-sm bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl transition-colors shadow-md shadow-emerald-600/20">
+            Abrir 2.webp Clicável
+          </a>
+          <a href="http://localhost:9000/dashboard" target="_blank" class="px-4 py-3 border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-sm rounded-xl transition-colors">
+            Ver Live
+          </a>
+        </div>
+      </div>
+
+      <!-- Tela 4: Descobrir Estudantes -->
+      <div class="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all group flex flex-col justify-between">
+        <div class="p-6">
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-xs font-bold text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full">
+              Tela 4 • Diretório
+            </span>
+            <span class="text-xs font-semibold text-slate-500">3.webp</span>
+          </div>
+          <h2 class="text-xl font-bold text-slate-900 mb-2 group-hover:text-emerald-600 transition-colors">
+            Descobrir Estudantes & Propor Troca
+          </h2>
+          <p class="text-sm text-slate-600 mb-6">
+            Pesquisa e filtros de mentores por universidade e cadeira académica, com o fluxo de envio de proposta de troca de competências.
+          </p>
+          <div class="rounded-2xl overflow-hidden border border-slate-100 mb-4 bg-slate-50 relative group-hover:scale-[1.01] transition-transform">
+            <img src="3.webp" alt="Descobrir Estudantes" class="w-full h-56 object-cover object-top"/>
+          </div>
+        </div>
+        <div class="p-6 pt-0 flex gap-3">
+          <a href="descobrir.html" class="flex-1 text-center font-bold text-sm bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl transition-colors shadow-md shadow-emerald-600/20">
+            Abrir 3.webp Clicável
+          </a>
+          <a href="http://localhost:9000/students" target="_blank" class="px-4 py-3 border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-sm rounded-xl transition-colors">
+            Ver Live
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

@@ -1,0 +1,734 @@
+[
+  {
+    "_id": "1",
+    "name": "Edson Mondlane",
+    "email": "demo@meetus.mz",
+    "avatar": "https://images.unsplash.com/photo-1506277886164-e25aa3f4ef7f?w=400&h=400&fit=crop&crop=faces",
+    "bio": "Estudante do 3º ano de Engenharia Informática na UEM. Apaixonado por desenvolvimento frontend com Vue.js e por trocar conhecimentos com colegas.",
+    "institution": "Universidade Eduardo Mondlane",
+    "course": "Engenharia Informática",
+    "year": 3,
+    "city": "Maputo",
+    "availability": "Terças e Quintas (15h - 19h), Sábados de manhã",
+    "reputation": 4.9,
+    "reviews_count": 24,
+    "verified": true,
+    "online": true,
+    "skills": [
+      {
+        "name": "JavaScript & Vue.js",
+        "type": "offer",
+        "level": "Avançado"
+      },
+      {
+        "name": "Git & GitHub",
+        "type": "offer",
+        "level": "Avançado"
+      },
+      {
+        "name": "Design UI/UX no Figma",
+        "type": "seek",
+        "level": "Básico"
+      },
+      {
+        "name": "Inglês para Conversação",
+        "type": "seek",
+        "level": "Intermédio"
+      }
+    ],
+    "interests": [
+      "Tecnologia & Inovação",
+      "Inteligência Artificial",
+      "Empreendedorismo",
+      "Música Moçambicana"
+    ],
+    "password": "$2a$10$bFEm58Ms3jRkwChKTNkozOkIPRgvt/e2cwCsmtt06NEO/lT1nfFQ2",
+    "id": "1",
+    "createdAt": "2026-11-05T03:27:13.205Z",
+    "updatedAt": "2026-11-08T03:56:16.658Z",
+    "role": "student"
+  },
+  {
+    "_id": "2",
+    "name": "Amália Mabjaia",
+    "email": "amalia.mabjaia@uem.mz",
+    "avatar": "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=400&h=400&fit=crop&crop=faces",
+    "bio": "Estudante do 4º ano de Design de Comunicação na UEM. Especialista em design systems no Figma e prototipagem. Quero dominar lógica de front-end!",
+    "institution": "Universidade Eduardo Mondlane",
+    "course": "Design de Comunicação",
+    "year": 4,
+    "city": "Maputo",
+    "availability": "Segundas, Quartas e Sextas à tarde",
+    "reputation": 5,
+    "reviews_count": 38,
+    "verified": true,
+    "online": true,
+    "skills": [
+      {
+        "name": "Design UI/UX no Figma",
+        "type": "offer",
+        "level": "Avançado"
+      },
+      {
+        "name": "Fotografia & Edição",
+        "type": "offer",
+        "level": "Avançado"
+      },
+      {
+        "name": "JavaScript & Vue.js",
+        "type": "seek",
+        "level": "Iniciante"
+      }
+    ],
+    "interests": [
+      "Design UI/UX no Figma",
+      "Educação & Mentoria",
+      "Fotografia & Edição"
+    ],
+    "password": "$2a$10$bFEm58Ms3jRkwChKTNkozOorlfO8MjkUmvBGefNx/IsAMU47EmX8K",
+    "id": "2",
+    "createdAt": "2026-11-05T03:27:13.207Z",
+    "updatedAt": "2026-11-08T03:56:16.659Z",
+    "role": "student"
+  },
+  {
+    "_id": "3",
+    "name": "Carlos Cossa",
+    "email": "carlos.cossa@isctem.ac.mz",
+    "avatar": "https://images.unsplash.com/photo-1522529599102-193c0d76b5b6?w=400&h=400&fit=crop&crop=faces",
+    "bio": "Estudante de Gestão de Empresas no ISCTEM. Prático em modelagem financeira no Excel, dashboards e pitch decks para startups locais.",
+    "institution": "ISCTEM",
+    "course": "Gestão de Empresas",
+    "year": 3,
+    "city": "Maputo",
+    "availability": "Tardes de Terça e Quinta, Fins de semana",
+    "reputation": 4.8,
+    "reviews_count": 19,
+    "verified": true,
+    "online": false,
+    "skills": [
+      {
+        "name": "Excel Avançado & Dashboards",
+        "type": "offer",
+        "level": "Avançado"
+      },
+      {
+        "name": "Contabilidade & Fiscalidade",
+        "type": "offer",
+        "level": "Intermédio"
+      },
+      {
+        "name": "Python para Análise de Dados",
+        "type": "seek",
+        "level": "Iniciante"
+      }
+    ],
+    "interests": [
+      "Empreendedorismo",
+      "Educação & Mentoria",
+      "Desporto Universitário"
+    ],
+    "password": "$2a$10$bFEm58Ms3jRkwChKTNkozOorlfO8MjkUmvBGefNx/IsAMU47EmX8K",
+    "id": "3",
+    "createdAt": "2026-11-05T03:27:13.207Z",
+    "updatedAt": "2026-11-08T03:56:16.659Z",
+    "role": "student"
+  },
+  {
+    "_id": "4",
+    "name": "Lúcia Nhaca",
+    "email": "lucia.nhaca@up.ac.mz",
+    "avatar": "https://images.unsplash.com/photo-1589156280159-27698a70f29e?w=400&h=400&fit=crop&crop=faces",
+    "bio": "Estudante de Ensino de Inglês na UP. Fluente C2. Apoio colegas com pronúncia, conversação fluente e redação de artigos académicos.",
+    "institution": "Universidade Pedagógica",
+    "course": "Ensino de Língua Inglesa",
+    "year": 4,
+    "city": "Maputo",
+    "availability": "Manhãs de Segunda e Quarta, Sábados",
+    "reputation": 4.95,
+    "reviews_count": 42,
+    "verified": true,
+    "online": true,
+    "skills": [
+      {
+        "name": "Inglês para Conversação",
+        "type": "offer",
+        "level": "Avançado"
+      },
+      {
+        "name": "Redação Académica & Teses",
+        "type": "offer",
+        "level": "Avançado"
+      },
+      {
+        "name": "Marketing Digital",
+        "type": "seek",
+        "level": "Iniciante"
+      }
+    ],
+    "interests": [
+      "Leitura & Literatura",
+      "Educação & Mentoria",
+      "Voluntariado Social"
+    ],
+    "password": "$2a$10$bFEm58Ms3jRkwChKTNkozOorlfO8MjkUmvBGefNx/IsAMU47EmX8K",
+    "id": "4",
+    "createdAt": "2026-11-05T03:27:13.208Z",
+    "updatedAt": "2026-11-08T03:56:16.659Z",
+    "role": "student"
+  },
+  {
+    "_id": "5",
+    "name": "Hélder Tembe",
+    "email": "helder.tembe@uem.mz",
+    "avatar": "https://images.unsplash.com/photo-1507152832244-10d45c7eda57?w=400&h=400&fit=crop&crop=faces",
+    "bio": "Estudante de Física e Matemática na UEM. Apaixonado por Cálculo I, II e Álgebra Linear. Quer aprender desenvolvimento web.",
+    "institution": "Universidade Eduardo Mondlane",
+    "course": "Física Aplicada & Matemática",
+    "year": 2,
+    "city": "Maputo",
+    "availability": "Todos os dias a partir das 18h",
+    "reputation": 4.7,
+    "reviews_count": 15,
+    "verified": true,
+    "online": true,
+    "skills": [
+      {
+        "name": "Cálculo I & II",
+        "type": "offer",
+        "level": "Avançado"
+      },
+      {
+        "name": "Álgebra Linear",
+        "type": "offer",
+        "level": "Avançado"
+      },
+      {
+        "name": "JavaScript & Vue.js",
+        "type": "seek",
+        "level": "Iniciante"
+      }
+    ],
+    "interests": [
+      "Tecnologia & Inovação",
+      "Inteligência Artificial",
+      "Leitura & Literatura"
+    ],
+    "password": "$2a$10$bFEm58Ms3jRkwChKTNkozOorlfO8MjkUmvBGefNx/IsAMU47EmX8K",
+    "id": "5",
+    "createdAt": "2026-11-05T03:27:13.210Z",
+    "updatedAt": "2026-11-08T03:56:16.659Z",
+    "role": "student"
+  },
+  {
+    "_id": "6",
+    "name": "Quitéria Bila",
+    "email": "quiteria.bila@unisave.ac.mz",
+    "avatar": "https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?w=400&h=400&fit=crop&crop=faces",
+    "bio": "Estudante na UniSave Gaza. Especialista em redação para comunicação social, fotografia documental e oratória.",
+    "institution": "Universidade Save",
+    "course": "Comunicação Social",
+    "year": 3,
+    "city": "Chongoene",
+    "availability": "Sextas e Fins de semana",
+    "reputation": 4.88,
+    "reviews_count": 21,
+    "verified": true,
+    "online": false,
+    "skills": [
+      {
+        "name": "Fotografia & Edição",
+        "type": "offer",
+        "level": "Avançado"
+      },
+      {
+        "name": "Marketing Digital",
+        "type": "seek",
+        "level": "Iniciante"
+      }
+    ],
+    "interests": [
+      "Fotografia & Edição",
+      "Música Moçambicana",
+      "Voluntariado Social"
+    ],
+    "password": "$2a$10$bFEm58Ms3jRkwChKTNkozOorlfO8MjkUmvBGefNx/IsAMU47EmX8K",
+    "id": "6",
+    "createdAt": "2026-11-05T03:27:13.210Z",
+    "updatedAt": "2026-11-08T03:56:16.659Z",
+    "role": "student"
+  },
+  {
+    "_id": "7",
+    "name": "Inácio Matusse",
+    "email": "inacio.matusse@meetus.mz",
+    "password": "$2a$10$bFEm58Ms3jRkwChKTNkozOorlfO8MjkUmvBGefNx/IsAMU47EmX8K",
+    "avatar": "https://images.unsplash.com/photo-1520451644838-906a72aa7c86?w=400&h=400&fit=crop&crop=faces",
+    "bio": "Estudante de Engenharia Informática na ISCTEM. Empenhado em aprender novas ferramentas e partilhar a minha experiência com colegas.",
+    "institution": "ISCTEM",
+    "course": "Engenharia Informática",
+    "year": 4,
+    "city": "Maputo",
+    "availability": "Tardes e fins de semana",
+    "reputation": 4.3,
+    "reviews_count": 5,
+    "verified": true,
+    "online": false,
+    "skills": [
+      {
+        "name": "JavaScript & Vue.js",
+        "type": "offer",
+        "level": "Avançado"
+      },
+      {
+        "name": "Excel Avançado & Dashboards",
+        "type": "seek",
+        "level": "Intermédio"
+      }
+    ],
+    "interests": [
+      "Tecnologia & Inovação",
+      "Educação & Mentoria",
+      "Empreendedorismo"
+    ],
+    "id": "7",
+    "createdAt": "2026-11-05T03:27:13.211Z",
+    "updatedAt": "2026-11-08T03:56:16.659Z",
+    "role": "student"
+  },
+  {
+    "_id": "8",
+    "name": "Samira Mucavele",
+    "email": "samira.mucavele@meetus.mz",
+    "password": "$2a$10$bFEm58Ms3jRkwChKTNkozOorlfO8MjkUmvBGefNx/IsAMU47EmX8K",
+    "avatar": "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=400&h=400&fit=crop&crop=faces",
+    "bio": "Estudante de Economia na Universidade Eduardo Mondlane. Empenhado em aprender novas ferramentas e partilhar a minha experiência com colegas.",
+    "institution": "Universidade Eduardo Mondlane",
+    "course": "Economia",
+    "year": 1,
+    "city": "Maputo",
+    "availability": "Tardes e fins de semana",
+    "reputation": 4.6,
+    "reviews_count": 23,
+    "verified": true,
+    "online": false,
+    "skills": [
+      {
+        "name": "Python para Análise de Dados",
+        "type": "offer",
+        "level": "Avançado"
+      },
+      {
+        "name": "Cálculo I & II",
+        "type": "seek",
+        "level": "Intermédio"
+      }
+    ],
+    "interests": [
+      "Tecnologia & Inovação",
+      "Educação & Mentoria",
+      "Empreendedorismo"
+    ],
+    "id": "8",
+    "createdAt": "2026-11-05T03:27:13.212Z",
+    "updatedAt": "2026-11-08T03:56:16.659Z",
+    "role": "student"
+  },
+  {
+    "_id": "9",
+    "name": "Nelson Macuácua",
+    "email": "nelson.macuacua@meetus.mz",
+    "password": "$2a$10$bFEm58Ms3jRkwChKTNkozOorlfO8MjkUmvBGefNx/IsAMU47EmX8K",
+    "avatar": "https://images.unsplash.com/photo-1523824921871-d6f1a15151f1?w=400&h=400&fit=crop&crop=faces",
+    "bio": "Estudante de Contabilidade e Finanças na A Politécnica. Empenhado em aprender novas ferramentas e partilhar a minha experiência com colegas.",
+    "institution": "A Politécnica",
+    "course": "Contabilidade e Finanças",
+    "year": 2,
+    "city": "Maputo",
+    "availability": "Tardes e fins de semana",
+    "reputation": 4.3,
+    "reviews_count": 9,
+    "verified": true,
+    "online": false,
+    "skills": [
+      {
+        "name": "Design UI/UX no Figma",
+        "type": "offer",
+        "level": "Avançado"
+      },
+      {
+        "name": "Álgebra Linear",
+        "type": "seek",
+        "level": "Intermédio"
+      }
+    ],
+    "interests": [
+      "Tecnologia & Inovação",
+      "Educação & Mentoria",
+      "Empreendedorismo"
+    ],
+    "id": "9",
+    "createdAt": "2026-11-05T03:27:13.212Z",
+    "updatedAt": "2026-11-08T03:56:16.659Z",
+    "role": "student"
+  },
+  {
+    "_id": "10",
+    "name": "Yara Sitóe",
+    "email": "yara.sitoe@meetus.mz",
+    "password": "$2a$10$bFEm58Ms3jRkwChKTNkozOorlfO8MjkUmvBGefNx/IsAMU47EmX8K",
+    "avatar": "https://images.unsplash.com/photo-1584999734482-0361aecad844?w=400&h=400&fit=crop&crop=faces",
+    "bio": "Estudante de Arquitetura e Planeamento na Universidade Eduardo Mondlane. Empenhado em aprender novas ferramentas e partilhar a minha experiência com colegas.",
+    "institution": "Universidade Eduardo Mondlane",
+    "course": "Arquitetura e Planeamento",
+    "year": 2,
+    "city": "Maputo",
+    "availability": "Tardes e fins de semana",
+    "reputation": 4.4,
+    "reviews_count": 25,
+    "verified": true,
+    "online": true,
+    "skills": [
+      {
+        "name": "Excel Avançado & Dashboards",
+        "type": "offer",
+        "level": "Avançado"
+      },
+      {
+        "name": "Inglês para Conversação",
+        "type": "seek",
+        "level": "Intermédio"
+      }
+    ],
+    "interests": [
+      "Tecnologia & Inovação",
+      "Educação & Mentoria",
+      "Empreendedorismo"
+    ],
+    "id": "10",
+    "createdAt": "2026-11-05T03:27:13.213Z",
+    "updatedAt": "2026-11-08T03:56:16.659Z",
+    "role": "student"
+  },
+  {
+    "_id": "11",
+    "name": "Zacarias Zandamela",
+    "email": "zacarias.zandamela@meetus.mz",
+    "password": "$2a$10$bFEm58Ms3jRkwChKTNkozOorlfO8MjkUmvBGefNx/IsAMU47EmX8K",
+    "avatar": "https://images.unsplash.com/photo-1528892952291-009c663ce843?w=400&h=400&fit=crop&crop=faces",
+    "bio": "Estudante de Medicina Geral na Universidade Eduardo Mondlane. Empenhado em aprender novas ferramentas e partilhar a minha experiência com colegas.",
+    "institution": "Universidade Eduardo Mondlane",
+    "course": "Medicina Geral",
+    "year": 4,
+    "city": "Maputo",
+    "availability": "Tardes e fins de semana",
+    "reputation": 4.9,
+    "reviews_count": 21,
+    "verified": true,
+    "online": true,
+    "skills": [
+      {
+        "name": "Cálculo I & II",
+        "type": "offer",
+        "level": "Avançado"
+      },
+      {
+        "name": "Francês para Relações Internacionais",
+        "type": "seek",
+        "level": "Intermédio"
+      }
+    ],
+    "interests": [
+      "Tecnologia & Inovação",
+      "Educação & Mentoria",
+      "Empreendedorismo"
+    ],
+    "id": "11",
+    "createdAt": "2026-11-05T03:27:13.213Z",
+    "updatedAt": "2026-11-08T03:56:16.659Z",
+    "role": "student"
+  },
+  {
+    "_id": "12",
+    "name": "Belmira Guambe",
+    "email": "belmira.guambe@meetus.mz",
+    "password": "$2a$10$bFEm58Ms3jRkwChKTNkozOorlfO8MjkUmvBGefNx/IsAMU47EmX8K",
+    "avatar": "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=400&h=400&fit=crop&crop=faces",
+    "bio": "Estudante de Direito na ISCTEM. Empenhado em aprender novas ferramentas e partilhar a minha experiência com colegas.",
+    "institution": "ISCTEM",
+    "course": "Direito",
+    "year": 4,
+    "city": "Maputo",
+    "availability": "Tardes e fins de semana",
+    "reputation": 4.4,
+    "reviews_count": 23,
+    "verified": true,
+    "online": true,
+    "skills": [
+      {
+        "name": "Álgebra Linear",
+        "type": "offer",
+        "level": "Avançado"
+      },
+      {
+        "name": "Marketing Digital",
+        "type": "seek",
+        "level": "Intermédio"
+      }
+    ],
+    "interests": [
+      "Tecnologia & Inovação",
+      "Educação & Mentoria",
+      "Empreendedorismo"
+    ],
+    "id": "12",
+    "createdAt": "2026-11-05T03:27:13.213Z",
+    "updatedAt": "2026-11-08T03:56:16.659Z",
+    "role": "student"
+  },
+  {
+    "_id": "13",
+    "name": "Mateus Langa",
+    "email": "mateus.langa@meetus.mz",
+    "password": "$2a$10$bFEm58Ms3jRkwChKTNkozOorlfO8MjkUmvBGefNx/IsAMU47EmX8K",
+    "avatar": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&h=400&fit=crop&crop=faces",
+    "bio": "Estudante de Engenharia Electrotécnica na Universidade Eduardo Mondlane. Empenhado em aprender novas ferramentas e partilhar a minha experiência com colegas.",
+    "institution": "Universidade Eduardo Mondlane",
+    "course": "Engenharia Electrotécnica",
+    "year": 4,
+    "city": "Maputo",
+    "availability": "Tardes e fins de semana",
+    "reputation": 4.3,
+    "reviews_count": 6,
+    "verified": true,
+    "online": true,
+    "skills": [
+      {
+        "name": "Inglês para Conversação",
+        "type": "offer",
+        "level": "Avançado"
+      },
+      {
+        "name": "Direito Constitucional Moçambicano",
+        "type": "seek",
+        "level": "Intermédio"
+      }
+    ],
+    "interests": [
+      "Tecnologia & Inovação",
+      "Educação & Mentoria",
+      "Empreendedorismo"
+    ],
+    "id": "13",
+    "createdAt": "2026-11-05T03:27:13.214Z",
+    "updatedAt": "2026-11-08T03:56:16.659Z",
+    "role": "student"
+  },
+  {
+    "_id": "14",
+    "name": "Tânia Chissano",
+    "email": "tania.chissano@meetus.mz",
+    "password": "$2a$10$bFEm58Ms3jRkwChKTNkozOorlfO8MjkUmvBGefNx/IsAMU47EmX8K",
+    "avatar": "https://images.unsplash.com/photo-1530785602389-07594beb8b73?w=400&h=400&fit=crop&crop=faces",
+    "bio": "Estudante de Ensino de Francês na Universidade Pedagógica. Empenhado em aprender novas ferramentas e partilhar a minha experiência com colegas.",
+    "institution": "Universidade Pedagógica",
+    "course": "Ensino de Francês",
+    "year": 4,
+    "city": "Maputo",
+    "availability": "Tardes e fins de semana",
+    "reputation": 4.8,
+    "reviews_count": 8,
+    "verified": true,
+    "online": true,
+    "skills": [
+      {
+        "name": "Francês para Relações Internacionais",
+        "type": "offer",
+        "level": "Avançado"
+      },
+      {
+        "name": "Contabilidade & Fiscalidade",
+        "type": "seek",
+        "level": "Intermédio"
+      }
+    ],
+    "interests": [
+      "Tecnologia & Inovação",
+      "Educação & Mentoria",
+      "Empreendedorismo"
+    ],
+    "id": "14",
+    "createdAt": "2026-11-05T03:27:13.214Z",
+    "updatedAt": "2026-11-08T03:56:16.659Z",
+    "role": "student"
+  },
+  {
+    "_id": "15",
+    "name": "Félix Sumbane",
+    "email": "felix.sumbane@meetus.mz",
+    "password": "$2a$10$bFEm58Ms3jRkwChKTNkozOorlfO8MjkUmvBGefNx/IsAMU47EmX8K",
+    "avatar": "https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?w=400&h=400&fit=crop&crop=faces",
+    "bio": "Estudante de Agronomia na Universidade Zambeze. Empenhado em aprender novas ferramentas e partilhar a minha experiência com colegas.",
+    "institution": "Universidade Zambeze",
+    "course": "Agronomia",
+    "year": 3,
+    "city": "Beira",
+    "availability": "Tardes e fins de semana",
+    "reputation": 4.9,
+    "reviews_count": 25,
+    "verified": true,
+    "online": true,
+    "skills": [
+      {
+        "name": "Marketing Digital",
+        "type": "offer",
+        "level": "Avançado"
+      },
+      {
+        "name": "Desenvolvimento Web Frontend",
+        "type": "seek",
+        "level": "Intermédio"
+      }
+    ],
+    "interests": [
+      "Tecnologia & Inovação",
+      "Educação & Mentoria",
+      "Empreendedorismo"
+    ],
+    "id": "15",
+    "createdAt": "2026-11-05T03:27:13.215Z",
+    "updatedAt": "2026-11-08T03:56:16.659Z",
+    "role": "student"
+  },
+  {
+    "_id": "16",
+    "name": "Neusa Magaia",
+    "email": "neusa.magaia@meetus.mz",
+    "password": "$2a$10$bFEm58Ms3jRkwChKTNkozOorlfO8MjkUmvBGefNx/IsAMU47EmX8K",
+    "avatar": "https://images.unsplash.com/photo-1561406636-b80293969660?w=400&h=400&fit=crop&crop=faces",
+    "bio": "Estudante de Ciências Biológicas na Universidade Lúrio. Empenhado em aprender novas ferramentas e partilhar a minha experiência com colegas.",
+    "institution": "Universidade Lúrio",
+    "course": "Ciências Biológicas",
+    "year": 2,
+    "city": "Nampula",
+    "availability": "Tardes e fins de semana",
+    "reputation": 4.4,
+    "reviews_count": 28,
+    "verified": true,
+    "online": true,
+    "skills": [
+      {
+        "name": "Direito Constitucional Moçambicano",
+        "type": "offer",
+        "level": "Avançado"
+      },
+      {
+        "name": "Estatística e Probabilidades",
+        "type": "seek",
+        "level": "Intermédio"
+      }
+    ],
+    "interests": [
+      "Tecnologia & Inovação",
+      "Educação & Mentoria",
+      "Empreendedorismo"
+    ],
+    "id": "16",
+    "createdAt": "2026-11-05T03:27:13.215Z",
+    "updatedAt": "2026-11-08T03:56:16.659Z",
+    "role": "student"
+  },
+  {
+    "_id": "17",
+    "name": "Arlindo Muianga",
+    "email": "arlindo.muianga@meetus.mz",
+    "password": "$2a$10$bFEm58Ms3jRkwChKTNkozOorlfO8MjkUmvBGefNx/IsAMU47EmX8K",
+    "avatar": "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=400&h=400&fit=crop&crop=faces",
+    "bio": "Estudante de Engenharia Mecânica na Universidade Eduardo Mondlane. Empenhado em aprender novas ferramentas e partilhar a minha experiência com colegas.",
+    "institution": "Universidade Eduardo Mondlane",
+    "course": "Engenharia Mecânica",
+    "year": 1,
+    "city": "Maputo",
+    "availability": "Tardes e fins de semana",
+    "reputation": 4.4,
+    "reviews_count": 14,
+    "verified": true,
+    "online": true,
+    "skills": [
+      {
+        "name": "Contabilidade & Fiscalidade",
+        "type": "offer",
+        "level": "Avançado"
+      },
+      {
+        "name": "Fotografia & Edição",
+        "type": "seek",
+        "level": "Intermédio"
+      }
+    ],
+    "interests": [
+      "Tecnologia & Inovação",
+      "Educação & Mentoria",
+      "Empreendedorismo"
+    ],
+    "id": "17",
+    "createdAt": "2026-11-05T03:27:13.216Z",
+    "updatedAt": "2026-11-08T03:56:16.659Z",
+    "role": "student"
+  },
+  {
+    "_id": "18",
+    "name": "Graça Ndlovu",
+    "email": "graca.ndlovu@meetus.mz",
+    "password": "$2a$10$bFEm58Ms3jRkwChKTNkozOorlfO8MjkUmvBGefNx/IsAMU47EmX8K",
+    "avatar": "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&h=400&fit=crop&crop=faces",
+    "bio": "Estudante de Gestão de Recursos Humanos na A Politécnica. Empenhado em aprender novas ferramentas e partilhar a minha experiência com colegas.",
+    "institution": "A Politécnica",
+    "course": "Gestão de Recursos Humanos",
+    "year": 2,
+    "city": "Quelimane",
+    "availability": "Tardes e fins de semana",
+    "reputation": 4.3,
+    "reviews_count": 18,
+    "verified": true,
+    "online": true,
+    "skills": [
+      {
+        "name": "Desenvolvimento Web Frontend",
+        "type": "offer",
+        "level": "Avançado"
+      },
+      {
+        "name": "Redação Académica & Teses",
+        "type": "seek",
+        "level": "Intermédio"
+      }
+    ],
+    "interests": [
+      "Tecnologia & Inovação",
+      "Educação & Mentoria",
+      "Empreendedorismo"
+    ],
+    "id": "18",
+    "createdAt": "2026-11-05T03:27:13.216Z",
+    "updatedAt": "2026-11-08T03:56:16.659Z",
+    "role": "student"
+  },
+  {
+    "_id": "admin-001",
+    "name": "Administrador MEET-US",
+    "email": "admin@meetus.mz",
+    "password": "admin1234",
+    "role": "admin",
+    "institution": "Administração Geral MEET-US",
+    "course": "Gestão & Administração de Redes",
+    "year": 5,
+    "city": "Maputo",
+    "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=400&fit=crop&crop=faces",
+    "bio": "Administrador Central do MEET-US. Gestão global de estudantes, universidades, cursos, competências e moderação.",
+    "verified": true,
+    "id": "admin-001",
+    "createdAt": "2026-11-08T03:56:16.740Z",
+    "updatedAt": "2026-11-08T04:07:38.696Z"
+  }
+]

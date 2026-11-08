@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MEET-US — Tela 3: Descobrir Estudantes & Propor Troca (3.webp)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .hotspot {
+      position: absolute;
+      border: 2px dashed #10b981;
+      background: rgba(16, 185, 129, 0.15);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .hotspot:hover {
+      background: rgba(16, 185, 129, 0.35);
+      border-color: #059669;
+      transform: scale(1.01);
+    }
+    .hotspot-tag {
+      background: #059669;
+      color: white;
+      font-size: 11px;
+      font-weight: bold;
+      padding: 3px 8px;
+      border-radius: 4px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+  </style>
+</head>
+<body class="bg-slate-900 text-slate-100 antialiased min-h-screen flex flex-col">
+  <!-- Bar -->
+  <header class="bg-slate-800 border-b border-slate-700 px-6 py-4 flex items-center justify-between sticky top-0 z-50">
+    <div class="flex items-center gap-4">
+      <a href="index.html" class="text-slate-400 hover:text-white font-semibold text-sm flex items-center gap-1">
+        ← Central de Telas
+      </a>
+      <span class="text-slate-500">|</span>
+      <a href="code.html" class="text-slate-400 hover:text-white font-semibold text-sm">
+        Página Principal
+      </a>
+      <span class="text-slate-500">|</span>
+      <span class="font-bold text-white text-sm">Tela 3: Descobrir</span>
+    </div>
+    <div class="flex items-center gap-3">
+      <a href="http://localhost:9000/students" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-4 py-2 rounded-lg shadow transition-all">
+        Abrir Descobrir Estudantes no Navegador
+      </a>
+    </div>
+  </header>
+
+  <!-- Viewer -->
+  <main class="flex-1 max-w-7xl mx-auto p-6 flex flex-col items-center">
+    <div class="text-center mb-6">
+      <h1 class="text-2xl font-bold text-white mb-1">Tela Oficial de Descobrir Estudantes</h1>
+      <p class="text-slate-400 text-sm">Filtros por universidade, lista de parceiros e formulário de troca</p>
+    </div>
+
+    <!-- Image Container with Hotspots -->
+    <div class="relative rounded-2xl overflow-hidden shadow-2xl border border-slate-700 w-full bg-slate-800">
+      <img src="3.webp" alt="Descobrir Estudantes MEET-US" class="w-full h-auto block"/>
+
+      <!-- Hotspot: Barra de Filtros -->
+      <a href="http://localhost:9000/students" target="_blank" class="hotspot" style="top: 10%; left: 20%; width: 75%; height: 8%;">
+        <span class="hotspot-tag">Filtros por Universidade, Cidade & Cadeira</span>
+      </a>
+
+      <!-- Hotspot: Cartão 1 Propor Troca -->
+      <a href="http://localhost:9000/matching" target="_blank" class="hotspot" style="top: 25%; left: 20%; width: 24%; height: 42%;">
+        <span class="hotspot-tag">Propor Troca de Competências</span>
+      </a>
+
+      <!-- Hotspot: Cartão 2 Perfil Estudante -->
+      <a href="http://localhost:9000/students" target="_blank" class="hotspot" style="top: 25%; left: 45%; width: 24%; height: 42%;">
+        <span class="hotspot-tag">Ver Perfil & Competências</span>
+      </a>
+
+      <!-- Hotspot: Cartão 3 Avaliações -->
+      <a href="http://localhost:9000/students" target="_blank" class="hotspot" style="top: 25%; left: 70%; width: 24%; height: 42%;">
+        <span class="hotspot-tag">Avaliações & Disponibilidade</span>
+      </a>
+    </div>
+  </main>
+</body>
+</html>

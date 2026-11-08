@@ -1,0 +1,50 @@
+[
+  {
+    "_id": "1",
+    "requester_id": "1",
+    "provider_id": "2",
+    "skill": "Design UI/UX no Figma",
+    "message": "Construção de Design System no Figma e programação dos componentes em Vue.js",
+    "status": "accepted",
+    "scheduled_at": "2026-11-06T03:27:13.220Z",
+    "id": "1",
+    "createdAt": "2026-11-05T03:27:13.220Z",
+    "updatedAt": "2026-11-05T03:27:13.220Z"
+  },
+  {
+    "_id": "2",
+    "requester_id": "1",
+    "provider_id": "4",
+    "skill": "Inglês para Conversação",
+    "message": "Simulação de entrevista técnica em inglês para vaga de estágio",
+    "status": "running",
+    "scheduled_at": "2026-11-07T03:27:13.221Z",
+    "id": "2",
+    "createdAt": "2026-11-05T03:27:13.221Z",
+    "updatedAt": "2026-11-05T03:27:13.221Z"
+  },
+  {
+    "_id": "3",
+    "requester_id": "1",
+    "provider_id": "3",
+    "skill": "Excel Avançado & Dashboards",
+    "message": "Aprender XLOOKUP e fórmulas dinâmicas para relatórios financeiros",
+    "status": "completed",
+    "scheduled_at": "2026-11-08T03:27:13.221Z",
+    "id": "3",
+    "createdAt": "2026-11-05T03:27:13.221Z",
+    "updatedAt": "2026-11-05T03:27:13.221Z"
+  },
+  {
+    "_id": "4",
+    "requester_id": "1",
+    "provider_id": "5",
+    "skill": "Cálculo I & II",
+    "message": "Resolução conjunta da lista de exercícios de integrais",
+    "status": "pending",
+    "scheduled_at": "2026-11-09T03:27:13.221Z",
+    "id": "4",
+    "createdAt": "2026-11-05T03:27:13.221Z",
+    "updatedAt": "2026-11-05T03:27:13.221Z"
+  }
+]
