@@ -8,8 +8,15 @@ const USE_FAKE = (import.meta.env.VITE_USE_FAKE_API || import.meta.env.USE_FAKE_
 const getSocketUrl = () => {
   if (import.meta.env.VITE_SOCKET_URL) return import.meta.env.VITE_SOCKET_URL;
   if (import.meta.env.SOCKET_URL) return import.meta.env.SOCKET_URL;
-  if (typeof window !== 'undefined' && window.location.hostname && window.location.hostname !== 'localhost') {
-    return `http://${window.location.hostname}:3000`;
+  if (typeof window !== 'undefined') {
+    // Se acedido via ngrok, domínio de produção ou na porta do servidor unificado
+    if (window.location.hostname.includes('ngrok') || window.location.port === '3000' || !window.location.port) {
+      return window.location.origin;
+    }
+    // Se acedido via IP na rede local (dev server na porta 9000)
+    if (window.location.hostname && window.location.hostname !== 'localhost') {
+      return `http://${window.location.hostname}:3000`;
+    }
   }
   return 'http://localhost:3000';
 };

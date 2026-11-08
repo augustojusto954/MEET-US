@@ -5,8 +5,15 @@ import axios from 'axios'
 const getApiUrl = () => {
   if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL;
   if (import.meta.env.API_URL) return import.meta.env.API_URL;
-  if (typeof window !== 'undefined' && window.location.hostname && window.location.hostname !== 'localhost') {
-    return `http://${window.location.hostname}:3000/api`;
+  if (typeof window !== 'undefined') {
+    // Se acedido via ngrok, domínio de produção ou na porta do servidor unificado
+    if (window.location.hostname.includes('ngrok') || window.location.port === '3000' || !window.location.port) {
+      return `${window.location.origin}/api`;
+    }
+    // Se acedido via IP na rede local (dev server na porta 9000)
+    if (window.location.hostname && window.location.hostname !== 'localhost') {
+      return `http://${window.location.hostname}:3000/api`;
+    }
   }
   return 'http://localhost:3000/api';
 };
