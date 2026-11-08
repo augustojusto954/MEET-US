@@ -2,6 +2,7 @@
 import { defineStore } from 'pinia'
 import { fakeAuth } from 'src/services/fake-api'
 import { api } from 'src/boot/axios'
+import { socket } from 'src/boot/socket'
 import { saveDatabase } from 'src/db'
 import { useMeetUsStore } from 'src/stores/meetus'
 
@@ -43,6 +44,9 @@ export const useAuthStore = defineStore('auth', {
           const meetusStore = useMeetUsStore()
           meetusStore.setCurrentUser(this.user)
         } catch (_) {}
+        if (this.userId && socket) {
+          socket.emit('user:join', this.userId)
+        }
         return res.data
       } finally { this.loading = false }
     },
@@ -58,6 +62,9 @@ export const useAuthStore = defineStore('auth', {
           const meetusStore = useMeetUsStore()
           meetusStore.setCurrentUser(this.user)
         } catch (_) {}
+        if (this.userId && socket) {
+          socket.emit('user:join', this.userId)
+        }
         return res.data
       } finally { this.loading = false }
     },
@@ -78,6 +85,9 @@ export const useAuthStore = defineStore('auth', {
     },
 
     logout() {
+      if (this.userId && socket) {
+        socket.emit('user:leave', this.userId)
+      }
       this.user = null
       this.token = null
       this._persist()

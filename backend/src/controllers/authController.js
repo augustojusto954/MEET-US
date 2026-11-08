@@ -13,7 +13,7 @@ function createToken(user) {
 
 exports.register = async (req, res, next) => {
   try {
-    const { name, email, password, institution, course, year } = req.body;
+    const { name, email, password, institution, course, year, avatar: customAvatar } = req.body;
     if (!name || !email || !password) {
       return res.status(400).json({ message: 'Preenche todos os campos obrigatórios.' });
     }
@@ -29,6 +29,15 @@ exports.register = async (req, res, next) => {
       hashedPassword = await bcrypt.hash(password, salt);
     }
 
+    // Gerar avatar personalizado único para cada estudante (caso não envie foto própria)
+    let finalAvatar = (customAvatar && customAvatar.trim()) ? customAvatar.trim() : '';
+    if (!finalAvatar) {
+      const bgColors = ['059669', '2563EB', '7C3AED', 'D97706', 'DC2626', '0D9488', '4F46E5', '0284C7', 'E11D48', '0891B2'];
+      const charSum = name.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
+      const bg = bgColors[Math.abs(charSum) % bgColors.length];
+      finalAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=${bg}&color=ffffff&size=256&bold=true`;
+    }
+
     const user = await User.create({
       name,
       email,
@@ -37,10 +46,11 @@ exports.register = async (req, res, next) => {
       institution: institution || '',
       course: course || '',
       year: year || 1,
-      avatar: 'https://images.unsplash.com/photo-1506277886164-e25aa3f4ef7f?w=400&h=400&fit=crop&crop=faces',
+      avatar: finalAvatar,
       bio: '',
       city: 'Maputo',
       availability: 'Flexível',
+      online: false,
       skills: [],
       interests: []
     });

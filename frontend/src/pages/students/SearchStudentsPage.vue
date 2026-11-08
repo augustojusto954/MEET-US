@@ -108,10 +108,20 @@
         <q-card flat class="student-card hover-lift full-height column justify-between">
           <div>
             <!-- Foto / Cabeçalho -->
-            <div class="student-card-header">
+            <div class="student-card-header relative-position">
               <div class="student-img-container">
-                <img :src="student.avatar" class="student-avatar-img" />
+                <img :src="student.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(student.name)}&background=059669&color=fff&size=256`" class="student-avatar-img" />
               </div>
+              <!-- Badge Online Real -->
+              <q-badge
+                v-if="student.online"
+                color="positive"
+                class="q-px-sm q-py-xs text-weight-bold"
+                rounded
+                style="position: absolute; top: 10px; left: 10px; font-size: 11px; z-index: 2; box-shadow: 0 2px 8px rgba(0,0,0,0.3);"
+              >
+                ● Online
+              </q-badge>
               <div class="match-badge">
                 {{ student.compatibilityScore || 85 }}%
                 <div style="font-size: 8px; font-weight: 500;">compatível</div>
@@ -176,80 +186,85 @@
             </div>
           </div>
 
-          <!-- Ações do Cartão -->
-          <div class="q-pa-md q-pt-none row q-gutter-xs">
-            <q-btn
-              flat
-              dense
-              color="grey-8"
-              label="Ver Perfil"
-              class="col"
-              no-caps
-              style="border-radius: 8px;"
-              :to="{ name: 'profile', query: { id: student.id } }"
-            />
+          <!-- Ações do Cartão Responsivas (2 Linhas Limpas) -->
+          <div class="q-pa-md q-pt-none">
+            <div class="row q-gutter-xs q-mb-xs">
+              <q-btn
+                flat
+                dense
+                color="grey-8"
+                label="Ver Perfil"
+                class="col"
+                no-caps
+                style="border-radius: 8px; font-weight: 600;"
+                :to="{ name: 'profile', query: { id: student.id } }"
+              />
 
-            <q-btn
-              v-if="!getConnectionStatus(student.id)"
-              outline
-              dense
-              color="primary"
-              icon="person_add"
-              label="Conectar"
-              class="col"
-              no-caps
-              style="border-radius: 8px;"
-              @click="handleConnect(student.id)"
-            />
-            <q-btn
-              v-else-if="getConnectionStatus(student.id) === 'sent'"
-              flat
-              dense
-              color="grey-7"
-              icon="hourglass_empty"
-              label="Enviado"
-              class="col"
-              no-caps
-              style="border-radius: 8px;"
-            />
-            <q-btn
-              v-else-if="getConnectionStatus(student.id) === 'connected'"
-              unelevated
-              dense
-              color="positive"
-              icon="check"
-              label="Conectado"
-              class="col"
-              no-caps
-              style="border-radius: 8px;"
-            />
+              <q-btn
+                v-if="!getConnectionStatus(student.id)"
+                outline
+                dense
+                color="primary"
+                icon="person_add"
+                label="Conectar"
+                class="col"
+                no-caps
+                style="border-radius: 8px; font-weight: 600;"
+                @click="handleConnect(student.id)"
+              />
+              <q-btn
+                v-else-if="getConnectionStatus(student.id) === 'sent'"
+                flat
+                dense
+                color="grey-7"
+                icon="hourglass_empty"
+                label="Enviado"
+                class="col"
+                no-caps
+                style="border-radius: 8px;"
+              />
+              <q-btn
+                v-else-if="getConnectionStatus(student.id) === 'connected'"
+                unelevated
+                dense
+                color="positive"
+                icon="check"
+                label="Conectado"
+                class="col"
+                no-caps
+                style="border-radius: 8px; font-weight: 600;"
+              />
+            </div>
 
-            <q-btn
-              unelevated
-              dense
-              color="positive"
-              icon="call"
-              label="Ligar"
-              no-caps
-              class="q-px-sm text-weight-bold"
-              style="border-radius: 8px;"
-              :to="{ name: 'calls', query: { partnerId: student.id, partner: student.name } }"
-            >
-              <q-tooltip>Iniciar Chamada com {{ student.name }}</q-tooltip>
-            </q-btn>
+            <div class="row q-gutter-xs">
+              <q-btn
+                unelevated
+                dense
+                color="positive"
+                icon="call"
+                label="Ligar"
+                no-caps
+                class="col text-weight-bold"
+                style="border-radius: 8px;"
+                :to="{ name: 'calls', query: { partnerId: student.id, partner: student.name } }"
+              >
+                <q-tooltip>Iniciar Chamada com {{ student.name }}</q-tooltip>
+              </q-btn>
 
-            <q-btn
-              unelevated
-              dense
-              color="primary"
-              icon="swap_horiz"
-              no-caps
-              class="q-px-sm"
-              style="border-radius: 8px;"
-              :to="{ name: 'exchange-create', query: { partnerId: student.id } }"
-            >
-              <q-tooltip>Propor Troca Direta</q-tooltip>
-            </q-btn>
+              <q-btn
+                unelevated
+                dense
+                color="primary"
+                icon="swap_horiz"
+                label="Propor Troca"
+                no-caps
+                class="col text-weight-bold"
+                style="border-radius: 8px;"
+                :to="{ name: 'exchange-create', query: { partnerId: student.id } }"
+              >
+                <q-tooltip>Propor Troca Direta</q-tooltip>
+              </q-btn>
+            </div>
           </div>
         </q-card>
       </div>

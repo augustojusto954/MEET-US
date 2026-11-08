@@ -45,8 +45,15 @@
       <div class="q-pa-lg">
         <div class="row items-end justify-between" style="margin-top: -65px;">
           <div class="row items-end">
-            <q-avatar size="100px" class="shadow-3 border-white bg-white" style="border: 4px solid #FFFFFF;">
-              <img :src="profileUser.avatar" />
+            <q-avatar size="100px" class="shadow-3 border-white bg-white relative-position" style="border: 4px solid #FFFFFF;">
+              <img :src="profileUser.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(profileUser.name || 'Estudante')}&background=059669&color=fff&size=256`" />
+              <q-badge
+                v-if="profileUser.online"
+                color="positive"
+                floating
+                rounded
+                style="top: 8px; right: 8px; width: 14px; height: 14px; border: 2px solid white;"
+              />
             </q-avatar>
             <div class="q-ml-md q-mb-xs">
               <div class="row items-center">
@@ -54,6 +61,14 @@
                 <q-icon v-if="profileUser.verified" name="verified" color="primary" size="22px" class="q-ml-xs">
                   <q-tooltip>Estudante Verificado</q-tooltip>
                 </q-icon>
+                <q-badge
+                  :color="profileUser.online ? 'positive' : 'grey-5'"
+                  rounded
+                  class="q-ml-sm q-px-xs text-weight-bold"
+                  style="font-size: 10px;"
+                >
+                  {{ profileUser.online ? 'Online agora' : 'Offline' }}
+                </q-badge>
               </div>
               <div class="text-subtitle2 text-grey-8">{{ profileUser.course }} ({{ profileUser.year }}º Ano)</div>
               <div class="text-caption text-grey-6">{{ profileUser.institution }} • {{ profileUser.city }}</div>

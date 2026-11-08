@@ -41,7 +41,7 @@ export function formatUserForStore(u) {
     id,
     name: u.name || 'Estudante',
     email: u.email || '',
-    avatar: u.avatar || 'https://images.unsplash.com/photo-1506277886164-e25aa3f4ef7f?w=400&h=400&fit=crop&crop=faces',
+    avatar: u.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(u.name || 'Estudante')}&background=059669&color=fff&size=256&bold=true`,
     cover: u.cover || 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1200&h=400&fit=crop',
     bio: u.bio || `Estudante universitário em Moçambique na área de ${u.course || 'Ensino Superior'}.`,
     institution: u.institution || 'Universidade Eduardo Mondlane',
@@ -52,7 +52,7 @@ export function formatUserForStore(u) {
     reputation: u.reputation || 5.0,
     reviews_count: u.reviews_count || 0,
     verified: u.verified !== undefined ? !!u.verified : true,
-    online: true,
+    online: Boolean(u.online),
     compatibilityScore: 95,
     skillsTeach: (u.skillsTeach && u.skillsTeach.length > 0) ? u.skillsTeach : (skillsTeach.length > 0 ? skillsTeach : [
       { id: `st-${id}-0`, name: u.course || 'Metodologia de Estudo', level: 'Intermédio', category: 'Académico' }
@@ -530,7 +530,7 @@ export const useMeetUsStore = defineStore('meetus', {
             id: String(u._id || u.id),
             name: u.name,
             email: u.email,
-            avatar: u.avatar || 'https://images.unsplash.com/photo-1506277886164-e25aa3f4ef7f?w=400&h=400&fit=crop&crop=faces',
+            avatar: u.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(u.name || 'Estudante')}&background=059669&color=fff&size=256&bold=true`,
             cover: u.cover || 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1200&h=400&fit=crop',
             bio: u.bio || 'Estudante universitário em Moçambique.',
             institution: u.institution || 'Universidade Eduardo Mondlane',
@@ -589,7 +589,7 @@ export const useMeetUsStore = defineStore('meetus', {
             author: {
               id: p.author_id,
               name: p.author_name,
-              avatar: p.author_avatar || 'https://images.unsplash.com/photo-1506277886164-e25aa3f4ef7f?w=400&h=400&fit=crop&crop=faces',
+              avatar: p.author_avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(p.author_name || 'Autor')}&background=059669&color=fff&size=256&bold=true`,
               institution: p.author_institution,
               course: p.author_course
             },
@@ -604,7 +604,7 @@ export const useMeetUsStore = defineStore('meetus', {
             comments: (p.comments || []).map(c => ({
               id: String(c._id || `c-${Math.random()}`),
               authorName: c.author_name,
-              authorAvatar: c.author_avatar || 'https://images.unsplash.com/photo-1506277886164-e25aa3f4ef7f?w=400&h=400&fit=crop&crop=faces',
+              authorAvatar: c.author_avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(c.author_name || 'Comentador')}&background=059669&color=fff&size=256&bold=true`,
               text: c.text,
               createdAt: new Date(c.createdAt || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
             }))
@@ -613,6 +613,28 @@ export const useMeetUsStore = defineStore('meetus', {
         }
       } catch (err) {
         console.warn('[Sync] Could not fetch live posts from MongoDB:', err.message)
+      }
+    },
+
+    updateUserPresence(userId, isOnline) {
+      if (!userId) return
+      const sId = String(userId)
+      const student = this.students.find(s => String(s.id) === sId || String(s._id) === sId)
+      if (student) {
+        student.online = Boolean(isOnline)
+      }
+      if (this.currentUser && (String(this.currentUser.id) === sId || String(this.currentUser._id) === sId)) {
+        this.currentUser.online = Boolean(isOnline)
+      }
+    },
+
+    setOnlineUsers(onlineUserIds = []) {
+      const set = new Set(onlineUserIds.map(id => String(id)))
+      this.students.forEach(s => {
+        s.online = set.has(String(s.id || s._id))
+      })
+      if (this.currentUser) {
+        this.currentUser.online = set.has(String(this.currentUser.id || this.currentUser._id))
       }
     }
   }

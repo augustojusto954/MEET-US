@@ -18,7 +18,7 @@
         </nav>
 
         <!-- Action Buttons -->
-        <div class="row items-center q-gutter-sm">
+        <div class="row items-center q-gutter-xs q-gutter-sm-sm">
           <q-btn
             flat
             no-caps
@@ -32,10 +32,68 @@
             color="primary"
             label="Cria conta"
             :to="{ name: 'register' }"
-            class="text-weight-bold btn-signup shadow-2"
+            class="text-weight-bold btn-signup shadow-2 gt-xs"
+          />
+          <!-- Mobile Hamburger Toggle -->
+          <q-btn
+            flat
+            round
+            dense
+            icon="menu"
+            color="grey-8"
+            class="lt-md q-ml-xs"
+            @click="mobileNavOpen = true"
           />
         </div>
       </div>
+
+      <!-- Mobile Navigation Drawer / Dialog -->
+      <q-dialog v-model="mobileNavOpen" position="top">
+        <q-card class="full-width q-pa-md shadow-5" style="border-radius: 0 0 16px 16px;">
+          <div class="row items-center justify-between q-mb-sm">
+            <div class="text-weight-bolder text-h6" style="color: #059669;">MEET-US</div>
+            <q-btn flat round dense icon="close" v-close-popup />
+          </div>
+          <q-list separator>
+            <q-item clickable v-close-popup href="#como-funciona">
+              <q-item-section avatar><q-icon name="help_outline" color="primary" /></q-item-section>
+              <q-item-section>Como funciona</q-item-section>
+            </q-item>
+            <q-item clickable v-close-popup href="#competencias">
+              <q-item-section avatar><q-icon name="stars" color="primary" /></q-item-section>
+              <q-item-section>Competências</q-item-section>
+            </q-item>
+            <q-item clickable v-close-popup href="#comunidade">
+              <q-item-section avatar><q-icon name="groups" color="primary" /></q-item-section>
+              <q-item-section>Comunidade</q-item-section>
+            </q-item>
+            <q-item clickable v-close-popup href="#sobre">
+              <q-item-section avatar><q-icon name="info" color="primary" /></q-item-section>
+              <q-item-section>Sobre</q-item-section>
+            </q-item>
+          </q-list>
+          <div class="row q-gutter-sm q-mt-md">
+            <q-btn
+              outline
+              color="primary"
+              label="Entrar"
+              :to="{ name: 'login' }"
+              class="col text-weight-bold"
+              no-caps
+              v-close-popup
+            />
+            <q-btn
+              unelevated
+              color="primary"
+              label="Cria Conta"
+              :to="{ name: 'register' }"
+              class="col text-weight-bold"
+              no-caps
+              v-close-popup
+            />
+          </div>
+        </q-card>
+      </q-dialog>
     </header>
 
     <!-- Main Content -->
@@ -306,6 +364,10 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
+
+const mobileNavOpen = ref(false)
+
 const popularSkills = [
   'Design de Interfaces',
   'Programação',

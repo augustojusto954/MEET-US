@@ -7,9 +7,13 @@
       </div>
     </div>
 
-    <q-card flat style="height: calc(100vh - 190px); min-height: 520px; border-radius: 20px; overflow: hidden;" class="row no-wrap">
+    <q-card flat class="chat-main-card row no-wrap" style="border-radius: 20px; overflow: hidden;">
       <!-- Coluna da Esquerda: Lista de Conversas -->
-      <div class="col-12 col-md-4 border-right column bg-white" style="border-right: 1px solid #E2E8F0;">
+      <div
+        v-show="$q.screen.gt.sm || !selectedConversation"
+        class="col-12 col-md-4 border-right column bg-white"
+        style="border-right: 1px solid #E2E8F0;"
+      >
         <div class="q-pa-md border-bottom" style="background: #F8FAFC; border-bottom: 1px solid #E2E8F0;">
           <q-input
             v-model="searchConv"
@@ -39,7 +43,7 @@
             >
               <q-item-section avatar>
                 <q-avatar size="48px" class="relative-position">
-                  <img :src="c.avatar" />
+                  <img :src="c.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(c.name)}&background=059669&color=fff&size=256`" />
                   <q-badge
                     v-if="c.online"
                     color="positive"
@@ -69,18 +73,34 @@
       </div>
 
       <!-- Coluna Central: Janela da Conversa Ativa -->
-      <div v-if="selectedConversation" class="col column bg-app">
+      <div
+        v-if="selectedConversation"
+        v-show="$q.screen.gt.sm || selectedConversation"
+        class="col-12 col-md-8 col column bg-app"
+      >
         <!-- Topo da Conversa com Controles -->
-        <div class="row items-center justify-between q-pa-md bg-white border-bottom" style="border-bottom: 1px solid #E2E8F0;">
+        <div class="row items-center justify-between q-pa-sm q-pa-md-md bg-white border-bottom" style="border-bottom: 1px solid #E2E8F0;">
           <div class="row items-center">
+            <!-- Botão Voltar para Mobile -->
+            <q-btn
+              flat
+              round
+              dense
+              icon="arrow_back"
+              color="grey-8"
+              class="lt-md q-mr-xs"
+              @click="selectedConversation = null"
+            />
             <q-avatar size="40px" class="q-mr-sm">
-              <img :src="selectedConversation.avatar" />
+              <img :src="selectedConversation.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(selectedConversation.name)}&background=059669&color=fff&size=256`" />
             </q-avatar>
             <div>
               <div class="text-subtitle2 text-weight-bold text-dark">{{ selectedConversation.name }}</div>
               <div class="text-caption text-positive row items-center">
-                <q-badge color="positive" rounded class="q-mr-xs" />
-                {{ selectedConversation.online ? 'Online' : 'Offline' }}
+                <q-badge :color="selectedConversation.online ? 'positive' : 'grey-5'" rounded class="q-mr-xs" />
+                <span :class="selectedConversation.online ? 'text-positive' : 'text-grey-6'">
+                  {{ selectedConversation.online ? 'Online' : 'Offline' }}
+                </span>
               </div>
             </div>
           </div>
@@ -105,6 +125,7 @@
               dense
               color="grey-7"
               icon="info"
+              class="gt-sm"
               @click="showInfoDrawer = !showInfoDrawer"
             >
               <q-tooltip>Detalhes do Contacto & Troca</q-tooltip>
@@ -142,7 +163,7 @@
         </div>
 
         <!-- Mensagens em Scroll -->
-        <q-scroll-area class="col q-pa-md">
+        <q-scroll-area class="col q-pa-sm q-pa-md-md">
           <div class="column q-gutter-sm">
             <div
               v-for="msg in selectedConversation.messages"
@@ -151,11 +172,11 @@
               :class="msg.sender === 'me' ? 'justify-end' : 'justify-start'"
             >
               <div
-                class="q-pa-md shadow-1"
+                class="q-pa-sm q-pa-md-md shadow-1 chat-bubble"
                 :class="msg.sender === 'me' ? 'bg-primary text-white' : 'bg-white text-dark'"
-                style="max-width: 65%; border-radius: 12px; border: 1px solid #E2E8F0;"
+                style="border-radius: 12px; border: 1px solid #E2E8F0;"
               >
-                <div class="text-body2">{{ msg.text }}</div>
+                <div class="text-body2" style="word-break: break-word;">{{ msg.text }}</div>
                 <div
                   class="text-caption text-right q-mt-xs"
                   :class="msg.sender === 'me' ? 'text-emerald-100' : 'text-grey-6'"
@@ -169,8 +190,8 @@
         </q-scroll-area>
 
         <!-- Input de Envio de Mensagem -->
-        <div class="q-pa-md bg-white" style="border-top: 1px solid #E2E8F0;">
-          <div class="row items-center q-gutter-sm">
+        <div class="q-pa-sm q-pa-md-md bg-white" style="border-top: 1px solid #E2E8F0;">
+          <div class="row items-center q-gutter-xs q-gutter-sm-sm">
             <q-btn flat round dense icon="attach_file" color="grey-7" @click="notify('Anexo adicionado.')" />
             <q-input
               v-model="inputMessage"
@@ -192,15 +213,25 @@
         </div>
       </div>
 
+      <!-- Estado Vazio para Desktop se nenhuma conversa estiver aberta -->
+      <div
+        v-if="!selectedConversation && $q.screen.gt.sm"
+        class="col column items-center justify-center bg-white text-center q-pa-lg text-grey-6"
+      >
+        <q-icon name="chat" size="56px" color="grey-4" class="q-mb-md" />
+        <div class="text-h6 text-weight-bold">Nenhuma conversa selecionada</div>
+        <div class="text-body2">Escolhe um estudante na lista para iniciar a troca de mensagens.</div>
+      </div>
+
       <!-- Coluna da Direita: Drawer de Informações do Contacto -->
       <div
-        v-if="showInfoDrawer && selectedConversation"
+        v-if="showInfoDrawer && selectedConversation && $q.screen.gt.sm"
         class="col-12 col-md-3 border-left bg-white q-pa-md"
         style="border-left: 1px solid #E2E8F0;"
       >
         <div class="text-center q-mb-md">
           <q-avatar size="72px" class="shadow-2 q-mb-sm">
-            <img :src="selectedConversation.avatar" />
+            <img :src="selectedConversation.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(selectedConversation.name)}&background=059669&color=fff&size=256`" />
           </q-avatar>
           <div class="text-h6 text-weight-bolder text-dark">{{ selectedConversation.name }}</div>
           <div class="text-caption text-grey-7">{{ selectedConversation.course }}</div>
@@ -251,7 +282,8 @@ const searchConv = ref('')
 const inputMessage = ref('')
 const showInfoDrawer = ref(false)
 
-const selectedConversation = ref(store.conversations[0])
+// No ecrã desktop abre a primeira conversa; em ecrã mobile começa na lista
+const selectedConversation = ref($q.screen.gt.sm ? store.conversations[0] : null)
 
 const filteredConversations = computed(() => {
   if (!searchConv.value.trim()) return store.conversations
@@ -271,6 +303,22 @@ function notify(msg) {
 </script>
 
 <style scoped>
+.chat-main-card {
+  height: calc(100vh - 180px);
+  min-height: 480px;
+}
+.chat-bubble {
+  max-width: 65%;
+}
+@media (max-width: 768px) {
+  .chat-main-card {
+    height: calc(100vh - 130px);
+    min-height: 420px;
+  }
+  .chat-bubble {
+    max-width: 85%;
+  }
+}
 .border-right {
   border-right: 1px solid #EAE8FF;
 }

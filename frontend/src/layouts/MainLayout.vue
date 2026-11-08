@@ -38,7 +38,20 @@
         <q-space />
 
         <!-- Ações do Header -->
-        <div class="row items-center q-gutter-sm">
+        <div class="row items-center q-gutter-xs q-gutter-sm-sm">
+          <!-- Botão Pesquisa Mobile -->
+          <q-btn
+            flat
+            round
+            dense
+            icon="search"
+            color="grey-8"
+            class="lt-md"
+            @click="showSearchDialog = true"
+          >
+            <q-tooltip>Pesquisar</q-tooltip>
+          </q-btn>
+
           <!-- Notificações -->
           <q-btn flat round dense icon="notifications_none" color="grey-8" size="md" :to="{ name: 'notifications' }">
             <q-badge
@@ -52,16 +65,16 @@
           </q-btn>
 
           <!-- Avatar do Utilizador Autenticado -->
-          <q-btn flat round dense class="q-ml-sm">
+          <q-btn flat round dense class="q-ml-xs">
             <q-avatar size="36px">
-              <img :src="activeUser?.avatar || 'https://images.unsplash.com/photo-1506277886164-e25aa3f4ef7f?w=400&h=400&fit=crop&crop=faces'" />
+              <img :src="currentAvatar" />
             </q-avatar>
 
             <q-menu anchor="bottom end" self="top end" class="shadow-4" style="min-width: 220px; border-radius: 12px;">
               <q-item class="q-py-md" style="background: #F8FAFC;">
                 <q-item-section avatar>
                   <q-avatar size="40px">
-                    <img :src="activeUser?.avatar || 'https://images.unsplash.com/photo-1506277886164-e25aa3f4ef7f?w=400&h=400&fit=crop&crop=faces'" />
+                    <img :src="currentAvatar" />
                   </q-avatar>
                 </q-item-section>
                 <q-item-section>
@@ -112,7 +125,8 @@
       v-model="leftDrawerOpen"
       show-if-above
       bordered
-      :width="240"
+      :width="250"
+      :breakpoint="1023"
       class="meetus-sidebar column justify-between"
     >
       <div>
@@ -140,6 +154,7 @@
             :to="{ name: item.to }"
             class="sidebar-nav-item"
             active-class="sidebar-nav-active"
+            @click="onNavClick"
           >
             <q-item-section avatar class="nav-avatar">
               <q-icon :name="item.icon" size="20px" />
@@ -151,9 +166,9 @@
 
       <!-- Rodapé da Sidebar: Perfil do Estudante Autenticado -->
       <div class="q-pa-md" style="border-top: 1px solid #F1F5F9;">
-        <div class="row items-center cursor-pointer" @click="$router.push({ name: 'profile' })" title="Ver o meu perfil">
+        <div class="row items-center cursor-pointer" @click="$router.push({ name: 'profile' }); onNavClick()" title="Ver o meu perfil">
           <q-avatar size="36px" class="q-mr-sm shadow-1">
-            <img :src="activeUser?.avatar || 'https://images.unsplash.com/photo-1506277886164-e25aa3f4ef7f?w=400&h=400&fit=crop&crop=faces'" />
+            <img :src="currentAvatar" />
           </q-avatar>
           <div style="line-height: 1.25;" class="ellipsis col">
             <div class="text-caption text-weight-bold text-dark ellipsis">{{ activeUser?.name || 'Estudante' }}</div>
@@ -176,7 +191,7 @@
       <q-card class="q-pa-lg text-center shadow-10" style="min-width: 320px; max-width: 400px; border-radius: 20px;">
         <div class="column items-center">
           <q-avatar size="88px" class="q-mb-md shadow-3 relative-position">
-            <img :src="callStore.incomingCall?.callerAvatar || 'https://images.unsplash.com/photo-1506277886164-e25aa3f4ef7f?w=400&h=400&fit=crop&crop=faces'" />
+            <img :src="incomingCallAvatar" />
             <q-badge color="positive" floating rounded class="q-pa-xs">
               <q-icon name="phone_in_talk" color="white" size="14px" />
             </q-badge>
@@ -227,6 +242,7 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import { useQuasar } from 'quasar'
 import { useMeetUsStore } from 'src/stores/meetus'
 import { useAuthStore } from 'src/stores/auth'
 import { useCallStore } from 'src/stores/call'
@@ -234,11 +250,34 @@ import { socket } from 'src/boot/socket'
 import GlobalSearchDialog from 'src/components/common/GlobalSearchDialog.vue'
 
 const router = useRouter()
+const $q = useQuasar()
 const store = useMeetUsStore()
 const auth = useAuthStore()
 const callStore = useCallStore()
 
 const showIncomingCallDialog = ref(false)
+
+function onNavClick() {
+  if ($q.screen.lt.md) {
+    leftDrawerOpen.value = false
+  }
+}
+
+const currentAvatar = computed(() => {
+  if (activeUser.value?.avatar && activeUser.value.avatar.trim()) {
+    return activeUser.value.avatar
+  }
+  const name = activeUser.value?.name || 'Estudante'
+  return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=059669&color=ffffff&size=256&bold=true`
+})
+
+const incomingCallAvatar = computed(() => {
+  if (callStore.incomingCall?.callerAvatar && callStore.incomingCall.callerAvatar.trim()) {
+    return callStore.incomingCall.callerAvatar
+  }
+  const name = callStore.incomingCall?.callerName || 'Colega MEET-US'
+  return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=059669&color=ffffff&size=256&bold=true`
+})
 
 function handleIncomingCall(data) {
   // Ignorar chamadas feitas pelo próprio utilizador

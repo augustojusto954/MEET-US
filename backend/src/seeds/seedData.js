@@ -64,7 +64,7 @@ const MOZ_STUDENTS_SEED = [
     reputation: 4.9,
     reviews_count: 24,
     verified: true,
-    online: true,
+    online: false,
     skills: [
       { name: 'JavaScript & Vue.js', type: 'offer', level: 'Avançado' },
       { name: 'Git & GitHub', type: 'offer', level: 'Avançado' },
@@ -87,7 +87,7 @@ const MOZ_STUDENTS_SEED = [
     reputation: 5.0,
     reviews_count: 38,
     verified: true,
-    online: true,
+    online: false,
     skills: [
       { name: 'Design UI/UX no Figma', type: 'offer', level: 'Avançado' },
       { name: 'Fotografia & Edição', type: 'offer', level: 'Avançado' },
@@ -131,7 +131,7 @@ const MOZ_STUDENTS_SEED = [
     reputation: 4.95,
     reviews_count: 42,
     verified: true,
-    online: true,
+    online: false,
     skills: [
       { name: 'Inglês para Conversação', type: 'offer', level: 'Avançado' },
       { name: 'Redação Académica & Teses', type: 'offer', level: 'Avançado' },
@@ -153,7 +153,7 @@ const MOZ_STUDENTS_SEED = [
     reputation: 4.7,
     reviews_count: 15,
     verified: true,
-    online: true,
+    online: false,
     skills: [
       { name: 'Cálculo I & II', type: 'offer', level: 'Avançado' },
       { name: 'Álgebra Linear', type: 'offer', level: 'Avançado' },
@@ -271,7 +271,7 @@ async function seedDatabase(force = false) {
       reputation: +(Math.random() * 0.8 + 4.2).toFixed(1),
       reviews_count: Math.floor(Math.random() * 25) + 5,
       verified: true,
-      online: Math.random() > 0.4,
+      online: false,
       skills: [
         { name: SKILLS_POOL[i % SKILLS_POOL.length], type: 'offer', level: 'Avançado' },
         { name: SKILLS_POOL[(i + 3) % SKILLS_POOL.length], type: 'seek', level: 'Intermédio' }

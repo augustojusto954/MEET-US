@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema({
   reputation: { type: Number, default: 5.0 },
   reviews_count: { type: Number, default: 0 },
   verified: { type: Boolean, default: false },
-  online: { type: Boolean, default: true },
+  online: { type: Boolean, default: false },
   role: { type: String, enum: ['student', 'admin', 'moderator'], default: 'student' },
   skills: [
     {

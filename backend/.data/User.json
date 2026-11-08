@@ -13,7 +13,7 @@
     "reputation": 4.9,
     "reviews_count": 24,
     "verified": true,
-    "online": true,
+    "online": false,
     "skills": [
       {
         "name": "JavaScript & Vue.js",
@@ -45,7 +45,7 @@
     "password": "$2a$10$bFEm58Ms3jRkwChKTNkozOkIPRgvt/e2cwCsmtt06NEO/lT1nfFQ2",
     "id": "1",
     "createdAt": "2026-11-05T03:27:13.205Z",
-    "updatedAt": "2026-11-08T03:56:16.658Z",
+    "updatedAt": "2026-11-08T16:28:54.150Z",
     "role": "student"
   },
   {
@@ -62,7 +62,7 @@
     "reputation": 5,
     "reviews_count": 38,
     "verified": true,
-    "online": true,
+    "online": false,
     "skills": [
       {
         "name": "Design UI/UX no Figma",
@@ -88,7 +88,7 @@
     "password": "$2a$10$bFEm58Ms3jRkwChKTNkozOorlfO8MjkUmvBGefNx/IsAMU47EmX8K",
     "id": "2",
     "createdAt": "2026-11-05T03:27:13.207Z",
-    "updatedAt": "2026-11-08T03:56:16.659Z",
+    "updatedAt": "2026-11-08T16:28:54.150Z",
     "role": "student"
   },
   {
@@ -131,7 +131,7 @@
     "password": "$2a$10$bFEm58Ms3jRkwChKTNkozOorlfO8MjkUmvBGefNx/IsAMU47EmX8K",
     "id": "3",
     "createdAt": "2026-11-05T03:27:13.207Z",
-    "updatedAt": "2026-11-08T03:56:16.659Z",
+    "updatedAt": "2026-11-08T16:28:54.150Z",
     "role": "student"
   },
   {
@@ -148,7 +148,7 @@
     "reputation": 4.95,
     "reviews_count": 42,
     "verified": true,
-    "online": true,
+    "online": false,
     "skills": [
       {
         "name": "Inglês para Conversação",
@@ -174,7 +174,7 @@
     "password": "$2a$10$bFEm58Ms3jRkwChKTNkozOorlfO8MjkUmvBGefNx/IsAMU47EmX8K",
     "id": "4",
     "createdAt": "2026-11-05T03:27:13.208Z",
-    "updatedAt": "2026-11-08T03:56:16.659Z",
+    "updatedAt": "2026-11-08T16:28:54.150Z",
     "role": "student"
   },
   {
@@ -191,7 +191,7 @@
     "reputation": 4.7,
     "reviews_count": 15,
     "verified": true,
-    "online": true,
+    "online": false,
     "skills": [
       {
         "name": "Cálculo I & II",
@@ -217,7 +217,7 @@
     "password": "$2a$10$bFEm58Ms3jRkwChKTNkozOorlfO8MjkUmvBGefNx/IsAMU47EmX8K",
     "id": "5",
     "createdAt": "2026-11-05T03:27:13.210Z",
-    "updatedAt": "2026-11-08T03:56:16.659Z",
+    "updatedAt": "2026-11-08T16:28:54.150Z",
     "role": "student"
   },
   {
@@ -255,7 +255,7 @@
     "password": "$2a$10$bFEm58Ms3jRkwChKTNkozOorlfO8MjkUmvBGefNx/IsAMU47EmX8K",
     "id": "6",
     "createdAt": "2026-11-05T03:27:13.210Z",
-    "updatedAt": "2026-11-08T03:56:16.659Z",
+    "updatedAt": "2026-11-08T16:28:54.151Z",
     "role": "student"
   },
   {
@@ -293,7 +293,7 @@
     ],
     "id": "7",
     "createdAt": "2026-11-05T03:27:13.211Z",
-    "updatedAt": "2026-11-08T03:56:16.659Z",
+    "updatedAt": "2026-11-08T16:28:54.151Z",
     "role": "student"
   },
   {
@@ -331,7 +331,7 @@
     ],
     "id": "8",
     "createdAt": "2026-11-05T03:27:13.212Z",
-    "updatedAt": "2026-11-08T03:56:16.659Z",
+    "updatedAt": "2026-11-08T16:28:54.151Z",
     "role": "student"
   },
   {
@@ -369,7 +369,7 @@
     ],
     "id": "9",
     "createdAt": "2026-11-05T03:27:13.212Z",
-    "updatedAt": "2026-11-08T03:56:16.659Z",
+    "updatedAt": "2026-11-08T16:28:54.151Z",
     "role": "student"
   },
   {
@@ -387,7 +387,7 @@
     "reputation": 4.4,
     "reviews_count": 25,
     "verified": true,
-    "online": true,
+    "online": false,
     "skills": [
       {
         "name": "Excel Avançado & Dashboards",
@@ -407,7 +407,7 @@
     ],
     "id": "10",
     "createdAt": "2026-11-05T03:27:13.213Z",
-    "updatedAt": "2026-11-08T03:56:16.659Z",
+    "updatedAt": "2026-11-08T16:28:54.151Z",
     "role": "student"
   },
   {
@@ -425,7 +425,7 @@
     "reputation": 4.9,
     "reviews_count": 21,
     "verified": true,
-    "online": true,
+    "online": false,
     "skills": [
       {
         "name": "Cálculo I & II",
@@ -445,7 +445,7 @@
     ],
     "id": "11",
     "createdAt": "2026-11-05T03:27:13.213Z",
-    "updatedAt": "2026-11-08T03:56:16.659Z",
+    "updatedAt": "2026-11-08T16:28:54.151Z",
     "role": "student"
   },
   {
@@ -463,7 +463,7 @@
     "reputation": 4.4,
     "reviews_count": 23,
     "verified": true,
-    "online": true,
+    "online": false,
     "skills": [
       {
         "name": "Álgebra Linear",
@@ -483,7 +483,7 @@
     ],
     "id": "12",
     "createdAt": "2026-11-05T03:27:13.213Z",
-    "updatedAt": "2026-11-08T03:56:16.659Z",
+    "updatedAt": "2026-11-08T16:28:54.151Z",
     "role": "student"
   },
   {
@@ -501,7 +501,7 @@
     "reputation": 4.3,
     "reviews_count": 6,
     "verified": true,
-    "online": true,
+    "online": false,
     "skills": [
       {
         "name": "Inglês para Conversação",
@@ -521,7 +521,7 @@
     ],
     "id": "13",
     "createdAt": "2026-11-05T03:27:13.214Z",
-    "updatedAt": "2026-11-08T03:56:16.659Z",
+    "updatedAt": "2026-11-08T16:28:54.151Z",
     "role": "student"
   },
   {
@@ -539,7 +539,7 @@
     "reputation": 4.8,
     "reviews_count": 8,
     "verified": true,
-    "online": true,
+    "online": false,
     "skills": [
       {
         "name": "Francês para Relações Internacionais",
@@ -559,7 +559,7 @@
     ],
     "id": "14",
     "createdAt": "2026-11-05T03:27:13.214Z",
-    "updatedAt": "2026-11-08T03:56:16.659Z",
+    "updatedAt": "2026-11-08T16:28:54.151Z",
     "role": "student"
   },
   {
@@ -577,7 +577,7 @@
     "reputation": 4.9,
     "reviews_count": 25,
     "verified": true,
-    "online": true,
+    "online": false,
     "skills": [
       {
         "name": "Marketing Digital",
@@ -597,7 +597,7 @@
     ],
     "id": "15",
     "createdAt": "2026-11-05T03:27:13.215Z",
-    "updatedAt": "2026-11-08T03:56:16.659Z",
+    "updatedAt": "2026-11-08T16:28:54.151Z",
     "role": "student"
   },
   {
@@ -615,7 +615,7 @@
     "reputation": 4.4,
     "reviews_count": 28,
     "verified": true,
-    "online": true,
+    "online": false,
     "skills": [
       {
         "name": "Direito Constitucional Moçambicano",
@@ -635,7 +635,7 @@
     ],
     "id": "16",
     "createdAt": "2026-11-05T03:27:13.215Z",
-    "updatedAt": "2026-11-08T03:56:16.659Z",
+    "updatedAt": "2026-11-08T16:28:54.151Z",
     "role": "student"
   },
   {
@@ -653,7 +653,7 @@
     "reputation": 4.4,
     "reviews_count": 14,
     "verified": true,
-    "online": true,
+    "online": false,
     "skills": [
       {
         "name": "Contabilidade & Fiscalidade",
@@ -673,7 +673,7 @@
     ],
     "id": "17",
     "createdAt": "2026-11-05T03:27:13.216Z",
-    "updatedAt": "2026-11-08T03:56:16.659Z",
+    "updatedAt": "2026-11-08T16:28:54.151Z",
     "role": "student"
   },
   {
@@ -691,7 +691,7 @@
     "reputation": 4.3,
     "reviews_count": 18,
     "verified": true,
-    "online": true,
+    "online": false,
     "skills": [
       {
         "name": "Desenvolvimento Web Frontend",
@@ -711,7 +711,7 @@
     ],
     "id": "18",
     "createdAt": "2026-11-05T03:27:13.216Z",
-    "updatedAt": "2026-11-08T03:56:16.659Z",
+    "updatedAt": "2026-11-08T16:28:54.151Z",
     "role": "student"
   },
   {
@@ -729,6 +729,7 @@
     "verified": true,
     "id": "admin-001",
     "createdAt": "2026-11-08T03:56:16.740Z",
-    "updatedAt": "2026-11-08T04:07:38.696Z"
+    "updatedAt": "2026-11-08T16:28:54.151Z",
+    "online": false
   }
 ]

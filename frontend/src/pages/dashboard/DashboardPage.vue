@@ -109,8 +109,17 @@
           >
             <q-card flat class="student-card hover-lift full-height cursor-pointer" @click="$router.push({ name: 'matching-details', params: { id: s.id } })">
               <!-- Foto do Estudante com Badge Verde Suave -->
-              <div class="student-photo-wrapper">
-                <img :src="s.avatar" class="student-photo" />
+              <div class="student-photo-wrapper relative-position">
+                <img :src="s.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(s.name)}&background=059669&color=fff&size=256`" class="student-photo" />
+                <q-badge
+                  v-if="s.online"
+                  color="positive"
+                  class="q-px-xs q-py-xs text-weight-bold"
+                  rounded
+                  style="position: absolute; top: 8px; left: 8px; z-index: 2; font-size: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.25);"
+                >
+                  ● Online
+                </q-badge>
                 <div class="compat-badge shadow-1">
                   <div class="text-weight-bold" style="line-height: 1.1;">{{ s.compatibilityScore || 90 }}%</div>
                   <div style="font-size: 8px; font-weight: 600; text-transform: lowercase;">compatível</div>

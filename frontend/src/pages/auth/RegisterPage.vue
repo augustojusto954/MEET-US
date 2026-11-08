@@ -30,6 +30,71 @@
       </div>
 
       <q-form @submit.prevent="onSubmit" class="column q-gutter-y-md">
+        <!-- Foto de Perfil Própria / Avatar Personalizado -->
+        <div class="avatar-box q-pa-sm rounded-borders">
+          <div class="field-label q-mb-xs">Foto de Perfil</div>
+          <div class="row items-center q-gutter-md">
+            <q-avatar size="64px" class="shadow-2 border-primary bg-white relative-position">
+              <img :src="displayAvatar" alt="Avatar" />
+            </q-avatar>
+
+            <div class="col">
+              <input
+                ref="fileInputRef"
+                type="file"
+                accept="image/*"
+                class="hidden"
+                @change="onFileChange"
+              />
+              <div class="row q-gutter-xs">
+                <q-btn
+                  unelevated
+                  dense
+                  size="sm"
+                  color="primary"
+                  icon="photo_camera"
+                  label="Carregar Foto"
+                  class="q-px-sm text-weight-bold"
+                  no-caps
+                  @click="fileInputRef?.click()"
+                />
+                <q-btn
+                  v-if="form.avatar"
+                  flat
+                  dense
+                  size="sm"
+                  color="grey-8"
+                  icon="close"
+                  label="Limpar"
+                  class="q-px-xs"
+                  no-caps
+                  @click="form.avatar = ''"
+                />
+              </div>
+              <div class="text-caption text-grey-6 q-mt-xs" style="font-size: 11px; line-height: 1.2;">
+                Carrega a tua foto ou usa o avatar gerado com o teu nome.
+              </div>
+            </div>
+          </div>
+
+          <!-- Sugestões de Fotos de Estudantes -->
+          <div class="q-mt-sm">
+            <div class="text-caption text-grey-7 q-mb-xs" style="font-size: 11px;">Ou seleciona um avatar:</div>
+            <div class="row q-gutter-xs items-center">
+              <q-avatar
+                v-for="(av, idx) in PRESET_AVATARS"
+                :key="idx"
+                size="32px"
+                class="cursor-pointer preset-avatar"
+                :class="{ 'preset-selected': form.avatar === av }"
+                @click="form.avatar = av"
+              >
+                <img :src="av" />
+              </q-avatar>
+            </div>
+          </div>
+        </div>
+
         <div>
           <div class="field-label">Nome Completo</div>
           <q-input
@@ -141,7 +206,7 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
 import { useAuthStore } from 'src/stores/auth'
@@ -151,6 +216,16 @@ const router = useRouter()
 const auth = useAuthStore()
 
 const isPwd = ref(true)
+const fileInputRef = ref(null)
+
+const PRESET_AVATARS = [
+  'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=400&h=400&fit=crop&crop=faces', // Amália
+  'https://images.unsplash.com/photo-1522529599102-193c0d76b5b6?w=400&h=400&fit=crop&crop=faces', // Carlos
+  'https://images.unsplash.com/photo-1589156280159-27698a70f29e?w=400&h=400&fit=crop&crop=faces', // Lúcia
+  'https://images.unsplash.com/photo-1507152832244-10d45c7eda57?w=400&h=400&fit=crop&crop=faces', // Hélder
+  'https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?w=400&h=400&fit=crop&crop=faces', // Quitéria
+  'https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=400&h=400&fit=crop&crop=faces'  // Samira
+]
 
 const INSTITUTIONS = [
   'Universidade Eduardo Mondlane',
@@ -166,14 +241,71 @@ const form = reactive({
   name: '',
   email: '',
   password: '',
+  avatar: '',
   institution: 'Universidade Eduardo Mondlane',
   course: '',
   year: 1
 })
 
+const displayAvatar = computed(() => {
+  if (form.avatar && form.avatar.trim()) {
+    return form.avatar
+  }
+  const cleanName = (form.name || '').trim() || 'Estudante'
+  const bgColors = ['059669', '2563EB', '7C3AED', 'D97706', 'DC2626', '0D9488', '4F46E5', '0284C7', 'E11D48']
+  const charSum = cleanName.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0)
+  const bg = bgColors[Math.abs(charSum) % bgColors.length]
+  return `https://ui-avatars.com/api/?name=${encodeURIComponent(cleanName)}&background=${bg}&color=ffffff&size=256&bold=true`
+})
+
+function onFileChange(e) {
+  const file = e.target.files?.[0]
+  if (!file) return
+
+  if (file.size > 5 * 1024 * 1024) {
+    $q.notify({ type: 'warning', message: 'A imagem deve ter no máximo 5MB.' })
+    return
+  }
+
+  const reader = new FileReader()
+  reader.onload = (ev) => {
+    const img = new Image()
+    img.onload = () => {
+      // Redimensionar para tamanho otimizado (300x300) para mobile e baixo consumo
+      const canvas = document.createElement('canvas')
+      const maxDim = 300
+      let w = img.width
+      let h = img.height
+      if (w > h) {
+        if (w > maxDim) {
+          h = Math.round((h * maxDim) / w)
+          w = maxDim
+        }
+      } else {
+        if (h > maxDim) {
+          w = Math.round((w * maxDim) / h)
+          h = maxDim
+        }
+      }
+      canvas.width = w
+      canvas.height = h
+      const ctx = canvas.getContext('2d')
+      ctx.drawImage(img, 0, 0, w, h)
+      form.avatar = canvas.toDataURL('image/jpeg', 0.85)
+      $q.notify({ type: 'positive', message: 'Foto carregada com sucesso!', icon: 'check' })
+    }
+    img.src = ev.target.result
+  }
+  reader.readAsDataURL(file)
+}
+
 async function onSubmit() {
   try {
-    await auth.register(form)
+    const payload = { ...form }
+    if (!payload.avatar) {
+      payload.avatar = displayAvatar.value
+    }
+    await auth.register(payload)
     $q.notify({
       type: 'positive',
       message: `Conta criada com sucesso! Bem-vindo(a), ${form.name}!`,
@@ -194,8 +326,30 @@ async function onSubmit() {
 .register-page {
   width: 100%;
   max-width: 480px;
-  margin: 32px auto;
+  margin: 24px auto;
   padding: 16px;
+}
+.register-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  border: 1px solid #E2E8F0;
+}
+.avatar-box {
+  background: #F8FAFC;
+  border: 1px dashed #CBD5E1;
+}
+.preset-avatar {
+  border: 2px solid transparent;
+  transition: transform 0.15s, border-color 0.15s;
+}
+.preset-avatar:hover {
+  transform: scale(1.1);
+}
+.preset-selected {
+  border-color: #059669 !important;
+  transform: scale(1.08);
 }
 .field-label {
   font-size: 0.82rem;
@@ -208,5 +362,16 @@ async function onSubmit() {
 }
 .back-link:hover {
   color: #059669 !important;
+}
+
+@media (max-width: 480px) {
+  .register-card {
+    padding: 16px;
+    border-radius: 12px;
+  }
+  .register-page {
+    margin: 12px auto;
+    padding: 8px;
+  }
 }
 </style>

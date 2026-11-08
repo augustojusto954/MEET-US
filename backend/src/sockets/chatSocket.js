@@ -1,15 +1,71 @@
 // backend/src/sockets/chatSocket.js
-const { Message, Conversation, Notification } = require('../models');
+const { Message, Conversation, Notification, User } = require('../models');
+
+// Rastreamento em memória de utilizadores ativos conectados em tempo real
+const activeUsers = new Map(); // userId -> Set of socketId
+const socketToUser = new Map(); // socketId -> userId
 
 function initSockets(io) {
+  // Limpar estados residuais de utilizadores offline ao inicializar o socket server
+  User.updateMany({}, { online: false }).catch(err => {
+    console.warn('[Socket.IO] Aviso ao redefinir estado online inicial:', err.message);
+  });
+
   io.on('connection', (socket) => {
     console.log(`[Socket.IO] Client connected: ${socket.id}`);
 
-    // Join user's individual channel
-    socket.on('user:join', (userId) => {
-      if (userId) {
-        socket.join(`user:${userId}`);
-        console.log(`[Socket.IO] Socket ${socket.id} joined user:${userId}`);
+    // Join user's individual channel e registo de presença REAL
+    socket.on('user:join', async (rawUserId) => {
+      if (!rawUserId) return;
+      const userId = String(rawUserId);
+
+      socket.userId = userId;
+      socketToUser.set(socket.id, userId);
+
+      if (!activeUsers.has(userId)) {
+        activeUsers.set(userId, new Set());
+      }
+      activeUsers.get(userId).add(socket.id);
+
+      socket.join(`user:${userId}`);
+      console.log(`[Socket.IO] User ${userId} is ONLINE (Sockets: ${activeUsers.get(userId).size})`);
+
+      try {
+        await User.findByIdAndUpdate(userId, { online: true });
+        // Transmite o novo estado online a todos os clientes conectados
+        io.emit('user:presence', { userId, online: true });
+      } catch (e) {
+        console.error('[Socket.IO] Erro ao marcar user online:', e.message);
+      }
+
+      // Envia imediatamente a lista de todos os utilizadores online ao novo cliente
+      socket.emit('users:online_list', Array.from(activeUsers.keys()));
+    });
+
+    // Saída voluntária (Logout)
+    socket.on('user:leave', async (rawUserId) => {
+      const userId = rawUserId ? String(rawUserId) : socket.userId;
+      if (!userId) return;
+
+      activeUsers.delete(userId);
+      socketToUser.delete(socket.id);
+
+      try {
+        await User.findByIdAndUpdate(userId, { online: false });
+        io.emit('user:presence', { userId, online: false });
+        console.log(`[Socket.IO] User ${userId} logged out -> OFFLINE`);
+      } catch (e) {
+        console.error('[Socket.IO] Erro ao marcar user offline no logout:', e.message);
+      }
+    });
+
+    // Solicitação direta de utilizadores online
+    socket.on('users:get_online', (callback) => {
+      const list = Array.from(activeUsers.keys());
+      if (typeof callback === 'function') {
+        callback(list);
+      } else {
+        socket.emit('users:online_list', list);
       }
     });
 
@@ -115,8 +171,25 @@ function initSockets(io) {
       }
     });
 
-    socket.on('disconnect', () => {
+    socket.on('disconnect', async () => {
       console.log(`[Socket.IO] Client disconnected: ${socket.id}`);
+      const userId = socket.userId || socketToUser.get(socket.id);
+      socketToUser.delete(socket.id);
+
+      if (userId && activeUsers.has(userId)) {
+        const userSockets = activeUsers.get(userId);
+        userSockets.delete(socket.id);
+        if (userSockets.size === 0) {
+          activeUsers.delete(userId);
+          console.log(`[Socket.IO] User ${userId} has no more sockets -> OFFLINE`);
+          try {
+            await User.findByIdAndUpdate(userId, { online: false });
+            io.emit('user:presence', { userId, online: false });
+          } catch (e) {
+            console.error('[Socket.IO] Erro ao marcar user offline:', e.message);
+          }
+        }
+      }
     });
   });
 }

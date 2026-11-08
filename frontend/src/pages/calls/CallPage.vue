@@ -99,7 +99,7 @@
               class="full-width full-height column items-center justify-center bg-grey-9 text-center q-pa-xs"
             >
               <q-avatar size="36px">
-                <img :src="auth.user?.avatar || 'https://images.unsplash.com/photo-1506277886164-e25aa3f4ef7f?w=400&h=400&fit=crop&crop=faces'" />
+                <img :src="auth.user?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(auth.user?.name || 'Você')}&background=059669&color=fff&size=256`" />
               </q-avatar>
               <div class="text-caption text-grey-5 q-mt-xs" style="font-size: 10px;">Câmara desligada</div>
             </div>
