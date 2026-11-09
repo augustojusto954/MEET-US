@@ -17,12 +17,18 @@ export default route(function (/* { store, ssrContext } */) {
     const auth = useAuthStore()
     const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
 
+    // Reconhece a sessão ativa por token: se o utilizador já está logado, entra direto no sistema
+    if (auth.isAuthenticated && (to.path === '/' || to.path.startsWith('/auth'))) {
+      if (!to.query.landing) {
+        return auth.user?.role === 'admin' ? { name: 'admin-overview' } : { name: 'dashboard' }
+      }
+    }
+
+    // Se a rota requer autenticação e não há sessão válida
     if (requiresAuth && !auth.isAuthenticated) {
       return { name: 'login', query: { redirect: to.fullPath } }
     }
-    if (auth.isAuthenticated && to.path.startsWith('/auth')) {
-      return { name: 'dashboard' }
-    }
+
     return true
   })
 

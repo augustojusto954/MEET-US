@@ -24,7 +24,7 @@
         </q-badge>
       </div>
       <div class="text-caption text-grey-7">
-        Introduz o teu e-mail universitário e enviaremos instruções para redefinir a tua palavra-passe.
+        Introduz o teu e-mail universitário e a nova palavra-passe que desejas utilizar.
       </div>
     </div>
 
@@ -36,20 +36,44 @@
           type="email"
           outlined
           dense
-          placeholder="ex: estudante@uem.mz"
+          placeholder="ex: rosa@gmail.com"
           :rules="[v => !!v || 'Por favor indica o teu e-mail']"
         >
           <template #prepend><q-icon name="mail_outline" color="primary" /></template>
         </q-input>
       </div>
 
+      <div>
+        <div class="text-caption text-weight-bold text-dark q-mb-xs">Nova Palavra-passe</div>
+        <q-input
+          v-model="newPassword"
+          :type="isPwd ? 'password' : 'text'"
+          outlined
+          dense
+          placeholder="Mínimo de 6 caracteres"
+          :rules="[v => (v && v.length >= 6) || 'Mínimo de 6 caracteres']"
+        >
+          <template #prepend><q-icon name="lock_outline" color="primary" /></template>
+          <template #append>
+            <q-icon
+              :name="isPwd ? 'visibility' : 'visibility_off'"
+              class="cursor-pointer"
+              color="grey-6"
+              size="20px"
+              @click="isPwd = !isPwd"
+            />
+          </template>
+        </q-input>
+      </div>
+
       <q-btn
         type="submit"
-        label="Enviar Instruções de Recuperação"
+        label="Atualizar Palavra-passe"
         class="full-width text-white shadow-1 q-py-sm text-weight-bold"
         color="primary"
         no-caps
         size="md"
+        :loading="loading"
         style="border-radius: 12px; height: 44px; background: #059669 !important;"
       />
 
@@ -65,26 +89,42 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
-import { fakeAuth } from 'src/services/fake-api'
+import { api } from 'src/boot/axios'
 
 const $q = useQuasar()
+const router = useRouter()
 const email = ref('')
+const newPassword = ref('')
+const isPwd = ref(true)
+const loading = ref(false)
 
 async function onSubmit() {
+  if (!email.value || !newPassword.value) {
+    $q.notify({ type: 'warning', message: 'Preenche o e-mail e a nova palavra-passe.' })
+    return
+  }
+  loading.value = true
   try {
-    const { data } = await fakeAuth.forgotPassword(email.value)
+    const res = await api.post('/auth/forgot-password', {
+      email: email.value.trim(),
+      newPassword: newPassword.value.trim()
+    })
     $q.notify({
       type: 'positive',
-      message: data.message || 'Instruções enviadas para o teu e-mail!',
-      icon: 'mail'
+      message: res.data.message || 'Palavra-passe alterada com sucesso!',
+      icon: 'check_circle'
     })
-  } catch {
+    router.push({ name: 'login' })
+  } catch (err) {
     $q.notify({
-      type: 'info',
-      message: 'Instruções simuladas enviadas com sucesso!',
-      icon: 'send'
+      type: 'negative',
+      message: err.response?.data?.message || 'Falha ao redefinir a palavra-passe.',
+      icon: 'error'
     })
+  } finally {
+    loading.value = false
   }
 }
 </script>

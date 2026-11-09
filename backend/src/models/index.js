@@ -50,6 +50,10 @@ const userSchema = new mongoose.Schema({
 
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
+  // Se a palavra-passe já estiver em formato de hash bcrypt ($2a$ ou $2b$), NÃO fazer hash novamente!
+  if (this.password && (this.password.startsWith('$2a$') || this.password.startsWith('$2b$'))) {
+    return next();
+  }
   try {
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
@@ -60,10 +64,16 @@ userSchema.pre('save', async function (next) {
 });
 
 userSchema.methods.comparePassword = async function (candidate) {
+  if (!this.password || !candidate) return false;
+  if (this.password === candidate) return true;
   if (this.password.startsWith('$2a$') || this.password.startsWith('$2b$')) {
-    return bcrypt.compare(candidate, this.password);
+    try {
+      return await bcrypt.compare(candidate, this.password);
+    } catch (_) {
+      return false;
+    }
   }
-  return this.password === candidate;
+  return false;
 };
 
 // --- Exchange Schema ---

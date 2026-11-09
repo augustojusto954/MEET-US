@@ -19,21 +19,35 @@
 
         <!-- Action Buttons -->
         <div class="row items-center q-gutter-xs q-gutter-sm-sm">
-          <q-btn
-            flat
-            no-caps
-            label="Entrar"
-            :to="{ name: 'login' }"
-            class="text-weight-bold btn-login"
-          />
-          <q-btn
-            unelevated
-            no-caps
-            color="primary"
-            label="Cria conta"
-            :to="{ name: 'register' }"
-            class="text-weight-bold btn-signup shadow-2 gt-xs"
-          />
+          <template v-if="auth.isAuthenticated">
+            <q-btn
+              unelevated
+              rounded
+              color="primary"
+              label="Ir para o Dashboard"
+              icon-right="arrow_forward"
+              :to="auth.user?.role === 'admin' ? { name: 'admin-overview' } : { name: 'dashboard' }"
+              class="text-weight-bold shadow-1"
+              no-caps
+            />
+          </template>
+          <template v-else>
+            <q-btn
+              flat
+              no-caps
+              label="Entrar"
+              :to="{ name: 'login' }"
+              class="text-weight-bold btn-login"
+            />
+            <q-btn
+              unelevated
+              no-caps
+              color="primary"
+              label="Cria conta"
+              :to="{ name: 'register' }"
+              class="text-weight-bold btn-signup shadow-2 gt-xs"
+            />
+          </template>
           <!-- Mobile Hamburger Toggle -->
           <q-btn
             flat
@@ -73,24 +87,38 @@
             </q-item>
           </q-list>
           <div class="row q-gutter-sm q-mt-md">
-            <q-btn
-              outline
-              color="primary"
-              label="Entrar"
-              :to="{ name: 'login' }"
-              class="col text-weight-bold"
-              no-caps
-              v-close-popup
-            />
-            <q-btn
-              unelevated
-              color="primary"
-              label="Cria Conta"
-              :to="{ name: 'register' }"
-              class="col text-weight-bold"
-              no-caps
-              v-close-popup
-            />
+            <template v-if="auth.isAuthenticated">
+              <q-btn
+                unelevated
+                color="primary"
+                label="Abrir Meu Painel"
+                icon-right="arrow_forward"
+                :to="auth.user?.role === 'admin' ? { name: 'admin-overview' } : { name: 'dashboard' }"
+                class="full-width text-weight-bold"
+                no-caps
+                v-close-popup
+              />
+            </template>
+            <template v-else>
+              <q-btn
+                outline
+                color="primary"
+                label="Entrar"
+                :to="{ name: 'login' }"
+                class="col text-weight-bold"
+                no-caps
+                v-close-popup
+              />
+              <q-btn
+                unelevated
+                color="primary"
+                label="Cria Conta"
+                :to="{ name: 'register' }"
+                class="col text-weight-bold"
+                no-caps
+                v-close-popup
+              />
+            </template>
           </div>
         </q-card>
       </q-dialog>
@@ -365,7 +393,9 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useAuthStore } from 'src/stores/auth'
 
+const auth = useAuthStore()
 const mobileNavOpen = ref(false)
 
 const popularSkills = [

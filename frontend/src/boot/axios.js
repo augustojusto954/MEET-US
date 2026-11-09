@@ -29,11 +29,13 @@ api.interceptors.request.use((config) => {
   return config
 })
 
-// Interceptor de response → trata 401
+// Interceptor de response → trata 401 apenas em rotas protegidas (não em tentativas de login/registo)
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    const url = error.config?.url || ''
+    const isAuthRoute = url.includes('/auth/login') || url.includes('/auth/register') || url.includes('/auth/forgot-password')
+    if (error.response?.status === 401 && !isAuthRoute) {
       localStorage.removeItem('meetus_token')
       localStorage.removeItem('meetus_user')
       if (!window.location.pathname.startsWith('/auth/login')) {
