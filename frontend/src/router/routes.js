@@ -70,7 +70,7 @@ const routes = [
   {
     path: '/admin',
     component: () => import('src/layouts/AdminLayout.vue'),
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, requiresAdmin: true },
     children: [
       { path: '', redirect: '/admin/overview' },
       { path: 'overview', name: 'admin-overview', component: () => import('src/pages/admin/AdminOverviewPage.vue') },

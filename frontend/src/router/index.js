@@ -16,6 +16,12 @@ export default route(function (/* { store, ssrContext } */) {
   Router.beforeEach((to) => {
     const auth = useAuthStore()
     const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
+    const requiresAdmin = to.matched.some(record => record.meta.requiresAdmin)
+
+    // O Admin é único: se uma rota requer permissão de administrador e o utilizador não for admin, bloqueia!
+    if (requiresAdmin && !auth.isAdmin) {
+      return { name: 'dashboard' }
+    }
 
     // Reconhece a sessão ativa por token: se o utilizador já está logado, entra direto no sistema
     if (auth.isAuthenticated && (to.path === '/' || to.path.startsWith('/auth'))) {
@@ -31,6 +37,10 @@ export default route(function (/* { store, ssrContext } */) {
 
     return true
   })
+
+  if (typeof window !== 'undefined') {
+    window.__MEETUS_ROUTER__ = Router
+  }
 
   return Router
 })

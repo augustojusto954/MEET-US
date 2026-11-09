@@ -293,12 +293,14 @@ import { api } from 'src/boot/axios'
 import { socket } from 'src/boot/socket'
 import { useAuthStore } from 'src/stores/auth'
 import { useMeetUsStore } from 'src/stores/meetus'
+import { useChatStore } from 'src/stores/chat'
 
 const route = useRoute()
 const router = useRouter()
 const $q = useQuasar()
 const auth = useAuthStore()
 const store = useMeetUsStore()
+const chatStore = useChatStore()
 
 const searchConv = ref('')
 const inputMessage = ref('')
@@ -396,8 +398,10 @@ async function selectConversation(conv) {
       time: formatTime(m.createdAt)
     }))
 
-    // Marcar como lido
-    api.put(`/chat/conversations/${conv.id}/read`).catch(() => {})
+    // Marcar como lido e atualizar o badge vermelho de mensagens
+    api.put(`/chat/conversations/${conv.id}/read`).then(() => {
+      chatStore.loadConversations()
+    }).catch(() => {})
     conv.unreadCount = 0
 
     scrollToBottom()
@@ -506,7 +510,9 @@ function handleIncomingMessage(msg) {
         time: formatTime(msg.createdAt || Date.now())
       })
       scrollToBottom()
-      api.put(`/chat/conversations/${convId}/read`).catch(() => {})
+      api.put(`/chat/conversations/${convId}/read`).then(() => {
+        chatStore.loadConversations()
+      }).catch(() => {})
     }
   }
 

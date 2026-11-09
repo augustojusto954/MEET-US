@@ -176,13 +176,26 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { useQuasar } from 'quasar'
 import { useAuthStore } from 'src/stores/auth'
 
 const router = useRouter()
+const $q = useQuasar()
 const auth = useAuthStore()
 const leftDrawerOpen = ref(true)
+
+onMounted(() => {
+  if (!auth.isAdmin) {
+    $q.notify({
+      type: 'negative',
+      message: 'Acesso restrito. Apenas o administrador oficial do MEET-US tem permissão para aceder a esta área.',
+      icon: 'lock'
+    })
+    router.replace({ name: 'dashboard' })
+  }
+})
 
 function logout() {
   auth.logout()

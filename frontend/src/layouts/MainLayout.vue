@@ -52,6 +52,89 @@
             <q-tooltip>Pesquisar</q-tooltip>
           </q-btn>
 
+          <!-- Mensagens estilo Facebook (Ícone + Sinal Vermelho com Quantidade) -->
+          <q-btn
+            flat
+            round
+            dense
+            icon="chat_bubble_outline"
+            color="grey-8"
+            size="md"
+            class="q-mr-xs cursor-pointer relative-position"
+            @click="handleMessageButtonClick"
+          >
+            <!-- Sinal Vermelho com Quantidade (Estilo Facebook) -->
+            <q-badge
+              v-if="chatStore.totalUnreadCount > 0"
+              color="negative"
+              floating
+              rounded
+              class="text-weight-bold shadow-2"
+              style="font-size: 11px; padding: 2px 5px; top: 1px; right: 1px;"
+            >
+              {{ chatStore.totalUnreadCount > 99 ? '99+' : chatStore.totalUnreadCount }}
+            </q-badge>
+            <q-tooltip>Mensagens ({{ chatStore.totalUnreadCount }} não lidas)</q-tooltip>
+
+            <!-- Dropdown rápido de conversas estilo Facebook -->
+            <q-menu
+              v-if="chatStore.conversations.length"
+              anchor="bottom end"
+              self="top end"
+              class="shadow-4"
+              style="min-width: 320px; max-width: 90vw; border-radius: 14px;"
+            >
+              <div class="row items-center justify-between q-pa-sm bg-grey-1" style="border-bottom: 1px solid #E2E8F0;">
+                <span class="text-subtitle2 text-weight-bolder text-dark">Conversas</span>
+                <q-badge v-if="chatStore.totalUnreadCount > 0" color="negative" class="text-weight-bold">
+                  {{ chatStore.totalUnreadCount }} novas
+                </q-badge>
+              </div>
+
+              <q-list separator dense class="q-py-xs">
+                <q-item
+                  v-for="c in chatStore.conversations.slice(0, 5)"
+                  :key="c.id"
+                  clickable
+                  v-close-popup
+                  class="q-py-sm"
+                  :class="{ 'bg-red-1': (c.unread || c.unreadCount || 0) > 0 }"
+                  @click="openChatWith(c.other?.id || c.participantId)"
+                >
+                  <q-item-section avatar>
+                    <q-avatar size="38px" class="relative-position shadow-1">
+                      <img :src="c.other?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(c.other?.name || 'C')}&background=059669&color=fff&size=256`" />
+                      <q-badge
+                        v-if="c.other?.online"
+                        color="positive"
+                        floating
+                        rounded
+                        style="top: 1px; right: 1px;"
+                      />
+                    </q-avatar>
+                  </q-item-section>
+
+                  <q-item-section>
+                    <q-item-label class="text-weight-bold text-dark ellipsis">{{ c.other?.name || 'Colega' }}</q-item-label>
+                    <q-item-label caption class="ellipsis text-grey-8" :class="{ 'text-weight-bold text-dark': (c.unread || c.unreadCount || 0) > 0 }">
+                      {{ c.last_message || 'Inicia uma conversa...' }}
+                    </q-item-label>
+                  </q-item-section>
+
+                  <q-item-section side v-if="(c.unread || c.unreadCount || 0) > 0">
+                    <q-badge color="negative" rounded class="text-weight-bold">
+                      {{ c.unread || c.unreadCount }}
+                    </q-badge>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+
+              <div class="q-pa-xs text-center border-top">
+                <q-btn flat dense no-caps color="primary" label="Ver Todas as Mensagens" class="full-width text-weight-bold" :to="{ name: 'chat' }" v-close-popup />
+              </div>
+            </q-menu>
+          </q-btn>
+
           <!-- Notificações -->
           <q-btn flat round dense icon="notifications_none" color="grey-8" size="md" :to="{ name: 'notifications' }">
             <q-badge
@@ -100,12 +183,13 @@
                   <q-item-section>Definições</q-item-section>
                 </q-item>
 
-                <q-separator class="q-my-xs" />
-
-                <q-item clickable v-close-popup :to="{ name: 'admin-overview' }">
-                  <q-item-section avatar><q-icon name="admin_panel_settings" color="grey-7" /></q-item-section>
-                  <q-item-section>Portal Admin</q-item-section>
-                </q-item>
+                <template v-if="auth.isAdmin">
+                  <q-separator class="q-my-xs" />
+                  <q-item clickable v-close-popup :to="{ name: 'admin-overview' }">
+                    <q-item-section avatar><q-icon name="admin_panel_settings" color="primary" /></q-item-section>
+                    <q-item-section class="text-weight-bold text-primary">Portal Admin</q-item-section>
+                  </q-item>
+                </template>
 
                 <q-separator class="q-my-xs" />
 
@@ -151,7 +235,7 @@
             :key="item.to"
             clickable
             v-ripple
-            :to="{ name: item.to }"
+            :to="getNavTarget(item)"
             class="sidebar-nav-item"
             active-class="sidebar-nav-active"
             @click="onNavClick"
@@ -160,6 +244,12 @@
               <q-icon :name="item.icon" size="20px" />
             </q-item-section>
             <q-item-section class="text-weight-medium nav-text">{{ item.label }}</q-item-section>
+            <!-- Sinal Vermelho na Sidebar para Mensagens (Estilo Facebook) -->
+            <q-item-section side v-if="item.to === 'chat' && chatStore.totalUnreadCount > 0">
+              <q-badge color="negative" rounded class="text-weight-bold shadow-1">
+                {{ chatStore.totalUnreadCount }}
+              </q-badge>
+            </q-item-section>
           </q-item>
         </div>
       </div>
@@ -246,6 +336,7 @@ import { useQuasar } from 'quasar'
 import { useMeetUsStore } from 'src/stores/meetus'
 import { useAuthStore } from 'src/stores/auth'
 import { useCallStore } from 'src/stores/call'
+import { useChatStore } from 'src/stores/chat'
 import { socket } from 'src/boot/socket'
 import GlobalSearchDialog from 'src/components/common/GlobalSearchDialog.vue'
 
@@ -254,6 +345,7 @@ const $q = useQuasar()
 const store = useMeetUsStore()
 const auth = useAuthStore()
 const callStore = useCallStore()
+const chatStore = useChatStore()
 
 const showIncomingCallDialog = ref(false)
 
@@ -334,6 +426,30 @@ function logout() {
   router.push({ name: 'login' })
 }
 
+function handleMessageButtonClick() {
+  const senderId = chatStore.latestUnreadSenderId
+  if (senderId) {
+    router.push({ name: 'chat-user', params: { userId: senderId } })
+  } else {
+    router.push({ name: 'chat' })
+  }
+}
+
+function openChatWith(userId) {
+  if (userId) {
+    router.push({ name: 'chat-user', params: { userId: String(userId) } })
+  } else {
+    router.push({ name: 'chat' })
+  }
+}
+
+function getNavTarget(item) {
+  if (item.to === 'chat' && chatStore.latestUnreadSenderId) {
+    return { name: 'chat-user', params: { userId: chatStore.latestUnreadSenderId } }
+  }
+  return { name: item.to }
+}
+
 // Ctrl+K / Cmd+K
 function handleKeyDown(e) {
   if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
@@ -348,6 +464,9 @@ onMounted(() => {
   if (auth.userId) {
     socket.emit('user:join', auth.userId)
   }
+
+  chatStore.bindSocket?.()
+  chatStore.loadConversations?.()
 
   socket.on('call:incoming', handleIncomingCall)
   socket.on('call:offer', handleIncomingCall)

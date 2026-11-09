@@ -5,6 +5,7 @@ import { api } from 'src/boot/axios'
 import { socket } from 'src/boot/socket'
 import { saveDatabase } from 'src/db'
 import { useMeetUsStore } from 'src/stores/meetus'
+import { useChatStore } from 'src/stores/chat'
 
 const USE_FAKE = (import.meta.env.VITE_USE_FAKE_API || import.meta.env.USE_FAKE_API || 'false') === 'true'
 
@@ -43,6 +44,9 @@ export const useAuthStore = defineStore('auth', {
         try {
           const meetusStore = useMeetUsStore()
           meetusStore.setCurrentUser(this.user)
+          const chatStore = useChatStore()
+          chatStore.bindSocket?.()
+          chatStore.loadConversations?.()
         } catch (_) {}
         if (this.userId && socket) {
           socket.emit('user:join', this.userId)
@@ -61,6 +65,9 @@ export const useAuthStore = defineStore('auth', {
         try {
           const meetusStore = useMeetUsStore()
           meetusStore.setCurrentUser(this.user)
+          const chatStore = useChatStore()
+          chatStore.bindSocket?.()
+          chatStore.loadConversations?.()
         } catch (_) {}
         if (this.userId && socket) {
           socket.emit('user:join', this.userId)
