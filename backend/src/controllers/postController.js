@@ -20,22 +20,40 @@ exports.list = async (req, res, next) => {
 
 exports.create = async (req, res, next) => {
   try {
-    const userId = req.user?.id || '1';
-    const user = await User.findById(userId);
+    let user = req.user;
+    const authorId = req.user?.id || req.user?._id || req.body.authorId || req.body.userId;
+
+    if (!user && authorId) {
+      user = await User.findById(authorId);
+      if (!user) {
+        user = await User.findOne({ _id: authorId });
+      }
+    }
+
+    const authorName = user?.name || req.body.authorName || 'Estudante MEET-US';
+    let authorAvatar = user?.avatar || req.body.authorAvatar || '';
+    if (!authorAvatar) {
+      const bgColors = ['059669', '2563EB', '7C3AED', 'D97706', 'DC2626', '0D9488', '4F46E5', '0284C7', 'E11D48', '0891B2'];
+      const charSum = authorName.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
+      const bg = bgColors[Math.abs(charSum) % bgColors.length];
+      authorAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(authorName)}&background=${bg}&color=ffffff&size=256&bold=true`;
+    }
+    const authorCourse = user?.course || req.body.authorCourse || 'Ensino Superior';
+    const authorInstitution = user?.institution || req.body.authorInstitution || 'Universidade Eduardo Mondlane';
 
     const post = await Post.create({
-      author_id: String(userId),
-      author_name: user?.name || 'Estudante MEET-US',
-      author_avatar: user?.avatar || 'https://images.unsplash.com/photo-1506277886164-e25aa3f4ef7f?w=400&h=400&fit=crop&crop=faces',
-      author_course: user?.course || 'Engenharia Informática',
-      author_institution: user?.institution || 'Universidade Eduardo Mondlane',
+      author_id: String(user?._id || user?.id || authorId || 'anon'),
+      author_name: authorName,
+      author_avatar: authorAvatar,
+      author_course: authorCourse,
+      author_institution: authorInstitution,
       title: req.body.title,
       content: req.body.content,
       category: req.body.category || 'Geral',
       tags: req.body.tags || ['MEETUS']
     });
 
-    res.status(201).json(post);
+    res.status(201).json(post.toJSON ? post.toJSON() : post);
   } catch (err) {
     next(err);
   }
@@ -44,7 +62,7 @@ exports.create = async (req, res, next) => {
 exports.toggleLike = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const userId = req.user?.id || '1';
+    const userId = req.user?.id || req.user?._id || req.body.userId || 'anon';
     const post = await Post.findById(id);
     if (!post) return res.status(404).json({ message: 'Publicação não encontrada' });
 
@@ -69,15 +87,27 @@ exports.toggleLike = async (req, res, next) => {
 exports.addComment = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const userId = req.user?.id || '1';
-    const user = await User.findById(userId);
+    let user = req.user;
+    const userId = req.user?.id || req.user?._id || req.body.authorId || req.body.userId;
+    if (!user && userId) {
+      user = await User.findById(userId);
+    }
     const post = await Post.findById(id);
     if (!post) return res.status(404).json({ message: 'Publicação não encontrada' });
 
+    const authorName = user?.name || req.body.authorName || 'Estudante';
+    let authorAvatar = user?.avatar || req.body.authorAvatar || '';
+    if (!authorAvatar) {
+      const bgColors = ['059669', '2563EB', '7C3AED', 'D97706', 'DC2626', '0D9488', '4F46E5', '0284C7', 'E11D48', '0891B2'];
+      const charSum = authorName.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
+      const bg = bgColors[Math.abs(charSum) % bgColors.length];
+      authorAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(authorName)}&background=${bg}&color=ffffff&size=256&bold=true`;
+    }
+
     const newComment = {
-      author_id: String(userId),
-      author_name: user?.name || 'Estudante',
-      author_avatar: user?.avatar || '',
+      author_id: String(user?._id || user?.id || userId || 'anon'),
+      author_name: authorName,
+      author_avatar: authorAvatar,
       text: req.body.text,
       created_at: new Date().toISOString()
     };

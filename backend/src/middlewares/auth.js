@@ -33,6 +33,27 @@ async function authMiddleware(req, res, next) {
   }
 }
 
+async function optionalAuth(req, res, next) {
+  try {
+    const authHeader = req.headers.authorization;
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      const token = authHeader.split(' ')[1];
+      let userId;
+      if (token.startsWith('fake-jwt-')) {
+        userId = token.replace('fake-jwt-', '');
+      } else {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        userId = decoded.id;
+      }
+      const user = await User.findById(userId);
+      if (user) {
+        req.user = user;
+      }
+    }
+  } catch (_) {}
+  next();
+}
+
 function requireAdmin(req, res, next) {
   if (!req.user || req.user.role !== 'admin') {
     return res.status(403).json({ message: 'Acesso restrito. Apenas administradores do MEET-US têm permissão para esta ação.' });
@@ -42,4 +63,5 @@ function requireAdmin(req, res, next) {
 
 module.exports = authMiddleware;
 module.exports.authMiddleware = authMiddleware;
+module.exports.optionalAuth = optionalAuth;
 module.exports.requireAdmin = requireAdmin;

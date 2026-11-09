@@ -334,14 +334,26 @@ export const useMeetUsStore = defineStore('meetus', {
 
     // --- Community Posts ---
     async createPost(post) {
+      let activeUser = this.currentUser
+      try {
+        const authUserStr = localStorage.getItem('meetus_user')
+        if (authUserStr) {
+          const u = JSON.parse(authUserStr)
+          if (u && (u.name || u.id || u._id)) {
+            activeUser = formatUserForStore(u)
+            this.currentUser = activeUser
+          }
+        }
+      } catch (_) {}
+
       const newPost = {
         id: `post-${Date.now()}`,
         author: {
-          id: this.currentUser.id,
-          name: this.currentUser.name,
-          avatar: this.currentUser.avatar,
-          institution: this.currentUser.institution,
-          course: this.currentUser.course
+          id: String(activeUser.id || activeUser._id || 'me'),
+          name: activeUser.name,
+          avatar: activeUser.avatar,
+          institution: activeUser.institution,
+          course: activeUser.course
         },
         title: post.title,
         content: post.content,
@@ -361,10 +373,21 @@ export const useMeetUsStore = defineStore('meetus', {
           title: post.title,
           content: post.content,
           category: post.category,
-          tags: post.tags
+          tags: post.tags,
+          authorId: String(activeUser.id || activeUser._id || ''),
+          authorName: activeUser.name,
+          authorAvatar: activeUser.avatar,
+          authorCourse: activeUser.course,
+          authorInstitution: activeUser.institution
         })
-        if (res.data?._id) {
-          newPost.id = String(res.data._id)
+        if (res.data?._id || res.data?.id) {
+          newPost.id = String(res.data._id || res.data.id)
+          if (res.data.author_name) {
+            newPost.author.name = res.data.author_name
+            newPost.author.avatar = res.data.author_avatar || newPost.author.avatar
+            newPost.author.course = res.data.author_course || newPost.author.course
+            newPost.author.institution = res.data.author_institution || newPost.author.institution
+          }
           this._persist('posts')
         }
       } catch (err) {
@@ -382,7 +405,8 @@ export const useMeetUsStore = defineStore('meetus', {
         this._persist('posts')
 
         try {
-          await api.post(`/posts/${postId}/like`)
+          const activeId = String(this.currentUser?.id || this.currentUser?._id || '')
+          await api.post(`/posts/${postId}/like`, { userId: activeId })
         } catch (err) {
           console.warn('Backend like sync error:', err.message)
         }
@@ -400,10 +424,21 @@ export const useMeetUsStore = defineStore('meetus', {
     async addCommentToPost(postId, commentText) {
       const post = this.posts.find(p => p.id === postId)
       if (post && commentText.trim()) {
+        let activeUser = this.currentUser
+        try {
+          const authUserStr = localStorage.getItem('meetus_user')
+          if (authUserStr) {
+            const u = JSON.parse(authUserStr)
+            if (u && (u.name || u.id || u._id)) {
+              activeUser = formatUserForStore(u)
+            }
+          }
+        } catch (_) {}
+
         const commentObj = {
           id: `c-${Date.now()}`,
-          authorName: this.currentUser.name,
-          authorAvatar: this.currentUser.avatar,
+          authorName: activeUser.name,
+          authorAvatar: activeUser.avatar,
           text: commentText.trim(),
           createdAt: 'Agora mesmo'
         }
@@ -411,7 +446,12 @@ export const useMeetUsStore = defineStore('meetus', {
         this._persist('posts')
 
         try {
-          await api.post(`/posts/${postId}/comments`, { text: commentText.trim() })
+          await api.post(`/posts/${postId}/comment`, {
+            text: commentText.trim(),
+            authorId: String(activeUser.id || activeUser._id || ''),
+            authorName: activeUser.name,
+            authorAvatar: activeUser.avatar
+          })
         } catch (err) {
           console.warn('Backend comment sync error:', err.message)
         }
@@ -597,7 +637,7 @@ export const useMeetUsStore = defineStore('meetus', {
             content: p.content,
             category: p.category || 'Geral',
             likesCount: p.likes_count || p.likesCount || 0,
-            isLiked: (p.likes || []).includes(this.currentUser?.id || '1'),
+            isLiked: Boolean(this.currentUser?.id && (p.likes || []).map(String).includes(String(this.currentUser.id))),
             saved: false,
             createdAt: new Date(p.createdAt || Date.now()).toLocaleDateString('pt-MZ'),
             tags: p.tags || ['MEETUS'],
