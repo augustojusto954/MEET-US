@@ -3,17 +3,14 @@ import { boot } from 'quasar/wrappers'
 import axios from 'axios'
 
 const getApiUrl = () => {
-  if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL;
-  if (import.meta.env.API_URL) return import.meta.env.API_URL;
   if (typeof window !== 'undefined') {
-    // Se acedido via ngrok, domínio de produção ou na porta do servidor unificado
-    if (window.location.hostname.includes('ngrok') || window.location.port === '3000' || !window.location.port) {
-      return `${window.location.origin}/api`;
+    // Se o frontend dev estiver numa porta separada (ex: 9000), direcionar para o backend na 3000
+    if (window.location.port && window.location.port !== '3000' && window.location.port !== '80' && window.location.port !== '443') {
+      const host = window.location.hostname || 'localhost';
+      return `${window.location.protocol}//${host}:3000/api`;
     }
-    // Se acedido via IP na rede local (dev server na porta 9000)
-    if (window.location.hostname && window.location.hostname !== 'localhost') {
-      return `http://${window.location.hostname}:3000/api`;
-    }
+    // Servidor de produção unificado, ngrok, ou IP direto
+    return `${window.location.origin}/api`;
   }
   return 'http://localhost:3000/api';
 };

@@ -234,35 +234,49 @@
                 no-caps
                 style="border-radius: 8px; font-weight: 600;"
               />
+
+              <q-btn
+                flat
+                dense
+                color="primary"
+                icon="swap_horiz"
+                label="Trocar"
+                no-caps
+                class="col-auto q-px-sm"
+                style="border-radius: 8px; font-weight: 600;"
+                :to="{ name: 'exchange-create', query: { partnerId: student.id } }"
+              >
+                <q-tooltip>Propor Troca Direta</q-tooltip>
+              </q-btn>
             </div>
 
             <div class="row q-gutter-xs">
               <q-btn
                 unelevated
                 dense
-                color="positive"
-                icon="call"
-                label="Ligar"
+                color="primary"
+                icon="chat"
+                label="Mensagem"
                 no-caps
                 class="col text-weight-bold"
                 style="border-radius: 8px;"
-                :to="{ name: 'calls', query: { partnerId: student.id, partner: student.name } }"
+                :to="{ name: 'chat-user', params: { userId: student.id } }"
               >
-                <q-tooltip>Iniciar Chamada com {{ student.name }}</q-tooltip>
+                <q-tooltip>Conversar em direto com {{ student.name }}</q-tooltip>
               </q-btn>
 
               <q-btn
                 unelevated
                 dense
-                color="primary"
-                icon="swap_horiz"
-                label="Propor Troca"
+                color="positive"
+                icon="videocam"
+                label="Ligar"
                 no-caps
                 class="col text-weight-bold"
                 style="border-radius: 8px;"
-                :to="{ name: 'exchange-create', query: { partnerId: student.id } }"
+                :to="{ name: 'calls', query: { partnerId: student.id, partner: student.name, autostart: '1' } }"
               >
-                <q-tooltip>Propor Troca Direta</q-tooltip>
+                <q-tooltip>Iniciar Chamada em direto com {{ student.name }}</q-tooltip>
               </q-btn>
             </div>
           </div>
@@ -284,13 +298,19 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
 import { useMeetUsStore } from 'src/stores/meetus'
+import { useAuthStore } from 'src/stores/auth'
 import EmptyState from 'src/components/common/EmptyState.vue'
 
 const $q = useQuasar()
 const store = useMeetUsStore()
+const auth = useAuthStore()
+
+onMounted(() => {
+  store.syncWithBackend?.()
+})
 
 const searchQuery = ref('')
 const selectedInstitution = ref('')
@@ -368,7 +388,8 @@ function clearFilters() {
 }
 
 const filteredStudents = computed(() => {
-  let list = store.students.filter(s => s.id !== store.currentUser.id)
+  const myId = String(auth.userId || store.currentUser.id || '')
+  let list = store.students.filter(s => String(s.id) !== myId && String(s._id) !== myId)
 
   if (searchQuery.value.trim()) {
     const q = searchQuery.value.toLowerCase()

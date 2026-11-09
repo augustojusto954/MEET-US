@@ -6,17 +6,14 @@ import { FakeSocket } from 'src/services/fake-socket'
 const USE_FAKE = (import.meta.env.VITE_USE_FAKE_API || import.meta.env.USE_FAKE_API || 'false') === 'true'
 
 const getSocketUrl = () => {
-  if (import.meta.env.VITE_SOCKET_URL) return import.meta.env.VITE_SOCKET_URL;
-  if (import.meta.env.SOCKET_URL) return import.meta.env.SOCKET_URL;
   if (typeof window !== 'undefined') {
-    // Se acedido via ngrok, domínio de produção ou na porta do servidor unificado
-    if (window.location.hostname.includes('ngrok') || window.location.port === '3000' || !window.location.port) {
-      return window.location.origin;
+    // Se o frontend dev estiver numa porta separada (ex: 9000), direcionar para o backend na 3000
+    if (window.location.port && window.location.port !== '3000' && window.location.port !== '80' && window.location.port !== '443') {
+      const host = window.location.hostname || 'localhost';
+      return `${window.location.protocol}//${host}:3000`;
     }
-    // Se acedido via IP na rede local (dev server na porta 9000)
-    if (window.location.hostname && window.location.hostname !== 'localhost') {
-      return `http://${window.location.hostname}:3000`;
-    }
+    // Servidor de produção unificado, ngrok, ou IP direto
+    return window.location.origin;
   }
   return 'http://localhost:3000';
 };
@@ -30,7 +27,19 @@ if (USE_FAKE) {
   console.log('[Socket] A usar FakeSocket (modo offline)')
 } else {
   socket = io(SOCKET_URL, { autoConnect: true, transports: ['websocket', 'polling'] })
-  socket.on('connect', () => console.log('[Socket.IO] Conectado ao backend:', SOCKET_URL))
+  socket.on('connect', () => {
+    console.log('[Socket.IO] Conectado ao backend:', SOCKET_URL)
+    const storedUser = localStorage.getItem('meetus_user')
+    if (storedUser) {
+      try {
+        const u = JSON.parse(storedUser)
+        const uid = u?.id || u?._id
+        if (uid) {
+          socket.emit('user:join', String(uid))
+        }
+      } catch (_) {}
+    }
+  })
   socket.on('connect_error', (err) => console.warn('[Socket.IO] Erro de ligação:', err.message))
 }
 

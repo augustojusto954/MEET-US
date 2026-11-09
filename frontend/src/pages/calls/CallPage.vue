@@ -202,6 +202,7 @@
 import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useQuasar } from 'quasar'
+import { api } from 'src/boot/axios'
 import { useAuthStore } from 'src/stores/auth'
 import { useMeetUsStore } from 'src/stores/meetus'
 import { useCallStore } from 'src/stores/call'
@@ -295,23 +296,38 @@ function createSyntheticMediaStream(withVideo = true) {
 }
 
 async function obtainLocalMedia(withVideo = true) {
-  try {
-    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    try {
       localStream.value = await navigator.mediaDevices.getUserMedia({
         audio: true,
-        video: withVideo ? { width: { ideal: 1280 }, height: { ideal: 720 } } : false
+        video: withVideo ? { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 720 } } : false
       })
-    } else {
-      localStream.value = createSyntheticMediaStream(withVideo)
+    } catch (err1) {
+      console.warn('[WebRTC] Tentativa 1 com constraints ideais falhou, a tentar constraints básicas:', err1)
+      try {
+        localStream.value = await navigator.mediaDevices.getUserMedia({
+          audio: true,
+          video: withVideo ? true : false
+        })
+      } catch (err2) {
+        console.warn('[WebRTC] Tentativa 2 falhou, a tentar apenas áudio:', err2)
+        try {
+          localStream.value = await navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+          videoEnabled.value = false
+        } catch (err3) {
+          console.warn('[WebRTC] Câmara e microfone inacessíveis, a ativar fallback sintético:', err3)
+          localStream.value = createSyntheticMediaStream(withVideo)
+        }
+      }
     }
-  } catch (err) {
-    console.warn('[WebRTC] Não foi possível obter câmara/microfone físico, a usar fallback virtual:', err)
+  } else {
     localStream.value = createSyntheticMediaStream(withVideo)
   }
 
   await nextTick()
   if (localVideoEl.value && localStream.value) {
     localVideoEl.value.srcObject = localStream.value
+    localVideoEl.value.play().catch(() => {})
   }
   return localStream.value
 }
@@ -343,6 +359,7 @@ function initializePeerConnection() {
     nextTick(() => {
       if (remoteVideoEl.value) {
         remoteVideoEl.value.srcObject = remoteStream.value
+        remoteVideoEl.value.play().catch(e => console.warn('[WebRTC] Autoplay bloqueado pelo browser:', e))
       }
       if (event.track.kind === 'video') {
         hasRemoteVideo.value = true
@@ -609,13 +626,27 @@ onMounted(async () => {
   const partnerNameFromQuery = route.query.partner
   const isIncoming = route.query.incoming === '1' || route.query.incoming === 'true'
   const isVideo = route.query.video !== '0' && route.query.video !== 'false'
+  const autoStart = route.query.autostart === '1' || route.query.autostart === 'true'
 
   // Resolver utilizador alvo
   if (partnerIdFromQuery) {
     targetUserId.value = String(partnerIdFromQuery)
-    const found = store.students.find(s => String(s.id) === String(partnerIdFromQuery))
+    const found = store.students.find(s => String(s.id || s._id) === String(partnerIdFromQuery))
     if (found) {
       targetUser.value = found
+    } else {
+      try {
+        const uRes = await api.get(`/users/${partnerIdFromQuery}`)
+        if (uRes.data) {
+          targetUser.value = {
+            id: String(uRes.data._id || uRes.data.id),
+            name: uRes.data.name,
+            institution: uRes.data.institution || 'Universidade Eduardo Mondlane',
+            course: uRes.data.course || 'Ensino Superior',
+            avatar: uRes.data.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(uRes.data.name)}&background=059669&color=fff&size=256`
+          }
+        }
+      } catch (_) {}
     }
   }
 
@@ -623,7 +654,15 @@ onMounted(async () => {
     const found = store.students.find(s => s.name.toLowerCase().includes(partnerNameFromQuery.toLowerCase()))
     if (found) {
       targetUser.value = found
-      targetUserId.value = String(found.id)
+      targetUserId.value = String(found.id || found._id)
+    } else {
+      targetUser.value = {
+        id: targetUserId.value || 'partner',
+        name: partnerNameFromQuery,
+        institution: 'Universidade',
+        course: 'Estudante MEET-US',
+        avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(partnerNameFromQuery)}&background=059669&color=fff&size=256`
+      }
     }
   }
 
@@ -641,6 +680,8 @@ onMounted(async () => {
   // Se entrou através de uma chamada a receber (incoming)
   if (isIncoming) {
     await answerCall(isVideo)
+  } else if (autoStart) {
+    await startCall(isVideo)
   }
 })
 

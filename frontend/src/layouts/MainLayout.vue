@@ -293,8 +293,8 @@ function acceptIncomingCall(withVideo = true) {
   router.push({
     name: 'calls',
     query: {
-      partnerId: call.callerId,
-      partner: call.callerName,
+      partnerId: String(call.callerId),
+      partner: call.callerName || 'Colega',
       incoming: '1',
       video: withVideo ? '1' : '0'
     }
@@ -351,6 +351,11 @@ onMounted(() => {
 
   socket.on('call:incoming', handleIncomingCall)
   socket.on('call:offer', handleIncomingCall)
+  socket.on('call:ice-candidate', (data) => {
+    if (data?.candidate) {
+      callStore.addPendingCandidate(data.candidate)
+    }
+  })
   socket.on('call:ended', () => {
     showIncomingCallDialog.value = false
     callStore.clearIncomingCall()
@@ -361,6 +366,7 @@ onUnmounted(() => {
   window.removeEventListener('keydown', handleKeyDown)
   socket.off('call:incoming', handleIncomingCall)
   socket.off('call:offer', handleIncomingCall)
+  socket.off('call:ice-candidate')
 })
 </script>
 

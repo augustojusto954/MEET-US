@@ -29,16 +29,36 @@
               @click="handleLogout"
             />
           </template>
-          <q-btn
-            v-else
-            unelevated
-            rounded
-            color="primary"
-            icon="swap_horiz"
-            label="Propor Troca"
-            class="text-weight-bold shadow-2"
-            :to="{ name: 'exchange-create', query: { partnerId: profileUser.id } }"
-          />
+          <template v-else>
+            <q-btn
+              unelevated
+              rounded
+              color="white"
+              text-color="primary"
+              icon="chat"
+              label="Mensagem"
+              class="text-weight-bold shadow-2"
+              :to="{ name: 'chat-user', params: { userId: profileUser.id } }"
+            />
+            <q-btn
+              unelevated
+              rounded
+              color="positive"
+              icon="call"
+              label="Ligar"
+              class="text-weight-bold shadow-2"
+              :to="{ name: 'calls', query: { partnerId: profileUser.id, partner: profileUser.name, autostart: '1' } }"
+            />
+            <q-btn
+              unelevated
+              rounded
+              color="primary"
+              icon="swap_horiz"
+              label="Propor Troca"
+              class="text-weight-bold shadow-2"
+              :to="{ name: 'exchange-create', query: { partnerId: profileUser.id } }"
+            />
+          </template>
         </div>
       </div>
 
@@ -204,10 +224,11 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
-import { useMeetUsStore } from 'src/stores/meetus'
+import { api } from 'src/boot/axios'
+import { useMeetUsStore, formatUserForStore } from 'src/stores/meetus'
 import { useAuthStore } from 'src/stores/auth'
 
 const route = useRoute()
@@ -216,17 +237,48 @@ const $q = useQuasar()
 const store = useMeetUsStore()
 const auth = useAuthStore()
 
-const profileUser = computed(() => {
+const fetchedUser = ref(null)
+
+async function loadProfileUser() {
   const queryId = route.query.id
-  if (queryId && queryId !== String(store.currentUser.id)) {
-    const found = store.students.find(s => s.id === queryId)
+  if (queryId && queryId !== String(auth.userId)) {
+    const found = store.students.find(s => String(s.id || s._id) === String(queryId))
+    if (found) {
+      fetchedUser.value = found
+    }
+    try {
+      const res = await api.get(`/users/${queryId}`)
+      if (res.data) {
+        fetchedUser.value = formatUserForStore(res.data)
+      }
+    } catch (_) {}
+  } else {
+    fetchedUser.value = null
+  }
+}
+
+onMounted(() => {
+  loadProfileUser()
+})
+
+watch(() => route.query.id, () => {
+  loadProfileUser()
+})
+
+const profileUser = computed(() => {
+  if (fetchedUser.value) return fetchedUser.value
+  const queryId = route.query.id
+  if (queryId && queryId !== String(auth.userId)) {
+    const found = store.students.find(s => String(s.id || s._id) === String(queryId))
     if (found) return found
   }
-  return store.currentUser
+  return auth.user?.name ? formatUserForStore(auth.user) : store.currentUser
 })
 
 const isMe = computed(() => {
-  return String(profileUser.value.id) === String(store.currentUser.id) || !route.query.id
+  const queryId = route.query.id
+  if (!queryId) return true
+  return String(queryId) === String(auth.userId || store.currentUser.id)
 })
 
 function handleLogout() {

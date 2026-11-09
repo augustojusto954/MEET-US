@@ -82,23 +82,28 @@ function initSockets(io) {
         const { conversationId, senderId, receiverId, type = 'text', content, fileUrl } = data;
         if (!conversationId || !senderId) return;
 
-        const msg = await Message.create({
-          conversation_id: String(conversationId),
-          sender_id: String(senderId),
-          type,
-          content: content || '',
-          file_url: fileUrl || '',
-          status: 'sent'
-        });
+        let payload = null;
+        if (data._id || data.id) {
+          payload = data;
+        } else {
+          const msg = await Message.create({
+            conversation_id: String(conversationId),
+            sender_id: String(senderId),
+            type,
+            content: content || '',
+            file_url: fileUrl || '',
+            status: 'sent'
+          });
 
-        const conv = await Conversation.findById(conversationId);
-        if (conv) {
-          conv.last_message = content || `[${type}]`;
-          conv.last_message_at = new Date().toISOString();
-          await conv.save();
+          const conv = await Conversation.findById(conversationId);
+          if (conv) {
+            conv.last_message = content || `[${type}]`;
+            conv.last_message_at = new Date().toISOString();
+            await conv.save();
+          }
+
+          payload = msg.toJSON ? msg.toJSON() : msg;
         }
-
-        const payload = msg.toJSON ? msg.toJSON() : msg;
 
         // Broadcast to conversation room
         io.to(`conv:${conversationId}`).emit('chat:new', payload);
@@ -121,6 +126,7 @@ function initSockets(io) {
     socket.on('call:start', (data) => {
       const { targetId } = data;
       if (targetId) {
+        console.log(`[Socket.IO] call:start from ${data.callerId} -> user:${targetId}`);
         io.to(`user:${targetId}`).emit('call:incoming', data);
       }
     });
@@ -128,6 +134,8 @@ function initSockets(io) {
     socket.on('call:offer', (data) => {
       const { targetId } = data;
       if (targetId) {
+        console.log(`[Socket.IO] call:offer from ${data.callerId} (${data.callerName}) -> user:${targetId}`);
+        io.to(`user:${targetId}`).emit('call:incoming', data);
         io.to(`user:${targetId}`).emit('call:offer', data);
       }
     });
@@ -136,6 +144,7 @@ function initSockets(io) {
       const { callerId, targetId } = data;
       const destination = callerId || targetId;
       if (destination) {
+        console.log(`[Socket.IO] call:answer from ${data.targetId} -> user:${destination}`);
         io.to(`user:${destination}`).emit('call:answered', data);
         io.to(`user:${destination}`).emit('call:answer', data);
       }
@@ -152,6 +161,7 @@ function initSockets(io) {
       const { callerId, targetId } = data;
       const destination = callerId || targetId;
       if (destination) {
+        console.log(`[Socket.IO] call:reject -> user:${destination}`);
         io.to(`user:${destination}`).emit('call:rejected', data);
       }
     });
@@ -160,6 +170,7 @@ function initSockets(io) {
       const { targetId, callerId } = data;
       const destination = targetId || callerId;
       if (destination) {
+        console.log(`[Socket.IO] call:end -> user:${destination}`);
         io.to(`user:${destination}`).emit('call:ended', data);
       }
     });

@@ -30,7 +30,13 @@
         </div>
 
         <q-scroll-area class="col">
-          <q-list separator>
+          <div v-if="loadingConversations" class="q-pa-lg text-center">
+            <q-spinner-dots color="primary" size="32px" />
+            <div class="text-caption text-grey-6 q-mt-xs">A carregar conversas reais...</div>
+          </div>
+
+          <!-- Lista de Conversas Existentes -->
+          <q-list v-else-if="filteredConversations.length" separator>
             <q-item
               v-for="c in filteredConversations"
               :key="c.id"
@@ -39,11 +45,11 @@
               :active="selectedConversation?.id === c.id"
               active-class="bg-emerald-50"
               class="q-py-md"
-              @click="selectedConversation = c"
+              @click="selectConversation(c)"
             >
               <q-item-section avatar>
                 <q-avatar size="48px" class="relative-position">
-                  <img :src="c.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(c.name)}&background=059669&color=fff&size=256`" />
+                  <img :src="c.avatar" />
                   <q-badge
                     v-if="c.online"
                     color="positive"
@@ -56,8 +62,8 @@
 
               <q-item-section>
                 <div class="row items-center justify-between">
-                  <span class="text-subtitle2 text-weight-bold text-dark">{{ c.name }}</span>
-                  <span class="text-caption text-grey-6">{{ c.lastMessageAt }}</span>
+                  <span class="text-subtitle2 text-weight-bold text-dark ellipsis">{{ c.name }}</span>
+                  <span class="text-caption text-grey-6" style="font-size: 11px;">{{ c.lastMessageAt }}</span>
                 </div>
                 <div class="text-caption text-grey-7 ellipsis q-mt-xs">
                   {{ c.lastMessage }}
@@ -69,6 +75,37 @@
               </q-item-section>
             </q-item>
           </q-list>
+
+          <!-- Se ainda não tem conversas: Sugerir colegas reais para iniciar conversa -->
+          <div v-else class="q-pa-md text-center">
+            <q-icon name="forum" size="40px" color="grey-4" class="q-mb-sm" />
+            <div class="text-subtitle2 text-weight-bold text-dark">Ainda não tens conversas ativas</div>
+            <div class="text-caption text-grey-6 q-mb-md">Escolhe um colega abaixo para iniciar a tua primeira conversa real:</div>
+
+            <q-list dense separator class="text-left bg-grey-1 rounded-borders q-pa-xs">
+              <q-item
+                v-for="st in suggestedStudents.slice(0, 5)"
+                :key="st.id"
+                clickable
+                v-ripple
+                class="rounded-borders"
+                @click="startChatWith(st.id)"
+              >
+                <q-item-section avatar>
+                  <q-avatar size="32px">
+                    <img :src="st.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(st.name)}&background=059669&color=fff&size=256`" />
+                  </q-avatar>
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label class="text-weight-bold text-caption ellipsis">{{ st.name }}</q-item-label>
+                  <q-item-label caption class="ellipsis" style="font-size: 10px;">{{ st.course || st.institution }}</q-item-label>
+                </q-item-section>
+                <q-item-section side>
+                  <q-btn round flat dense icon="chat" color="primary" size="sm" />
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </div>
         </q-scroll-area>
       </div>
 
@@ -92,30 +129,33 @@
               @click="selectedConversation = null"
             />
             <q-avatar size="40px" class="q-mr-sm">
-              <img :src="selectedConversation.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(selectedConversation.name)}&background=059669&color=fff&size=256`" />
+              <img :src="selectedConversation.avatar" />
             </q-avatar>
             <div>
               <div class="text-subtitle2 text-weight-bold text-dark">{{ selectedConversation.name }}</div>
-              <div class="text-caption text-positive row items-center">
+              <div class="text-caption row items-center">
                 <q-badge :color="selectedConversation.online ? 'positive' : 'grey-5'" rounded class="q-mr-xs" />
                 <span :class="selectedConversation.online ? 'text-positive' : 'text-grey-6'">
-                  {{ selectedConversation.online ? 'Online' : 'Offline' }}
+                  {{ selectedConversation.online ? 'Online agora' : 'Offline' }}
                 </span>
               </div>
             </div>
           </div>
 
           <div class="row items-center q-gutter-xs">
-            <!-- Botão Iniciar Chamada -->
+            <!-- Botão Iniciar Chamada Real passando o partnerId -->
             <q-btn
-              flat
-              round
+              unelevated
+              rounded
               dense
-              color="primary"
+              color="positive"
               icon="videocam"
-              :to="{ name: 'calls', query: { partner: selectedConversation.name } }"
+              label="Ligar"
+              class="q-px-sm text-weight-bold"
+              no-caps
+              :to="{ name: 'calls', query: { partnerId: partnerUserId, partner: selectedConversation.name, autostart: '1' } }"
             >
-              <q-tooltip>Chamada de Estudo MEET-US</q-tooltip>
+              <q-tooltip>Iniciar Chamada de Vídeo/Áudio com {{ selectedConversation.name }}</q-tooltip>
             </q-btn>
 
             <!-- Toggle Painel Lateral de Informações -->
@@ -128,45 +168,26 @@
               class="gt-sm"
               @click="showInfoDrawer = !showInfoDrawer"
             >
-              <q-tooltip>Detalhes do Contacto & Troca</q-tooltip>
-            </q-btn>
-
-            <!-- Menu Opções (Silenciar, Bloquear, Denunciar) -->
-            <q-btn flat round dense icon="more_vert" color="grey-7">
-              <q-menu>
-                <q-list dense style="min-width: 160px">
-                  <q-item clickable v-close-popup @click="notify('Notificações da conversa silenciadas.')">
-                    <q-item-section avatar><q-icon name="notifications_off" color="grey-7" /></q-item-section>
-                    <q-item-section>Silenciar</q-item-section>
-                  </q-item>
-                  <q-item clickable v-close-popup @click="notify('Utilizador bloqueado.')" class="text-negative">
-                    <q-item-section avatar><q-icon name="block" color="negative" /></q-item-section>
-                    <q-item-section>Bloquear</q-item-section>
-                  </q-item>
-                  <q-item clickable v-close-popup @click="notify('Denúncia enviada.')" class="text-negative">
-                    <q-item-section avatar><q-icon name="flag" color="negative" /></q-item-section>
-                    <q-item-section>Denunciar</q-item-section>
-                  </q-item>
-                </q-list>
-              </q-menu>
+              <q-tooltip>Detalhes do Contacto</q-tooltip>
             </q-btn>
           </div>
-        </div>
-
-        <!-- Banner de Troca Relacionada (se houver) -->
-        <div v-if="selectedConversation.exchangeRelated" class="bg-emerald-50 q-px-md q-py-xs row items-center justify-between border-bottom" style="border-bottom: 1px solid #E2E8F0;">
-          <div class="row items-center text-caption text-dark">
-            <q-icon name="swap_horiz" color="primary" class="q-mr-xs" />
-            <span>Troca Ativa: <b>{{ selectedConversation.exchangeRelated.title }}</b> ({{ selectedConversation.exchangeRelated.date }})</span>
-          </div>
-          <q-btn flat dense rounded size="sm" color="primary" label="Ver Troca" :to="{ name: 'exchanges' }" />
         </div>
 
         <!-- Mensagens em Scroll -->
-        <q-scroll-area class="col q-pa-sm q-pa-md-md">
-          <div class="column q-gutter-sm">
+        <q-scroll-area ref="messagesScrollRef" class="col q-pa-sm q-pa-md-md">
+          <div v-if="loadingMessages" class="q-pa-lg text-center">
+            <q-spinner-dots color="primary" size="28px" />
+          </div>
+
+          <div v-else-if="currentMessages.length === 0" class="q-pa-xl text-center text-grey-6">
+            <q-icon name="waving_hand" size="36px" color="amber-7" class="q-mb-xs" />
+            <div class="text-subtitle2 text-weight-bold">Diz olá a {{ selectedConversation.name }}!</div>
+            <div class="text-caption">Esta é uma conversa privada em direto entre vós.</div>
+          </div>
+
+          <div v-else class="column q-gutter-sm">
             <div
-              v-for="msg in selectedConversation.messages"
+              v-for="msg in currentMessages"
               :key="msg.id"
               class="row"
               :class="msg.sender === 'me' ? 'justify-end' : 'justify-start'"
@@ -174,7 +195,7 @@
               <div
                 class="q-pa-sm q-pa-md-md shadow-1 chat-bubble"
                 :class="msg.sender === 'me' ? 'bg-primary text-white' : 'bg-white text-dark'"
-                style="border-radius: 12px; border: 1px solid #E2E8F0;"
+                style="border-radius: 14px; border: 1px solid #E2E8F0;"
               >
                 <div class="text-body2" style="word-break: break-word;">{{ msg.text }}</div>
                 <div
@@ -192,10 +213,9 @@
         <!-- Input de Envio de Mensagem -->
         <div class="q-pa-sm q-pa-md-md bg-white" style="border-top: 1px solid #E2E8F0;">
           <div class="row items-center q-gutter-xs q-gutter-sm-sm">
-            <q-btn flat round dense icon="attach_file" color="grey-7" @click="notify('Anexo adicionado.')" />
             <q-input
               v-model="inputMessage"
-              placeholder="Escreve a tua mensagem..."
+              placeholder="Escreve a tua mensagem em tempo real..."
               dense
               outlined
               class="col"
@@ -231,75 +251,310 @@
       >
         <div class="text-center q-mb-md">
           <q-avatar size="72px" class="shadow-2 q-mb-sm">
-            <img :src="selectedConversation.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(selectedConversation.name)}&background=059669&color=fff&size=256`" />
+            <img :src="selectedConversation.avatar" />
           </q-avatar>
           <div class="text-h6 text-weight-bolder text-dark">{{ selectedConversation.name }}</div>
-          <div class="text-caption text-grey-7">{{ selectedConversation.course }}</div>
-          <div class="text-caption text-grey-6">{{ selectedConversation.institution }}</div>
+          <div class="text-caption text-grey-7">{{ selectedConversation.other?.course || 'Estudante' }}</div>
+          <div class="text-caption text-grey-6">{{ selectedConversation.other?.institution || 'Moçambique' }}</div>
         </div>
 
         <q-separator class="q-my-md" />
 
-        <div class="text-caption text-weight-bold text-primary q-mb-xs">ANEXOS & FICHEIROS</div>
-        <div class="column q-gutter-xs">
-          <div class="row items-center text-caption text-grey-8 bg-soft-lavender q-pa-xs rounded-borders">
-            <q-icon name="picture_as_pdf" color="negative" class="q-mr-xs" />
-            <span class="ellipsis">resumo-design-systems.pdf</span>
-          </div>
-          <div class="row items-center text-caption text-grey-8 bg-soft-lavender q-pa-xs rounded-borders">
-            <q-icon name="link" color="primary" class="q-mr-xs" />
-            <span class="ellipsis">figma.com/file/meetus-project</span>
-          </div>
+        <div class="column q-gutter-sm">
+          <q-btn
+            unelevated
+            color="positive"
+            icon="videocam"
+            label="Fazer Chamada"
+            no-caps
+            class="full-width text-weight-bold"
+            :to="{ name: 'calls', query: { partnerId: partnerUserId, partner: selectedConversation.name, autostart: '1' } }"
+          />
+
+          <q-btn
+            outline
+            color="primary"
+            label="Ver Perfil Completo"
+            no-caps
+            class="full-width text-weight-bold"
+            :to="{ name: 'profile', query: { id: partnerUserId } }"
+          />
         </div>
-
-        <q-separator class="q-my-md" />
-
-        <q-btn
-          outline
-          rounded
-          dense
-          color="primary"
-          label="Ver Perfil Completo"
-          class="full-width"
-          :to="{ name: 'profile', query: { id: selectedConversation.participantId } }"
-        />
       </div>
     </q-card>
   </q-page>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
+import { api } from 'src/boot/axios'
+import { socket } from 'src/boot/socket'
+import { useAuthStore } from 'src/stores/auth'
 import { useMeetUsStore } from 'src/stores/meetus'
 
 const route = useRoute()
+const router = useRouter()
 const $q = useQuasar()
+const auth = useAuthStore()
 const store = useMeetUsStore()
 
 const searchConv = ref('')
 const inputMessage = ref('')
 const showInfoDrawer = ref(false)
+const loadingConversations = ref(false)
+const loadingMessages = ref(false)
+const messagesScrollRef = ref(null)
 
-// No ecrã desktop abre a primeira conversa; em ecrã mobile começa na lista
-const selectedConversation = ref($q.screen.gt.sm ? store.conversations[0] : null)
+const conversations = ref([])
+const selectedConversation = ref(null)
+const currentMessages = ref([])
+const suggestedStudents = ref([])
 
-const filteredConversations = computed(() => {
-  if (!searchConv.value.trim()) return store.conversations
-  const q = searchConv.value.toLowerCase()
-  return store.conversations.filter(c => c.name.toLowerCase().includes(q))
+const partnerUserId = computed(() => {
+  if (!selectedConversation.value) return ''
+  const other = selectedConversation.value.other
+  if (other) return String(other.id || other._id)
+  return String(selectedConversation.value.participantId || '')
 })
 
-function handleSend() {
-  if (!inputMessage.value.trim() || !selectedConversation.value) return
-  store.sendMessage(selectedConversation.value.id, inputMessage.value)
-  inputMessage.value = ''
+const filteredConversations = computed(() => {
+  if (!searchConv.value.trim()) return conversations.value
+  const q = searchConv.value.toLowerCase()
+  return conversations.value.filter(c => c.name.toLowerCase().includes(q))
+})
+
+function formatTime(isoOrDate) {
+  if (!isoOrDate) return ''
+  try {
+    const d = new Date(isoOrDate)
+    return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+  } catch (e) {
+    return ''
+  }
 }
 
-function notify(msg) {
-  $q.notify({ type: 'info', message: msg })
+function scrollToBottom() {
+  nextTick(() => {
+    if (messagesScrollRef.value) {
+      messagesScrollRef.value.setScrollPercentage('vertical', 1.0)
+    }
+  })
 }
+
+async function loadConversations(autoSelect = true) {
+  if (!auth.userId) return
+  loadingConversations.value = true
+  try {
+    const res = await api.get('/chat/conversations', { params: { userId: auth.userId } })
+    const rawList = Array.isArray(res.data) ? res.data : []
+
+    conversations.value = rawList.map(c => {
+      const other = c.other || {}
+      const name = other.name || 'Colega MEET-US'
+      const avatar = other.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=059669&color=fff&size=256`
+      return {
+        id: String(c.id || c._id),
+        other,
+        name,
+        avatar,
+        online: Boolean(other.online),
+        lastMessage: c.last_message || 'Inicia uma conversa...',
+        lastMessageAt: formatTime(c.last_message_at),
+        unreadCount: c.unread || 0
+      }
+    })
+
+    if (autoSelect && !selectedConversation.value && conversations.value.length > 0 && $q.screen.gt.sm) {
+      selectConversation(conversations.value[0])
+    }
+  } catch (err) {
+    console.error('Erro ao carregar conversas do backend:', err)
+  } finally {
+    loadingConversations.value = false
+  }
+}
+
+async function selectConversation(conv) {
+  selectedConversation.value = conv
+  currentMessages.value = []
+  loadingMessages.value = true
+
+  if (socket) {
+    socket.emit('conversation:join', conv.id)
+  }
+
+  try {
+    const res = await api.get(`/chat/conversations/${conv.id}/messages`)
+    const rawMsgs = Array.isArray(res.data) ? res.data : []
+
+    currentMessages.value = rawMsgs.map(m => ({
+      id: String(m._id || m.id),
+      sender: String(m.sender_id) === String(auth.userId) ? 'me' : 'other',
+      text: m.content || '',
+      time: formatTime(m.createdAt)
+    }))
+
+    // Marcar como lido
+    api.put(`/chat/conversations/${conv.id}/read`).catch(() => {})
+    conv.unreadCount = 0
+
+    scrollToBottom()
+  } catch (err) {
+    console.error('Erro ao carregar mensagens:', err)
+  } finally {
+    loadingMessages.value = false
+  }
+}
+
+async function startChatWith(otherUserId) {
+  if (!otherUserId || String(otherUserId) === String(auth.userId)) return
+  try {
+    const res = await api.post('/chat/conversations', {
+      userId: auth.userId,
+      otherId: String(otherUserId)
+    })
+    const convData = res.data
+
+    await loadConversations(false)
+
+    const existing = conversations.value.find(c => String(c.id) === String(convData.id || convData._id))
+    if (existing) {
+      selectConversation(existing)
+    } else {
+      let other = convData.other || store.students.find(s => String(s.id) === String(otherUserId))
+      if (!other || !other.name) {
+        try {
+          const uRes = await api.get(`/users/${otherUserId}`)
+          if (uRes.data) other = uRes.data
+        } catch (_) {}
+      }
+      other = other || {}
+      const newConv = {
+        id: String(convData.id || convData._id),
+        other,
+        name: other.name || 'Colega',
+        avatar: other.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(other.name || 'C')}&background=059669&color=fff&size=256`,
+        online: Boolean(other.online),
+        lastMessage: '',
+        lastMessageAt: '',
+        unreadCount: 0
+      }
+      conversations.value.unshift(newConv)
+      selectConversation(newConv)
+    }
+  } catch (err) {
+    console.error('Erro ao iniciar conversa com utilizador:', err)
+    $q.notify({ type: 'negative', message: 'Não foi possível abrir conversa com este estudante.' })
+  }
+}
+
+async function handleSend() {
+  if (!inputMessage.value.trim() || !selectedConversation.value) return
+  const text = inputMessage.value.trim()
+  inputMessage.value = ''
+
+  const convId = selectedConversation.value.id
+  const receiverId = partnerUserId.value
+
+  const optimisticMsg = {
+    id: `opt-${Date.now()}`,
+    sender: 'me',
+    text,
+    time: formatTime(new Date())
+  }
+  currentMessages.value.push(optimisticMsg)
+  scrollToBottom()
+
+  selectedConversation.value.lastMessage = text
+  selectedConversation.value.lastMessageAt = optimisticMsg.time
+
+  try {
+    const res = await api.post('/chat/messages', {
+      conversationId: convId,
+      content: text
+    })
+
+    const createdMsg = res.data
+    if (socket) {
+      socket.emit('chat:send', {
+        _id: createdMsg?._id || createdMsg?.id,
+        conversationId: convId,
+        senderId: auth.userId,
+        receiverId,
+        content: text,
+        createdAt: createdMsg?.createdAt || new Date().toISOString()
+      })
+    }
+  } catch (err) {
+    console.error('Erro ao enviar mensagem:', err)
+    $q.notify({ type: 'negative', message: 'Falha ao enviar mensagem.' })
+  }
+}
+
+function handleIncomingMessage(msg) {
+  if (!msg) return
+  const convId = String(msg.conversation_id)
+
+  if (selectedConversation.value && String(selectedConversation.value.id) === convId) {
+    if (String(msg.sender_id) !== String(auth.userId)) {
+      currentMessages.value.push({
+        id: String(msg._id || msg.id),
+        sender: 'other',
+        text: msg.content || '',
+        time: formatTime(msg.createdAt || Date.now())
+      })
+      scrollToBottom()
+      api.put(`/chat/conversations/${convId}/read`).catch(() => {})
+    }
+  }
+
+  // Atualizar a conversa na lista
+  const targetConv = conversations.value.find(c => String(c.id) === convId)
+  if (targetConv) {
+    targetConv.lastMessage = msg.content || ''
+    targetConv.lastMessageAt = formatTime(msg.createdAt || Date.now())
+    if (!selectedConversation.value || String(selectedConversation.value.id) !== convId) {
+      targetConv.unreadCount = (targetConv.unreadCount || 0) + 1
+    }
+  } else {
+    loadConversations(false)
+  }
+}
+
+onMounted(async () => {
+  if (socket) {
+    socket.on('chat:new', handleIncomingMessage)
+    if (auth.userId) socket.emit('user:join', auth.userId)
+  }
+
+  // Carregar lista de colegas sugeridos para criar conversas imediatas
+  suggestedStudents.value = store.students.filter(s => String(s.id) !== String(auth.userId))
+
+  await loadConversations(false)
+
+  // Se veio com parâmetro de rota :userId (/chat/:userId)
+  const targetUserIdFromRoute = route.params.userId || route.query.userId
+  if (targetUserIdFromRoute) {
+    await startChatWith(targetUserIdFromRoute)
+  } else if (conversations.value.length > 0 && $q.screen.gt.sm) {
+    selectConversation(conversations.value[0])
+  }
+})
+
+// Observar mudança de rota caso navegue entre diferentes utilizadores
+watch(() => route.params.userId, (newUserId) => {
+  if (newUserId) {
+    startChatWith(newUserId)
+  }
+})
+
+onUnmounted(() => {
+  if (socket) {
+    socket.off('chat:new', handleIncomingMessage)
+  }
+})
 </script>
 
 <style scoped>
