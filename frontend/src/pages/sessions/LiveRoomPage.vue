@@ -181,7 +181,17 @@
               class="main-live-video"
             />
 
-            <!-- 2. Palco Digital Dinâmico (Canvas 60fps de alta fidelidade para Estudantes e Fallback) -->
+            <!-- 2. Se for Estudante e o Mentor estiver a transmitir vídeo via WebRTC -->
+            <video
+              v-else-if="!isHost && remoteHostStreamActive"
+              ref="remoteVideoEl"
+              autoplay
+              playsinline
+              webkit-playsinline
+              class="main-live-video"
+            />
+
+            <!-- 3. Palco Digital Dinâmico (Canvas 60fps de alta fidelidade para Estudantes e Fallback) -->
             <div v-else class="full-width full-height relative-position flex flex-center stage-canvas-container">
               <canvas ref="stageCanvasEl" class="stage-canvas full-width full-height"></canvas>
 
@@ -574,6 +584,18 @@ const sessionState = computed(() => session.value?.status || 'SCHEDULED');
 const hostVideoEl = ref(null);
 const localPipVideoEl = ref(null);
 const stageCanvasEl = ref(null);
+const remoteVideoEl = ref(null);
+const remoteHostStream = ref(null);
+const remoteHostStreamActive = ref(false);
+const peerConnections = new Map();
+let studentPeerConnection = null;
+
+const ICE_SERVERS = [
+  { urls: 'stun:stun.l.google.com:19302' },
+  { urls: 'stun:stun1.l.google.com:19302' },
+  { urls: 'stun:stun2.l.google.com:19302' },
+  { urls: 'stun:stun.cloudflare.com:3478' }
+];
 
 const activeDrawer = ref(null); // 'participants' | 'chat' | null
 const micEnabled = ref(true);
@@ -692,6 +714,16 @@ onMounted(async () => {
         }, 5000);
       }
     });
+
+    socket.on('session:webrtc_signal', (payload) => {
+      handleStudentWebRtcSignal(payload);
+    });
+
+    socket.on('session:participant_joined', (payload) => {
+      if (isHost.value && hostMediaStream && payload.participant?.socketId && payload.participant.socketId !== socket.id) {
+        createPeerConnectionForParticipant(payload.participant.socketId);
+      }
+    });
   }
 });
 
@@ -701,6 +733,119 @@ onUnmounted(() => {
   clearTimeout(handNotificationTimer);
   stopMediaStreams();
 });
+
+// Mentor cria ligação WebRTC direta com cada estudante na sala
+async function createPeerConnectionForParticipant(targetSocketId) {
+  if (!hostMediaStream || !targetSocketId) return;
+  if (peerConnections.has(targetSocketId)) {
+    try { peerConnections.get(targetSocketId).close(); } catch (e) {}
+  }
+
+  const pc = new RTCPeerConnection({ iceServers: ICE_SERVERS });
+  peerConnections.set(targetSocketId, pc);
+
+  hostMediaStream.getTracks().forEach(track => {
+    pc.addTrack(track, hostMediaStream);
+  });
+
+  pc.onicecandidate = (event) => {
+    if (event.candidate) {
+      socket.emit('session:webrtc_signal', {
+        sessionId: sessionId.value,
+        targetSocketId,
+        senderId: auth.user?.id,
+        signal: { type: 'candidate', candidate: event.candidate }
+      });
+    }
+  };
+
+  try {
+    const offer = await pc.createOffer();
+    await pc.setLocalDescription(offer);
+    socket.emit('session:webrtc_signal', {
+      sessionId: sessionId.value,
+      targetSocketId,
+      senderId: auth.user?.id,
+      signal: { type: 'offer', sdp: pc.localDescription }
+    });
+  } catch (err) {
+    console.warn('[WebRTC Live] Erro ao criar oferta:', err);
+  }
+}
+
+// Estudante processa sinal de vídeo e áudio em directo vindo do Mentor
+async function handleStudentWebRtcSignal(payload) {
+  const { senderSocketId, signal } = payload || {};
+  if (!signal) return;
+
+  if (signal.type === 'offer') {
+    if (studentPeerConnection) {
+      try { studentPeerConnection.close(); } catch (e) {}
+    }
+    studentPeerConnection = new RTCPeerConnection({ iceServers: ICE_SERVERS });
+
+    studentPeerConnection.ontrack = (event) => {
+      console.log('[WebRTC Live] Transmissão em directo da mentora recebida com sucesso!');
+      remoteHostStream.value = event.streams[0];
+      remoteHostStreamActive.value = true;
+      nextTick(() => {
+        if (remoteVideoEl.value) {
+          remoteVideoEl.value.srcObject = event.streams[0];
+          remoteVideoEl.value.play().catch(e => {
+            console.warn('[WebRTC Live] Autoplay de áudio bloqueado pelo browser:', e);
+            audioBlocked.value = true;
+          });
+        }
+      });
+    };
+
+    studentPeerConnection.onicecandidate = (event) => {
+      if (event.candidate && senderSocketId) {
+        socket.emit('session:webrtc_signal', {
+          sessionId: sessionId.value,
+          targetSocketId: senderSocketId,
+          senderId: auth.user?.id,
+          signal: { type: 'candidate', candidate: event.candidate }
+        });
+      }
+    };
+
+    try {
+      await studentPeerConnection.setRemoteDescription(new RTCSessionDescription(signal.sdp));
+      const answer = await studentPeerConnection.createAnswer();
+      await studentPeerConnection.setLocalDescription(answer);
+      socket.emit('session:webrtc_signal', {
+        sessionId: sessionId.value,
+        targetSocketId: senderSocketId,
+        senderId: auth.user?.id,
+        signal: { type: 'answer', sdp: studentPeerConnection.localDescription }
+      });
+    } catch (err) {
+      console.warn('[WebRTC Live] Erro ao responder oferta:', err);
+    }
+  } else if (signal.type === 'answer' && isHost.value) {
+    const pc = peerConnections.get(senderSocketId);
+    if (pc && pc.signalingState !== 'closed') {
+      try {
+        await pc.setRemoteDescription(new RTCSessionDescription(signal.sdp));
+      } catch (err) {
+        console.warn('[WebRTC Live] Erro ao aplicar answer:', err);
+      }
+    }
+  } else if (signal.type === 'candidate') {
+    const pc = isHost.value ? peerConnections.get(senderSocketId) : studentPeerConnection;
+    if (pc && pc.remoteDescription && signal.candidate) {
+      try {
+        await pc.addIceCandidate(new RTCIceCandidate(signal.candidate));
+      } catch (err) {
+        console.warn('[WebRTC Live] Erro ao adicionar candidato ICE:', err);
+      }
+    }
+  } else if (signal.type === 'host_stopped') {
+    remoteHostStreamActive.value = false;
+    remoteHostStream.value = null;
+  }
+}
 
 // Inicialização segura do Palco (Diferenciando Mentor vs Estudante)
 function initStage() {
@@ -724,6 +869,15 @@ async function initHostCamera() {
           hostVideoEl.value.srcObject = stream;
         }
       });
+
+      // Se já houver participantes na sala, conectar imediatamente via WebRTC
+      if (store.roomParticipants) {
+        store.roomParticipants.forEach(p => {
+          if (p.socketId && p.socketId !== socket.id) {
+            createPeerConnectionForParticipant(p.socketId);
+          }
+        });
+      }
       return;
     }
   } catch (err) {
@@ -823,6 +977,10 @@ function startStageCanvas() {
 
 function unlockAudio() {
   audioBlocked.value = false;
+  if (remoteVideoEl.value) {
+    remoteVideoEl.value.muted = false;
+    remoteVideoEl.value.play().catch(e => console.warn(e));
+  }
   $q.notify({ type: 'positive', icon: 'volume_up', message: 'Áudio da aula ativado!' });
 }
 
@@ -839,7 +997,21 @@ function stopMediaStreams() {
     studentLocalStream.getTracks().forEach(t => t.stop());
     studentLocalStream = null;
   }
+  peerConnections.forEach(pc => {
+    try { pc.close(); } catch (e) {}
+  });
+  peerConnections.clear();
+
+  if (studentPeerConnection) {
+    try { studentPeerConnection.close(); } catch (e) {}
+    studentPeerConnection = null;
+  }
+
+  remoteHostStreamActive.value = false;
+  remoteHostStream.value = null;
+
   if (hostVideoEl.value) hostVideoEl.value.srcObject = null;
+  if (remoteVideoEl.value) remoteVideoEl.value.srcObject = null;
   if (localPipVideoEl.value) localPipVideoEl.value.srcObject = null;
 }
 

@@ -186,10 +186,8 @@ const MOZ_STUDENTS_SEED = [
 
 async function seedDatabase(force = false) {
   const existingUsers = await User.find({});
-  const hasOutdatedAvatars = existingUsers.some(u => u.avatar && u.avatar.includes('pravatar'));
-
-  if (!force && existingUsers.length >= 6 && !hasOutdatedAvatars) {
-    console.log(`[Seed] Database already contains ${existingUsers.length} verified Mozambican users. Skipping seed.`);
+  if (!force && existingUsers.length > 0) {
+    console.log(`[Seed] Database contains ${existingUsers.length} users (${existingUsers.map(u => u.name).join(', ')}). Skipping seed.`);
     return;
   }
 
