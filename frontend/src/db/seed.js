@@ -74,7 +74,44 @@ export function buildSeed(db) {
     reputation: 4.9,
     reviews_count: 24,
     verified: 1,
-    online: 1
+    online: 1,
+    role: 'student'
+  })
+
+  users.push({
+    name: 'Rosa',
+    email: 'rosa@gmail.com',
+    password: '123456',
+    avatar: 'https://ui-avatars.com/api/?name=Rosa&background=059669&color=ffffff&size=256&bold=true',
+    bio: 'Estudante de Economia na Universidade Eduardo Mondlane.',
+    institution: 'Universidade Eduardo Mondlane',
+    course: 'Economia',
+    year: 1,
+    city: 'Maputo',
+    availability: 'Flexível',
+    reputation: 5.0,
+    reviews_count: 6,
+    verified: 1,
+    online: 1,
+    role: 'student'
+  })
+
+  users.push({
+    name: 'Administrador MEET-US',
+    email: 'admin@meetus.mz',
+    password: 'admin1234',
+    avatar: 'https://ui-avatars.com/api/?name=Admin&background=059669&color=ffffff&size=256&bold=true',
+    bio: 'Administrador Central do MEET-US.',
+    institution: 'Administração Geral MEET-US',
+    course: 'Gestão de Redes',
+    year: 5,
+    city: 'Maputo',
+    availability: 'Total',
+    reputation: 5.0,
+    reviews_count: 50,
+    verified: 1,
+    online: 1,
+    role: 'admin'
   })
 
   for (let i = 0; i < 25; i++) {
@@ -100,8 +137,8 @@ export function buildSeed(db) {
 
   const insertUser = db.prepare(`
     INSERT INTO users
-      (name,email,password,avatar,bio,institution,course,year,city,availability,reputation,reviews_count,verified,online)
-    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+      (name,email,password,avatar,bio,institution,course,year,city,availability,reputation,reviews_count,verified,online,role)
+    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
   `)
 
   const userIds = []
@@ -109,7 +146,7 @@ export function buildSeed(db) {
     insertUser.run([
       u.name, u.email, u.password, u.avatar, u.bio, u.institution,
       u.course, u.year, u.city, u.availability, u.reputation,
-      u.reviews_count, u.verified, u.online
+      u.reviews_count, u.verified, u.online, u.role || 'student'
     ])
     userIds.push(db.exec('SELECT last_insert_rowid() AS id')[0].values[0][0])
   }

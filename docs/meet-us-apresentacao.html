@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="pt-MZ">
+<head>
+  <meta charset="UTF-8">
+  <title>MEET-US — Manual Oficial, Arquitetura e Roteiro de Apresentação</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap');
+
+    @page {
+      size: A4;
+      margin: 18mm 16mm 20mm 16mm;
+      @bottom-right {
+        content: counter(page);
+        font-size: 9pt;
+        color: #64748B;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: #1E293B;
+      background: #FFFFFF;
+      margin: 0;
+      padding: 0;
+      font-size: 10.5pt;
+      line-height: 1.55;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: 'Poppins', sans-serif;
+      color: #0F172A;
+      margin-top: 1.4em;
+      margin-bottom: 0.5em;
+      page-break-after: avoid;
+    }
+
+    h1 {
+      font-size: 24pt;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      line-height: 1.2;
+    }
+
+    h2 {
+      font-size: 15pt;
+      font-weight: 700;
+      color: #018B48;
+      border-bottom: 2px solid #E2E8F0;
+      padding-bottom: 6px;
+      margin-top: 1.8em;
+    }
+
+    h3 {
+      font-size: 12pt;
+      font-weight: 600;
+      color: #0F172A;
+      margin-top: 1.2em;
+    }
+
+    p {
+      margin: 0.6em 0;
+      text-align: justify;
+    }
+
+    .cover-page {
+      page-break-after: always;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 250mm;
+      padding: 20mm 0 10mm 0;
+    }
+
+    .cover-header {
+      border-left: 6px solid #018B48;
+      padding-left: 20px;
+    }
+
+    .cover-badge {
+      display: inline-block;
+      background: #ECFDF5;
+      color: #018B48;
+      font-weight: 700;
+      font-size: 10pt;
+      padding: 4px 14px;
+      border-radius: 999px;
+      margin-bottom: 15px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .cover-title {
+      font-size: 32pt;
+      font-weight: 800;
+      color: #0F172A;
+      margin: 0 0 10px 0;
+      line-height: 1.1;
+    }
+
+    .cover-subtitle {
+      font-size: 14pt;
+      color: #475569;
+      font-weight: 400;
+      margin: 0;
+      line-height: 1.4;
+    }
+
+    .cover-hero-box {
+      background: linear-gradient(135deg, #018B48 0%, #065F46 100%);
+      color: white;
+      padding: 24px 28px;
+      border-radius: 16px;
+      margin: 30px 0;
+      box-shadow: 0 10px 25px -5px rgba(1, 139, 72, 0.25);
+    }
+
+    .cover-hero-box h3 {
+      color: white;
+      margin-top: 0;
+      font-size: 14pt;
+    }
+
+    .cover-hero-box p {
+      color: #E6F4EA;
+      font-size: 10.5pt;
+      margin-bottom: 0;
+    }
+
+    .cover-meta {
+      border-top: 1px solid #E2E8F0;
+      padding-top: 18px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      font-size: 9.5pt;
+      color: #475569;
+    }
+
+    .meta-item strong {
+      display: block;
+      color: #0F172A;
+      font-size: 10pt;
+    }
+
+    .card {
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin: 14px 0;
+    }
+
+    .card-accent {
+      border-left: 4px solid #018B48;
+    }
+
+    .card h4 {
+      margin: 0 0 6px 0;
+      font-size: 11pt;
+      color: #0F172A;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 8.5pt;
+      font-weight: 600;
+      margin-right: 6px;
+      background: #E2E8F0;
+      color: #334155;
+    }
+
+    .badge-primary { background: #ECFDF5; color: #018B48; }
+    .badge-admin { background: #F3E8FF; color: #7E22CE; }
+    .badge-tech { background: #EFF6FF; color: #2563EB; }
+    .badge-orange { background: #FFF7ED; color: #C2410C; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 9pt;
+      page-break-inside: avoid;
+    }
+
+    th, td {
+      border: 1px solid #CBD5E1;
+      padding: 8px 10px;
+      text-align: left;
+    }
+
+    th {
+      background: #F1F5F9;
+      font-weight: 700;
+      color: #0F172A;
+    }
+
+    tr:nth-child(even) {
+      background: #F8FAFC;
+    }
+
+    .page-break {
+      page-break-after: always;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin: 14px 0;
+    }
+
+    .feature-card {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 10px;
+      padding: 12px 14px;
+      page-break-inside: avoid;
+    }
+
+    .feature-card strong {
+      display: block;
+      color: #018B48;
+      font-size: 10.5pt;
+      margin-bottom: 4px;
+    }
+
+    .step-box {
+      display: flex;
+      gap: 14px;
+      margin: 12px 0;
+      page-break-inside: avoid;
+    }
+
+    .step-number {
+      background: #018B48;
+      color: white;
+      font-weight: 800;
+      font-size: 11pt;
+      min-width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .step-content {
+      flex: 1;
+    }
+
+    .step-content h4 {
+      margin: 0 0 4px 0;
+      font-size: 10.5pt;
+      color: #0F172A;
+    }
+
+    ul, ol {
+      margin: 6px 0 12px 0;
+      padding-left: 20px;
+    }
+
+    li {
+      margin-bottom: 4px;
+    }
+
+    code {
+      font-family: Consolas, 'Courier New', monospace;
+      background: #F1F5F9;
+      padding: 2px 5px;
+      border-radius: 4px;
+      font-size: 9pt;
+      color: #0F172A;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ================= CAPA ================= -->
+  <div class="cover-page">
+    <div class="cover-header">
+      <div class="cover-badge">🇲🇿 Plataforma Universitária de Moçambique</div>
+      <h1 class="cover-title">MEET-US</h1>
+      <p class="cover-subtitle">Manual Oficial do Sistema, Arquitetura Técnica & Roteiro de Apresentação</p>
+    </div>
+
+    <div class="cover-hero-box">
+      <h3>Conectar. Partilhar. Aprender.</h3>
+      <p>
+        O MEET-US é uma plataforma universitária concebida para promover a partilha mútua de competências e a mentoria entre estudantes do ensino superior em Moçambique. Funciona de forma totalmente instalável (PWA & Desktop), operando com e sem ligação à internet, com autenticação persistente e comunicação WebRTC em tempo real.
+      </p>
+    </div>
+
+    <div class="cover-meta">
+      <div class="meta-item">
+        <strong>Versão do Sistema:</strong>
+        MEET-US v2.0 (Produção & PWA Standalone)
+      </div>
+      <div class="meta-item">
+        <strong>Ecossistema Universitário:</strong>
+        UEM, UP, ISCTEM, UniSave, A Politécnica, UniLúrio, etc.
+      </div>
+      <div class="meta-item">
+        <strong>Modo de Acesso:</strong>
+        Web PWA, Windows (.exe) e Túnel Seguro Cloudflare
+      </div>
+      <div class="meta-item">
+        <strong>Data de Publicação:</strong>
+        Novembro de 2026
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= SEÇÃO 1: VISÃO GERAL ================= -->
+  <h2>1. Visão Geral e Propósito</h2>
+  <p>
+    Nas universidades de Moçambique, os estudantes enfrentam frequentemente desafios para dominar competências práticas (como programação, cálculo financeiro, escrita académica de teses, idiomas ou design) sem custos adicionais. O <strong>MEET-US</strong> resolve esta assimetria através de um modelo colaborativo <em>Peer-to-Peer</em> (P2P), onde cada estudante pode <strong>ensinar o que já domina</strong> em troca de <strong>aprender o que precisa</strong>.
+  </p>
+
+  <div class="card card-accent">
+    <h4>💡 Princípio Fundamental da Plataforma</h4>
+    <p>
+      Nenhuma troca envolve dinheiro. O conhecimento é a moeda de valor. Um estudante de Engenharia Informática ensina Python a um colega de Gestão, que em troca lhe ensina Finanças Empresariais ou Excel Avançado.
+    </p>
+  </div>
+
+  <h3>Principais Objetivos Estratégicos:</h3>
+  <ul>
+    <li><strong>Combate à Exclusão Digital e Instabilidade de Rede:</strong> Suporte completo a funcionamento <em>Offline-First</em>. Se a internet falhar ou estiver indisponível, a aplicação continua acessível com dados em cache.</li>
+    <li><strong>Reconhecimento Automático do Utilizador:</strong> O estudante ou administrador autentica-se <strong>apenas na primeira vez</strong>. Nas utilizações seguintes, a aplicação reconhece a sessão automaticamente sem exigir login repetitivo.</li>
+    <li><strong>Acesso Multiplataforma Nativo:</strong> Disponível como Progressive Web App (PWA) instalável em telemóveis Android/iOS, navegador Web e aplicação Desktop (.exe para Windows).</li>
+    <li><strong>Salas de Estudo em Tempo Real:</strong> Áudio, vídeo e partilha de ecrã integrados sem necessidade de instalar aplicações de terceiros (como Zoom ou Teams).</li>
+  </ul>
+
+  <!-- ================= SEÇÃO 2: ARQUITETURA E TECNOLOGIAS ================= -->
+  <div class="page-break"></div>
+  <h2>2. Arquitetura Técnica e Tecnologias Usadas</h2>
+  <p>
+    A solução foi concebida sob uma arquitetura moderna, modular e de alto desempenho, dividida em três pilares principais:
+  </p>
+
+  <div class="feature-grid">
+    <div class="feature-card">
+      <strong>🖥️ Frontend Moderno & PWA</strong>
+      <span class="badge badge-tech">Vue 3</span>
+      <span class="badge badge-primary">Quasar Framework</span>
+      <span class="badge badge-tech">Vite</span>
+      <span class="badge badge-primary">Workbox Service Worker</span>
+      <p style="font-size: 9.5pt; margin-top: 6px;">
+        Interface responsiva com Design System oficial em Verde Esmeralda (<code>#018B48</code>), tipografia Inter/Poppins, Pinia para gestão de estado global, Vue Router com navegação protegida e Service Worker para cache PWA.
+      </p>
+    </div>
+
+    <div class="feature-card">
+      <strong>⚙️ Backend REST & WebSockets</strong>
+      <span class="badge badge-tech">Node.js</span>
+      <span class="badge badge-tech">Express</span>
+      <span class="badge badge-tech">Socket.IO</span>
+      <span class="badge badge-admin">JWT</span>
+      <p style="font-size: 9.5pt; margin-top: 6px;">
+        Servidor de microsserviços centralizado servindo API RESTful de alta velocidade, sinalização WebRTC P2P e mensageria instantânea com suporte a WebSockets persistentes e reconexão automática.
+      </p>
+    </div>
+
+    <div class="feature-card">
+      <strong>🗄️ Persistência Híbrida (Online & Offline)</strong>
+      <span class="badge badge-tech">MongoDB</span>
+      <span class="badge badge-tech">Mongoose</span>
+      <span class="badge badge-primary">SQL.js (WASM SQLite)</span>
+      <p style="font-size: 9.5pt; margin-top: 6px;">
+        Arquitetura dual: quando online, sincroniza com MongoDB para múltiplos dispositivos; quando offline, recorre instantaneamente ao motor embutido SQL.js (SQLite compilado em WebAssembly) no navegador.
+      </p>
+    </div>
+
+    <div class="feature-card">
+      <strong>📦 Desktop & Túnel de Produção</strong>
+      <span class="badge badge-tech">Electron v45</span>
+      <span class="badge badge-orange">Cloudflare Tunnel</span>
+      <p style="font-size: 9.5pt; margin-top: 6px;">
+        Distribuição empacotada em binário <code>MEET-US.exe</code> nativo para Windows, e túnel Cloudflare seguro (Zero-Trust edge routing) permitindo acesso de qualquer computador ou telemóvel na internet.
+      </p>
+    </div>
+  </div>
+
+  <!-- ================= SEÇÃO 3: FUNCIONALIDADES DETALHADAS ================= -->
+  <h2>3. Todas as Funcionalidades do Sistema</h2>
+
+  <div class="card">
+    <h4>1. Autenticação Inteligente e Reconhecimento Automático</h4>
+    <ul>
+      <li><strong>Sessão Permanente:</strong> O utilizador só precisa de introduzir credenciais uma única vez. Ao fechar e reabrir o telemóvel ou computador, entra direto no Dashboard.</li>
+      <li><strong>Identificação Flexível:</strong> Permite entrar com o e-mail completo (ex: <code>rosa@gmail.com</code>) ou apenas o nome de utilizador (ex: <code>rosa</code>).</li>
+      <li><strong>Login Híbrido:</strong> Funciona mesmo se o servidor estiver temporariamente sem internet graças ao banco de dados local.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h4>2. Dashboard do Estudante (Visão Geral)</h4>
+    <ul>
+      <li>Indicadores de reputação (estrelas de 1 a 5), sessões concluídas, horas de mentoria e competências ativas.</li>
+      <li>Próximas sessões de estudo agendadas com link direto para entrada na sala de chamada.</li>
+      <li>Sugestões inteligentes de colegas para troca de competências baseadas nos seus interesses.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h4>3. Descobrir Estudantes & Matching</h4>
+    <ul>
+      <li><strong>Filtros Avançados:</strong> Filtragem por Universidade moçambicana (UEM, ISCTEM, UP, UniSave, etc.), Curso, Cidade e Habilidade.</li>
+      <li><strong>Matching Interativo (Swipe):</strong> Mecanismo de cartões interativos para encontrar parceiros ideais de aprendizagem mútua com cálculo de compatibilidade percentual.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h4>4. Gestão de Competências (Ensinar vs Aprender)</h4>
+    <ul>
+      <li>O estudante cadastra as habilidades que domina (Nível Iniciante, Intermédio ou Avançado) e as que tem interesse em aprender.</li>
+      <li>Controlo de disponibilidade semanal por turnos (Manhãs, Tardes, Noites ou Fins de semana).</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h4>5. Mensagens & Salas de Estudo WebRTC</h4>
+    <ul>
+      <li><strong>Chat em Tempo Real:</strong> Troca de mensagens instantâneas com aviso de presença online/offline.</li>
+      <li><strong>Chamadas de Vídeo e Áudio P2P:</strong> Salas virtuais com transmissão de vídeo em alta definição, microfone e partilha de ecrã para apresentação de trabalhos e exercícios.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h4>6. Comunidade Académica & Avaliações</h4>
+    <ul>
+      <li>Fórum de partilha de dúvidas, artigos e avisos universitários categorizados.</li>
+      <li>Sistema de avaliações após cada sessão de mentoria (didática, pontualidade e domínio do conteúdo).</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h4>7. Painel de Administração Central (Exclusivo Super Admin)</h4>
+    <ul>
+      <li>Acesso restrito ao Super Administrador oficial (<code>admin@meetus.mz</code>).</li>
+      <li>Painel de indicadores globais: total de estudantes, competências cadastradas e universidades ativas.</li>
+      <li>Gestão de cursos, moderação de publicações e edição completa do perfil do administrador com foto e credenciais.</li>
+    </ul>
+  </div>
+
+  <!-- ================= SEÇÃO 4: CREDENCIAIS PARA TESTES ================= -->
+  <div class="page-break"></div>
+  <h2>4. Tabela de Credenciais para Testes</h2>
+  <p>
+    Para testar o sistema tanto na versão web como no instalável PWA ou Desktop, foram disponibilizadas as seguintes contas de teste pré-configuradas:
+  </p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Nome do Utilizador</th>
+        <th>E-mail / Login</th>
+        <th>Palavra-passe</th>
+        <th>Papel / Universidade</th>
+        <th>Objetivo do Teste</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Rosa</strong></td>
+        <td><code>rosa@gmail.com</code> (ou <code>rosa</code>)</td>
+        <td><strong><code>123456</code></strong> (ou <code>rosa</code>)</td>
+        <td>Estudante &bull; Economia (UEM)</td>
+        <td>Testar login rápido, troca de habilidades e visualização de postagens.</td>
+      </tr>
+      <tr>
+        <td><strong>Administrador Central</strong></td>
+        <td><code>admin@meetus.mz</code> (ou <code>admin</code>)</td>
+        <td><strong><code>admin1234</code></strong></td>
+        <td>Super Admin &bull; Gestão Geral</td>
+        <td>Acesso ao Painel Administrativo, gestão de universidades, cursos e métricas.</td>
+      </tr>
+      <tr>
+        <td><strong>Edson Mondlane</strong></td>
+        <td><code>demo@meetus.mz</code></td>
+        <td><strong><code>demo1234</code></strong></td>
+        <td>Estudante &bull; Eng. Informática (UEM)</td>
+        <td>Conta principal de demonstração com histórico completo de trocas e avaliações.</td>
+      </tr>
+      <tr>
+        <td><strong>Amália Mabjaia</strong></td>
+        <td><code>amalia.mabjaia@uem.mz</code></td>
+        <td><strong><code>password123</code></strong></td>
+        <td>Estudante &bull; Design de Comunicação</td>
+        <td>Simular solicitação de mentoria de UI/UX no Figma e chamadas de vídeo.</td>
+      </tr>
+      <tr>
+        <td><strong>Carlos Cossa</strong></td>
+        <td><code>carlos.cossa@isctem.ac.mz</code></td>
+        <td><strong><code>password123</code></strong></td>
+        <td>Estudante &bull; Gestão de Empresas</td>
+        <td>Testar busca por competência em Finanças / Excel e propostas de troca.</td>
+      </tr>
+      <tr>
+        <td><strong>Lúcia Nhaca</strong></td>
+        <td><code>lucia.nhaca@up.ac.mz</code></td>
+        <td><strong><code>password123</code></strong></td>
+        <td>Estudante &bull; Ensino de Inglês (UP)</td>
+        <td>Testar filtros de diferentes instituições de ensino superior.</td>
+      </tr>
+      <tr>
+        <td><strong>Eduardo</strong></td>
+        <td><code>eduardo@gmail.com</code></td>
+        <td><strong><code>123456</code></strong></td>
+        <td>Estudante &bull; UEM</td>
+        <td>Conta de estudante independente registada na plataforma.</td>
+      </tr>
+      <tr>
+        <td><strong>Tino Omar</strong></td>
+        <td><code>tino@gmail.com</code></td>
+        <td><strong><code>123456</code></strong></td>
+        <td>Estudante &bull; UEM</td>
+        <td>Conta ativa para testes de chat e presença simultânea.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- ================= SEÇÃO 5: ROTEIRO DE APRESENTAÇÃO ================= -->
+  <h2>5. Roteiro de Apresentação (Passo a Passo)</h2>
+  <p>
+    Segue o guião prático e profissional recomendado para apresentar e defender o projeto com sucesso:
+  </p>
+
+  <div class="step-box">
+    <div class="step-number">1</div>
+    <div class="step-content">
+      <h4>Abertura & O Problema (2 Minutos)</h4>
+      <p>
+        Apresente a motivação: <em>"Como estudantes moçambicanos podem partilhar conhecimento prático sem barreiras financeiras e com instabilidade de internet?"</em> Mostre a <strong>Landing Page oficial</strong> com o slogan <em>Conectar. Partilhar. Aprender.</em>
+      </p>
+    </div>
+  </div>
+
+  <div class="step-box">
+    <div class="step-number">2</div>
+    <div class="step-content">
+      <h4>Demonstração do Login & Reconhecimento Automático (2 Minutos)</h4>
+      <p>
+        Entre com a conta da <strong>Rosa</strong> (<code>rosa@gmail.com</code> / <code>123456</code>). Mostre a entrada direta no <strong>Dashboard do Estudante</strong>. Feche o separador ou a janela e reabra: destaque que <strong>não pede senha novamente</strong> — o estudante é imediatamente reconhecido.
+      </p>
+    </div>
+  </div>
+
+  <div class="step-box">
+    <div class="step-number">3</div>
+    <div class="step-content">
+      <h4>Descoberta de Estudantes & Filtros Moçambicanos (3 Minutos)</h4>
+      <p>
+        Aceda à aba <strong>Descobrir</strong>. Filtre por estudantes da <em>UEM, ISCTEM ou Universidade Pedagógica</em>. Mostre a pesquisa global rápida pressionando <code>Ctrl + K</code>.
+      </p>
+    </div>
+  </div>
+
+  <div class="step-box">
+    <div class="step-number">4</div>
+    <div class="step-content">
+      <h4>Matching de Competências & Fluxo de Troca (3 Minutos)</h4>
+      <p>
+        Vá para a tela de <strong>Matching</strong>. Mostre como o algoritmo calcula a compatibilidade com colegas que ensinam o que quer aprender. Clique em <em>"Propor Troca"</em> e percorra o assistente visual.
+      </p>
+    </div>
+  </div>
+
+  <div class="step-box">
+    <div class="step-number">5</div>
+    <div class="step-content">
+      <h4>Salas de Estudo em Tempo Real (WebRTC) (3 Minutos)</h4>
+      <p>
+        Abra a área de <strong>Mensagens</strong> e inicie uma <strong>Chamada de Vídeo</strong>. Demonstre que a transmissão de vídeo, áudio e partilha de ecrã ocorrem diretamente no navegador sem depender de aplicações externas.
+      </p>
+    </div>
+  </div>
+
+  <div class="step-box">
+    <div class="step-number">6</div>
+    <div class="step-content">
+      <h4>Painel Administrativo Exclusivo (3 Minutos)</h4>
+      <p>
+        Faça logout da Rosa e entre com o <strong>Super Administrador</strong> (<code>admin@meetus.mz</code> / <code>admin1234</code>). Mostre o <strong>Painel Administrativo</strong>, as métricas do sistema, aprovações, moderação e a personalização de foto de perfil.
+      </p>
+    </div>
+  </div>
+
+  <div class="step-box">
+    <div class="step-number">7</div>
+    <div class="step-content">
+      <h4>Instalação PWA & Funcionamento Offline (3 Minutos)</h4>
+      <p>
+        Mostre o ícone de instalação do <strong>PWA no telemóvel/navegador</strong> ou o <strong>MEET-US.exe</strong>. Desligue a internet momentaneamente e mostre que a aplicação continua a abrir com dados em cache sem telas de erro.
+      </p>
+    </div>
+  </div>
+
+  <div class="step-box">
+    <div class="step-number">8</div>
+    <div class="step-content">
+      <h4>Conclusão & Perguntas da Banca (2 Minutos)</h4>
+      <p>
+        Finalize resumindo o impacto social, pedagógico e tecnológico do MEET-US na educação superior em Moçambique. Abra espaço para perguntas técnicas.
+      </p>
+    </div>
+  </div>
+
+</body>
+</html>

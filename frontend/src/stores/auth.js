@@ -37,7 +37,23 @@ export const useAuthStore = defineStore('auth', {
     async login(payload) {
       this.loading = true
       try {
-        const res = USE_FAKE ? await fakeAuth.login(payload) : await api.post('/auth/login', payload)
+        let res
+        if (USE_FAKE) {
+          res = await fakeAuth.login(payload)
+        } else {
+          try {
+            res = await api.post('/auth/login', payload)
+          } catch (netErr) {
+            // Se falhou por falta de internet, timeout ou servidor inacessível, recorrer à base offline
+            const isNetworkFailure = !netErr.response || netErr.code === 'ERR_NETWORK' || netErr.code === 'ECONNABORTED' || (netErr.response && netErr.response.status >= 500)
+            if (isNetworkFailure) {
+              console.warn('[AUTH] Servidor backend inacessível ou modo offline. A recorrer à base local...', netErr)
+              res = await fakeAuth.login(payload)
+            } else {
+              throw netErr
+            }
+          }
+        }
         this.token = res.data.token
         this.user = res.data.user
         this._persist()
@@ -58,7 +74,22 @@ export const useAuthStore = defineStore('auth', {
     async register(payload) {
       this.loading = true
       try {
-        const res = USE_FAKE ? await fakeAuth.register(payload) : await api.post('/auth/register', payload)
+        let res
+        if (USE_FAKE) {
+          res = await fakeAuth.register(payload)
+        } else {
+          try {
+            res = await api.post('/auth/register', payload)
+          } catch (netErr) {
+            const isNetworkFailure = !netErr.response || netErr.code === 'ERR_NETWORK' || netErr.code === 'ECONNABORTED' || (netErr.response && netErr.response.status >= 500)
+            if (isNetworkFailure) {
+              console.warn('[AUTH] Servidor backend inacessível. A registar utilizador localmente...', netErr)
+              res = await fakeAuth.register(payload)
+            } else {
+              throw netErr
+            }
+          }
+        }
         this.token = res.data.token
         this.user = res.data.user
         this._persist()

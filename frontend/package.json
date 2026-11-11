@@ -1,12 +1,18 @@
 {
   "name": "meet-us-frontend",
+  "productName": "MEET-US",
   "version": "1.0.0",
   "description": "MEET-US — Plataforma de troca de habilidades entre estudantes",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "quasar dev",
-    "build": "quasar build",
+    "dev:pwa": "quasar dev -m pwa",
+    "dev:electron": "quasar dev -m electron",
+    "build": "quasar build -m pwa",
+    "build:pwa": "quasar build -m pwa",
+    "build:spa": "quasar build -m spa",
+    "build:electron": "quasar build -m electron",
     "lint": "eslint --ext .js,.vue ./",
     "format": "prettier --write \"**/*.{js,vue,json,md}\"",
     "test": "vitest"

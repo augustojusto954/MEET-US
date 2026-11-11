@@ -16,12 +16,18 @@ async function authMiddleware(req, res, next) {
     let userId;
     if (token.startsWith('fake-jwt-')) {
       userId = token.replace('fake-jwt-', '');
+    } else if (token.startsWith('offline-jwt-')) {
+      userId = token.replace('offline-jwt-', '');
     } else {
       const decoded = jwt.verify(token, JWT_SECRET);
       userId = decoded.id;
     }
 
-    const user = await User.findById(userId);
+    let user = await User.findById(userId);
+    if (!user) {
+      // Fallback: se for id numérico offline, tentar obter pelo primeiro utilizador ou por email
+      user = await User.findOne({ $or: [{ id: String(userId) }, { _id: String(userId) }] });
+    }
     if (!user) {
       return res.status(401).json({ message: 'Sessão inválida ou utilizador não encontrado.' });
     }
@@ -41,11 +47,16 @@ async function optionalAuth(req, res, next) {
       let userId;
       if (token.startsWith('fake-jwt-')) {
         userId = token.replace('fake-jwt-', '');
+      } else if (token.startsWith('offline-jwt-')) {
+        userId = token.replace('offline-jwt-', '');
       } else {
         const decoded = jwt.verify(token, JWT_SECRET);
         userId = decoded.id;
       }
-      const user = await User.findById(userId);
+      let user = await User.findById(userId);
+      if (!user) {
+        user = await User.findOne({ $or: [{ id: String(userId) }, { _id: String(userId) }] });
+      }
       if (user) {
         req.user = user;
       }

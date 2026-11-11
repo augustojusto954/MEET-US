@@ -42,6 +42,44 @@
     <div class="row q-col-gutter-lg">
       <!-- Coluna Principal (Esquerda - 8 Colunas) -->
       <div class="col-12 col-lg-8">
+        <!-- BANNER DE AULA AO VIVO AGORA NO DASHBOARD -->
+        <div
+          v-if="sessionsStore.activeLiveSession"
+          class="live-dashboard-card q-pa-md q-mb-lg shadow-2"
+        >
+          <div class="row items-center justify-between">
+            <div class="row items-center q-gutter-sm col ellipsis">
+              <q-avatar size="44px" class="shadow-2" style="border: 2px solid white;">
+                <img :src="sessionsStore.activeLiveSession.host_avatar || 'https://images.unsplash.com/photo-1589156280159-27698a70f29e?w=200&fit=crop'" />
+              </q-avatar>
+              <div class="column col ellipsis">
+                <div class="row items-center q-gutter-xs">
+                  <q-badge color="negative" class="text-weight-bold pulse-badge" style="font-size: 10px;">
+                    <span class="blink-dot q-mr-xs">●</span> AO VIVO AGORA
+                  </q-badge>
+                  <span class="text-weight-bolder text-white text-subtitle1 ellipsis">
+                    {{ sessionsStore.activeLiveSession.title }}
+                  </span>
+                </div>
+                <div class="text-caption text-emerald-200">
+                  Mentora: <b>{{ sessionsStore.activeLiveSession.host_name }}</b> • {{ sessionsStore.activeLiveSession.participantsCount || 1 }} estudantes na sala
+                </div>
+              </div>
+            </div>
+
+            <q-btn
+              unelevated
+              rounded
+              color="white"
+              text-color="negative"
+              icon="sensors"
+              label="Entrar na Aula Agora"
+              class="text-weight-bolder shadow-2 pulse-btn q-px-md"
+              :to="{ name: 'live-room', params: { id: sessionsStore.activeLiveSession.id || sessionsStore.activeLiveSession._id } }"
+            />
+          </div>
+        </div>
+
         <!-- Banner Verde Esmeralda de Destaque -->
         <div class="highlight-banner q-mb-lg">
           <div class="row items-center justify-between no-wrap">
@@ -271,10 +309,12 @@ import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from 'src/stores/auth'
 import { useMeetUsStore } from 'src/stores/meetus'
+import { useSessionsStore } from 'src/stores/sessions'
 
 const router = useRouter()
 const auth = useAuthStore()
 const store = useMeetUsStore()
+const sessionsStore = useSessionsStore()
 const activeTab = ref('Para ti')
 const quickQuery = ref('')
 
@@ -446,6 +486,42 @@ function getLearnSkills(student) {
   color: #059669;
   font-weight: 700;
   border-bottom-color: #059669;
+}
+
+.live-dashboard-card {
+  background: linear-gradient(135deg, #EF4444 0%, #B91C1C 100%);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #FFFFFF;
+}
+
+.pulse-badge {
+  animation: pulseGlow 1.6s infinite;
+}
+
+.pulse-btn {
+  animation: pulseBtnAnim 2s infinite;
+}
+
+@keyframes pulseGlow {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+  70% { transform: scale(1.05); box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+
+@keyframes pulseBtnAnim {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.6); }
+  50% { transform: scale(1.02); box-shadow: 0 0 14px rgba(255, 255, 255, 0.5); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+}
+
+.blink-dot {
+  animation: blinkAnim 1s infinite alternate;
+}
+
+@keyframes blinkAnim {
+  0% { opacity: 1; }
+  100% { opacity: 0.2; }
 }
 
 .student-card {

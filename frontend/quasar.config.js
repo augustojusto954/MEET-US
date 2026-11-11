@@ -48,7 +48,42 @@ export default defineConfig(() => {
 
     ssr: { pwa: false, prodPort: 3000, middlewares: ['render'] },
 
-    pwa: { workboxMode: 'GenerateSW' },
+    pwa: {
+      workboxMode: 'GenerateSW',
+      workboxOptions: {
+        skipWaiting: true,
+        clientsClaim: true,
+        runtimeCaching: [
+          {
+            urlPattern: ({ url }) => url.pathname.startsWith('/api/'),
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'meetus-api-cache',
+              expiration: {
+                maxEntries: 100,
+                maxAgeSeconds: 60 * 60 * 24 // 24 horas de cache offline
+              },
+              networkTimeoutSeconds: 4
+            }
+          },
+          {
+            urlPattern: ({ request }) =>
+              request.destination === 'image' ||
+              request.destination === 'style' ||
+              request.destination === 'script' ||
+              request.destination === 'font',
+            handler: 'StaleWhileRevalidate',
+            options: {
+              cacheName: 'meetus-static-assets',
+              expiration: {
+                maxEntries: 120,
+                maxAgeSeconds: 60 * 60 * 24 * 7 // 7 dias
+              }
+            }
+          }
+        ]
+      }
+    },
 
     electron: {
       preloadScripts: ['electron-preload'],

@@ -16,10 +16,9 @@
         </div>
 
         <!-- Marca Oficial MEET-US -->
-        <div class="brand-block q-mb-md">
+        <div class="brand-block q-mb-md text-center">
           <router-link to="/" style="text-decoration: none;">
-            <div class="brand-title">MEET-US</div>
-            <div class="brand-subtitle">Aprender. Partilhar. Crescer.</div>
+            <img src="/icons/meet-us-logo.png" style="height: 58px; max-width: 240px; object-fit: contain;" alt="MEET-US" />
           </router-link>
         </div>
 

@@ -44,12 +44,19 @@
           <q-btn-dropdown flat no-caps dense class="q-px-sm" style="background: #ECFDF5; color: #059669; border-radius: 8px;">
             <template #label>
               <div class="row items-center no-wrap">
-                <q-avatar size="26px" class="bg-primary text-white text-weight-bold">A</q-avatar>
-                <span class="text-weight-bold q-ml-xs text-dark">{{ auth.user?.name || 'Admin Central' }}</span>
+                <q-avatar size="28px" class="shadow-1 q-mr-xs">
+                  <img :src="adminAvatar" />
+                </q-avatar>
+                <span class="text-weight-bold text-dark ellipsis" style="max-width: 140px;">{{ auth.user?.name || 'Admin Central' }}</span>
                 <q-badge color="primary" class="q-ml-xs text-caption">ADMIN</q-badge>
               </div>
             </template>
-            <q-list dense style="min-width: 180px;">
+            <q-list dense style="min-width: 200px;">
+              <q-item clickable v-close-popup :to="{ name: 'admin-profile' }">
+                <q-item-section avatar><q-icon name="badge" color="primary" /></q-item-section>
+                <q-item-section>Perfil do Administrador</q-item-section>
+              </q-item>
+              <q-separator />
               <q-item clickable v-close-popup :to="{ name: 'dashboard' }">
                 <q-item-section avatar><q-icon name="school" color="primary" /></q-item-section>
                 <q-item-section>Portal do Estudante</q-item-section>
@@ -75,18 +82,10 @@
     >
       <div>
         <!-- Brand Header -->
-        <div class="q-pa-lg row items-center">
-          <q-avatar size="36px" class="bg-primary text-white text-weight-bolder shadow-1">
-            <q-icon name="admin_panel_settings" size="20px" />
-          </q-avatar>
-          <div class="q-ml-sm">
-            <div class="text-h6 text-weight-bolder text-dark" style="line-height: 1.1;">
-              MEET-US
-            </div>
-            <div class="text-caption text-grey-6" style="font-size: 10px; font-weight: 600;">
-              Administração Geral
-            </div>
-          </div>
+        <!-- Brand Header com Logótipo Oficial -->
+        <div class="q-pa-md row items-center justify-between">
+          <img src="/icons/meet-us-logo.png" style="height: 42px; max-width: 170px; object-fit: contain;" alt="MEET-US" />
+          <q-badge color="primary" class="text-weight-bold" style="font-size: 10px;">Admin</q-badge>
         </div>
 
         <q-separator style="background: #E2E8F0;" class="q-mx-md q-mb-xs" />
@@ -176,7 +175,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
 import { useAuthStore } from 'src/stores/auth'
@@ -185,6 +184,20 @@ const router = useRouter()
 const $q = useQuasar()
 const auth = useAuthStore()
 const leftDrawerOpen = ref(true)
+
+const adminAvatar = computed(() => {
+  if (auth.user?.avatar && auth.user.avatar.trim()) {
+    const av = auth.user.avatar.trim()
+    if (av.startsWith('/uploads')) {
+      if (typeof window !== 'undefined' && window.location.port && window.location.port !== '3000' && window.location.port !== '80' && window.location.port !== '443') {
+        return `${window.location.protocol}//${window.location.hostname}:3000${av}`
+      }
+    }
+    return av
+  }
+  const name = auth.user?.name || 'Administrador Central'
+  return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=059669&color=ffffff&size=256&bold=true`
+})
 
 onMounted(() => {
   if (!auth.isAdmin) {

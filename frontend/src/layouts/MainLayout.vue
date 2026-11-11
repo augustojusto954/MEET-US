@@ -16,7 +16,7 @@
 
         <!-- Logo Brand para Mobile -->
         <div class="row items-center cursor-pointer q-mr-md lt-md" @click="$router.push('/dashboard')">
-          <div class="text-weight-bolder text-h6" style="color: #059669; letter-spacing: -0.5px;">MEET-US</div>
+          <img src="/icons/meet-us-logo.png" style="height: 36px; max-width: 140px; object-fit: contain;" alt="MEET-US" />
         </div>
 
         <!-- Barra de Pesquisa Global Ampla Idêntica à Tela 2 -->
@@ -204,6 +204,16 @@
       </q-toolbar>
     </q-header>
 
+    <!-- Banner Modo Offline (Exibido quando a internet cai) -->
+    <div
+      v-if="!estaOnline"
+      class="bg-amber-9 text-white q-py-xs q-px-md text-caption text-center row items-center justify-center q-gutter-x-sm shadow-1"
+      style="position: sticky; top: 64px; z-index: 1500;"
+    >
+      <q-icon name="wifi_off" size="16px" />
+      <span class="text-weight-medium">Modo Offline: Sem ligação à internet. A usar conteúdos guardados localmente.</span>
+    </div>
+
     <!-- Sidebar Branca com Pílulas Verdes Idêntica à Tela 2 -->
     <q-drawer
       v-model="leftDrawerOpen"
@@ -214,17 +224,10 @@
       class="meetus-sidebar column justify-between"
     >
       <div>
-        <!-- Brand Header -->
-        <div class="q-pa-lg q-pb-md">
+        <!-- Brand Header com Logótipo Oficial -->
+        <div class="q-pa-md q-pb-xs">
           <div class="row items-center cursor-pointer" @click="$router.push('/dashboard')">
-            <div>
-              <div class="text-h6 text-weight-bolder" style="color: #059669; letter-spacing: -0.5px; line-height: 1.1;">
-                MEET-US
-              </div>
-              <div class="text-caption" style="font-size: 11px; font-weight: 500; color: #94A3B8; margin-top: 3px;">
-                Liga-te. Partilha. Aprende.
-              </div>
-            </div>
+            <img src="/icons/meet-us-logo.png" style="height: 48px; max-width: 100%; object-fit: contain;" alt="MEET-US" />
           </div>
         </div>
 
@@ -250,7 +253,28 @@
                 {{ chatStore.totalUnreadCount }}
               </q-badge>
             </q-item-section>
+            <!-- Sinal Vermelho na Sidebar para Aulas Ao Vivo -->
+            <q-item-section side v-if="item.to === 'calendar' && sessionsStore.activeLiveSession">
+              <q-badge color="negative" rounded class="text-weight-bold shadow-1 pulse-live-tag">
+                ● AO VIVO
+              </q-badge>
+            </q-item-section>
           </q-item>
+        </div>
+
+        <!-- Botão Instalar Aplicação (PWA / Desktop) -->
+        <div v-if="podeInstalar" class="q-px-sm q-mt-md">
+          <q-btn
+            unelevated
+            no-caps
+            class="full-width rounded-borders text-weight-bold"
+            style="background: #E8F5E9; color: #059669; border: 1px dashed #059669;"
+            icon="get_app"
+            label="Instalar MEET-US"
+            @click="instalarAplicacao"
+          >
+            <q-tooltip>Instalar no seu dispositivo</q-tooltip>
+          </q-btn>
         </div>
       </div>
 
@@ -270,6 +294,50 @@
 
     <!-- Content Area -->
     <q-page-container class="bg-app">
+      <!-- SINAL GLOBAL DE TRANSMISSÃO AO VIVO (Visível em qualquer página e dispositivo) -->
+      <transition name="fade">
+        <div
+          v-if="sessionsStore.activeLiveSession && dismissedLiveId !== (sessionsStore.activeLiveSession.id || sessionsStore.activeLiveSession._id)"
+          class="global-live-signal-bar row items-center justify-between q-px-md q-py-xs shadow-3"
+        >
+          <div
+            class="row items-center q-gutter-sm col ellipsis cursor-pointer"
+            @click="enterLiveRoom(sessionsStore.activeLiveSession.id || sessionsStore.activeLiveSession._id)"
+          >
+            <q-badge color="negative" class="pulse-live-badge text-weight-bold">
+              <span class="blink-dot q-mr-xs">●</span> AO VIVO
+            </q-badge>
+            <span class="text-caption text-weight-bold text-white ellipsis">
+              <b>{{ sessionsStore.activeLiveSession.host_name }}</b> iniciou «{{ sessionsStore.activeLiveSession.title }}»!
+            </span>
+          </div>
+
+          <div class="row items-center q-gutter-xs no-wrap q-ml-sm">
+            <q-btn
+              unelevated
+              rounded
+              dense
+              color="white"
+              text-color="negative"
+              icon="sensors"
+              label="Entrar na Aula"
+              size="sm"
+              class="text-weight-bolder q-px-sm shadow-1"
+              @click="enterLiveRoom(sessionsStore.activeLiveSession.id || sessionsStore.activeLiveSession._id)"
+            />
+            <q-btn
+              flat
+              round
+              dense
+              icon="close"
+              color="white"
+              size="xs"
+              @click="dismissedLiveId = (sessionsStore.activeLiveSession.id || sessionsStore.activeLiveSession._id)"
+            />
+          </div>
+        </div>
+      </transition>
+
       <router-view />
     </q-page-container>
 
@@ -337,6 +405,7 @@ import { useMeetUsStore } from 'src/stores/meetus'
 import { useAuthStore } from 'src/stores/auth'
 import { useCallStore } from 'src/stores/call'
 import { useChatStore } from 'src/stores/chat'
+import { useSessionsStore } from 'src/stores/sessions'
 import { socket } from 'src/boot/socket'
 import GlobalSearchDialog from 'src/components/common/GlobalSearchDialog.vue'
 
@@ -346,8 +415,72 @@ const store = useMeetUsStore()
 const auth = useAuthStore()
 const callStore = useCallStore()
 const chatStore = useChatStore()
+const sessionsStore = useSessionsStore()
+
+const dismissedLiveId = ref(null)
+
+function enterLiveRoom(sId) {
+  if (sId) {
+    router.push({ name: 'live-room', params: { id: sId } })
+  }
+}
 
 const showIncomingCallDialog = ref(false)
+
+// Monitorização Online / Offline e Instalação PWA
+const estaOnline = ref(typeof navigator !== 'undefined' ? navigator.onLine : true)
+let deferredPrompt = null
+const podeInstalar = ref(false)
+
+if (typeof window !== 'undefined') {
+  window.addEventListener('online', () => {
+    estaOnline.value = true
+    $q.notify({
+      message: 'Ligação à internet restabelecida!',
+      color: 'positive',
+      icon: 'wifi',
+      timeout: 2500,
+      position: 'top'
+    })
+  })
+  window.addEventListener('offline', () => {
+    estaOnline.value = false
+    $q.notify({
+      message: 'Sem internet. A trabalhar em modo offline.',
+      color: 'warning',
+      icon: 'wifi_off',
+      timeout: 3500,
+      position: 'top'
+    })
+  })
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault()
+    deferredPrompt = e
+    podeInstalar.value = true
+  })
+
+  window.addEventListener('appinstalled', () => {
+    podeInstalar.value = false
+    deferredPrompt = null
+    $q.notify({
+      message: 'MEET-US instalado com sucesso no seu dispositivo!',
+      color: 'positive',
+      icon: 'check_circle',
+      position: 'top'
+    })
+  })
+}
+
+async function instalarAplicacao() {
+  if (!deferredPrompt) return
+  deferredPrompt.prompt()
+  const { outcome } = await deferredPrompt.userChoice
+  if (outcome === 'accepted') {
+    podeInstalar.value = false
+  }
+  deferredPrompt = null
+}
 
 function onNavClick() {
   if ($q.screen.lt.md) {
@@ -416,7 +549,7 @@ const navLinks = computed(() => [
   { to: 'skills', label: 'As minhas competências', icon: 'star_border' },
   { to: 'exchanges', label: 'Trocas', icon: 'swap_horiz' },
   { to: 'chat', label: 'Mensagens', icon: 'chat_bubble_outline' },
-  { to: 'calendar', label: 'Calendário', icon: 'calendar_today' },
+  { to: 'calendar', label: 'Aulas & Agenda', icon: 'live_tv' },
   { to: 'community', label: 'Comunidade', icon: 'groups' },
   { to: 'leaderboard', label: 'Classificação', icon: 'bar_chart' }
 ])
@@ -458,8 +591,57 @@ function handleKeyDown(e) {
   }
 }
 
+let updateInterval = null
+
+function checkForPwaUpdates() {
+  if (typeof window !== 'undefined' && 'serviceWorker' in navigator && navigator.onLine) {
+    navigator.serviceWorker.getRegistration().then(reg => {
+      if (reg) {
+        reg.update().catch(err => console.warn('[MEET-US] Erro ao verificar atualização:', err))
+      }
+    }).catch(() => {})
+  }
+}
+
+function handleOnline() {
+  $q.notify({
+    message: 'Ligação à internet restabelecida!',
+    caption: 'A sincronizar dados e verificar atualizações do MEET-US...',
+    icon: 'cloud_done',
+    color: 'positive',
+    position: 'top-right',
+    timeout: 3500
+  })
+
+  if (!socket.connected) {
+    socket.connect()
+  }
+
+  // Verifica imediatamente se há nova versão da aplicação
+  checkForPwaUpdates()
+
+  // Recarrega conversas e dados
+  chatStore.loadConversations?.()
+  if (auth.userId) {
+    store.fetchInitialData?.()
+  }
+}
+
+function handleOffline() {
+  $q.notify({
+    message: 'Modo Offline Ativado',
+    caption: 'Sem internet no momento. O MEET-US continua a funcionar com os teus dados guardados em cache.',
+    icon: 'wifi_off',
+    color: 'dark',
+    position: 'bottom-right',
+    timeout: 4500
+  })
+}
+
 onMounted(() => {
   window.addEventListener('keydown', handleKeyDown)
+  window.addEventListener('online', handleOnline)
+  window.addEventListener('offline', handleOffline)
 
   if (auth.userId) {
     socket.emit('user:join', auth.userId)
@@ -467,6 +649,10 @@ onMounted(() => {
 
   chatStore.bindSocket?.()
   chatStore.loadConversations?.()
+
+  // Verificação inicial e periódica de atualizações quando online (a cada 10 minutos)
+  checkForPwaUpdates()
+  updateInterval = setInterval(checkForPwaUpdates, 10 * 60 * 1000)
 
   socket.on('call:incoming', handleIncomingCall)
   socket.on('call:offer', handleIncomingCall)
@@ -483,6 +669,9 @@ onMounted(() => {
 
 onUnmounted(() => {
   window.removeEventListener('keydown', handleKeyDown)
+  window.removeEventListener('online', handleOnline)
+  window.removeEventListener('offline', handleOffline)
+  if (updateInterval) clearInterval(updateInterval)
   socket.off('call:incoming', handleIncomingCall)
   socket.off('call:offer', handleIncomingCall)
   socket.off('call:ice-candidate')
@@ -530,5 +719,38 @@ onUnmounted(() => {
 
 .sidebar-nav-active .q-icon {
   color: #059669 !important;
+}
+
+.global-live-signal-bar {
+  background: linear-gradient(90deg, #DC2626 0%, #B91C1C 100%);
+  color: #FFFFFF;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.pulse-live-badge {
+  border-radius: 12px;
+  animation: pulseGlowRed 1.8s infinite;
+}
+
+.pulse-live-tag {
+  animation: pulseGlowRed 2s infinite;
+}
+
+@keyframes pulseGlowRed {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+  70% { transform: scale(1.05); box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+
+.blink-dot {
+  animation: blinkAnim 1s infinite alternate;
+}
+
+@keyframes blinkAnim {
+  0% { opacity: 1; }
+  100% { opacity: 0.2; }
 }
 </style>

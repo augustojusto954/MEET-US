@@ -7,16 +7,24 @@ const USE_FAKE = (import.meta.env.VITE_USE_FAKE_API || import.meta.env.USE_FAKE_
 
 const getSocketUrl = () => {
   if (typeof window !== 'undefined') {
-    // Se o frontend dev estiver numa porta separada (ex: 9000), direcionar para o backend na 3000
-    if (window.location.port && window.location.port !== '3000' && window.location.port !== '80' && window.location.port !== '443') {
-      const host = window.location.hostname || 'localhost';
-      return `${window.location.protocol}//${host}:3000`;
+    // 1. Electron ou ficheiro local (file://)
+    if (window.location.protocol === 'file:' || !window.location.origin || window.location.origin === 'null') {
+      const savedSocket = localStorage.getItem('meetus_socket_url')
+      if (savedSocket) return savedSocket
+      return 'http://localhost:3000'
     }
-    // Servidor de produção unificado, ngrok, ou IP direto
-    return window.location.origin;
+
+    // 2. Se o frontend dev estiver numa porta separada (ex: 9000), direcionar para o backend na 3000
+    if (window.location.port && window.location.port !== '3000' && window.location.port !== '80' && window.location.port !== '443') {
+      const host = window.location.hostname || 'localhost'
+      return `${window.location.protocol}//${host}:3000`
+    }
+
+    // 3. Servidor de produção unificado, túnel, ou IP de rede local
+    return window.location.origin
   }
-  return 'http://localhost:3000';
-};
+  return 'http://localhost:3000'
+}
 
 const SOCKET_URL = getSocketUrl();
 

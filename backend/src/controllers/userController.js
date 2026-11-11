@@ -204,6 +204,10 @@ exports.update = async (req, res, next) => {
       }
     });
 
+    if (req.body.password && typeof req.body.password === 'string' && req.body.password.trim().length >= 6) {
+      user.password = req.body.password.trim();
+    }
+
     // Nenhum estudante pode alterar o seu próprio papel ou virar admin
     if (user.role !== 'admin') {
       user.role = 'student';

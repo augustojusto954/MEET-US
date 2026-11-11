@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS users (
   reviews_count INTEGER DEFAULT 0,
   verified INTEGER DEFAULT 0,
   online INTEGER DEFAULT 0,
+  role TEXT DEFAULT 'student',
   created_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 

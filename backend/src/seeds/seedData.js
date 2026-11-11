@@ -1,6 +1,6 @@
 // backend/src/seeds/seedData.js
 const bcrypt = require('bcryptjs');
-const { User, Exchange, Conversation, Message, Match, Notification, Post } = require('../models');
+const { User, Exchange, Conversation, Message, Match, Notification, Post, Session } = require('../models');
 
 // Fotografias reais de alta qualidade de estudantes e jovens negros universitários moçambicanos (Unsplash)
 const BLACK_STUDENTS_AVATARS = [
@@ -396,6 +396,115 @@ async function seedDatabase(force = false) {
     likes_count: 42,
     comments: []
   });
+
+  // Seed Sessions (Aulas em Directo / Live Sessions)
+  try {
+    const existingSessions = await Session.countDocuments();
+    if (existingSessions === 0) {
+      await Session.create({
+        _id: 'session-1',
+        title: 'Inglês com Lúcia',
+        subject: 'Inglês para Conversação Académica',
+        description: 'Prática de conversação fluente, vocabulário técnico e pronúncia para entrevistas e apresentações internacionais.',
+        host_id: '4',
+        host_name: 'Lúcia Nhaca',
+        host_avatar: BLACK_STUDENTS_AVATARS[3],
+        host_course: 'Ensino de Língua Inglesa (UP)',
+        status: 'SCHEDULED', // AGENDADA
+        scheduled_at: '2026-11-11T10:00:00.000Z',
+        started_at: null,
+        ended_at: null,
+        max_participants: 30,
+        participants: [
+          {
+            user_id: '1',
+            user_name: 'Edson Arnaldo',
+            user_avatar: BLACK_STUDENTS_AVATARS[0],
+            user_course: 'Engenharia Informática',
+            status: 'JOINED',
+            joined_at: new Date().toISOString()
+          },
+          {
+            user_id: '2',
+            user_name: 'Amália Mabjaia',
+            user_avatar: BLACK_STUDENTS_AVATARS[1],
+            user_course: 'Design e Multimédia',
+            status: 'JOINED',
+            joined_at: new Date().toISOString()
+          },
+          {
+            user_id: '8',
+            user_name: 'Samira Patel',
+            user_avatar: BLACK_STUDENTS_AVATARS[7],
+            user_course: 'Medicina Geral',
+            status: 'JOINED',
+            joined_at: new Date().toISOString()
+          },
+          {
+            user_id: '3',
+            user_name: 'Carlos Macuácua',
+            user_avatar: BLACK_STUDENTS_AVATARS[2],
+            user_course: 'Gestão Financeira',
+            status: 'JOINED',
+            joined_at: new Date().toISOString()
+          }
+        ],
+        chat_messages: [
+          {
+            sender_id: '4',
+            sender_name: 'Lúcia Nhaca',
+            sender_avatar: BLACK_STUDENTS_AVATARS[3],
+            text: 'Olá a todos! Sejam bem-vindos à nossa aula em directo de Inglês.',
+            time: '10:01'
+          }
+        ]
+      });
+
+      await Session.create({
+        _id: 'session-2',
+        title: 'Programação Web com Vue 3 & Quasar',
+        subject: 'Engenharia de Software',
+        description: 'Construção de componentes reativos, stores Pinia, PWA e integração WebSockets em tempo real.',
+        host_id: '1',
+        host_name: 'Edson Arnaldo',
+        host_avatar: BLACK_STUDENTS_AVATARS[0],
+        host_course: 'Engenharia Informática (UP)',
+        status: 'SCHEDULED',
+        scheduled_at: '2026-11-11T15:30:00.000Z',
+        started_at: null,
+        ended_at: null,
+        max_participants: 25,
+        participants: []
+      });
+
+      await Session.create({
+        _id: 'session-3',
+        title: 'Cálculo I: Teorema Fundamental e Integrais',
+        subject: 'Matemática e Engenharia',
+        description: 'Resolução passo a passo de exercícios práticos dos exames de admissão e testes semestrais.',
+        host_id: '5',
+        host_name: 'Hélder Tembe',
+        host_avatar: BLACK_STUDENTS_AVATARS[4],
+        host_course: 'Física Aplicada & Matemática (UEM)',
+        status: 'ENDED',
+        scheduled_at: '2026-11-10T14:00:00.000Z',
+        started_at: '2026-11-10T14:02:00.000Z',
+        ended_at: '2026-11-10T15:35:00.000Z',
+        max_participants: 40,
+        participants: [
+          {
+            user_id: '1',
+            user_name: 'Edson Arnaldo',
+            user_avatar: BLACK_STUDENTS_AVATARS[0],
+            status: 'JOINED'
+          }
+        ]
+      });
+      console.log('[Seed] Live Sessions seeded successfully.');
+    }
+  } catch (err) {
+    console.warn('[Seed] Warning seeding sessions:', err.message);
+  }
 
   console.log(`[Seed] Seed finished successfully! 18 authentic Mozambican students and full real content loaded.`);
 }

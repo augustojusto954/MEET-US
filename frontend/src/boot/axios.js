@@ -4,16 +4,24 @@ import axios from 'axios'
 
 const getApiUrl = () => {
   if (typeof window !== 'undefined') {
-    // Se o frontend dev estiver numa porta separada (ex: 9000), direcionar para o backend na 3000
-    if (window.location.port && window.location.port !== '3000' && window.location.port !== '80' && window.location.port !== '443') {
-      const host = window.location.hostname || 'localhost';
-      return `${window.location.protocol}//${host}:3000/api`;
+    // 1. Electron ou execução a partir do sistema de ficheiros (file://)
+    if (window.location.protocol === 'file:' || !window.location.origin || window.location.origin === 'null') {
+      const savedApi = localStorage.getItem('meetus_api_url')
+      if (savedApi) return savedApi
+      return 'http://localhost:3000/api'
     }
-    // Servidor de produção unificado, ngrok, ou IP direto
-    return `${window.location.origin}/api`;
+
+    // 2. Se o frontend dev estiver numa porta separada (ex: 9000), direcionar para o backend na 3000
+    if (window.location.port && window.location.port !== '3000' && window.location.port !== '80' && window.location.port !== '443') {
+      const host = window.location.hostname || 'localhost'
+      return `${window.location.protocol}//${host}:3000/api`
+    }
+
+    // 3. Servidor de produção unificado, túnel, ou IP de rede local
+    return `${window.location.origin}/api`
   }
-  return 'http://localhost:3000/api';
-};
+  return 'http://localhost:3000/api'
+}
 
 const API_URL = getApiUrl();
 
@@ -29,19 +37,12 @@ api.interceptors.request.use((config) => {
   return config
 })
 
-// Interceptor de response → trata 401 apenas em rotas protegidas (não em tentativas de login/registo)
+// Interceptor de response → preserva a sessão persistente do utilizador (só sai com logout explícito)
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    const url = error.config?.url || ''
-    const isAuthRoute = url.includes('/auth/login') || url.includes('/auth/register') || url.includes('/auth/forgot-password')
-    if (error.response?.status === 401 && !isAuthRoute) {
-      localStorage.removeItem('meetus_token')
-      localStorage.removeItem('meetus_user')
-      if (!window.location.pathname.startsWith('/auth/login')) {
-        window.location.href = '/auth/login'
-      }
-    }
+    // Não limpa o token em caso de falha de conexão ou 401 temporário,
+    // garantindo que o utilizador permanece reconhecido sempre no instalável e web.
     return Promise.reject(error)
   }
 )

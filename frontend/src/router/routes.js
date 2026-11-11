@@ -44,6 +44,7 @@ const routes = [
       { path: 'exchanges/:id', name: 'exchange-details', component: () => import('src/pages/exchanges/ExchangeDetailsPage.vue') },
       { path: 'swaps', name: 'swaps', component: () => import('src/pages/exchanges/ExchangeRequestsPage.vue') },
       { path: 'sessions/:id', name: 'session-details', component: () => import('src/pages/sessions/SessionDetailsPage.vue') },
+      { path: 'live/:id', name: 'live-room', component: () => import('src/pages/sessions/LiveRoomPage.vue') },
       { path: 'calendar', name: 'calendar', component: () => import('src/pages/calendar/CalendarPage.vue') },
       { path: 'calls', name: 'calls', component: () => import('src/pages/calls/CallPage.vue') },
 

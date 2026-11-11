@@ -11,8 +11,7 @@
     <!-- Logo Clicável para Home -->
     <div class="text-center q-mb-lg">
       <router-link to="/" style="text-decoration: none;" class="cursor-pointer">
-        <div class="text-h4 text-weight-bolder" style="color: #059669; letter-spacing: -1px;">MEET-US</div>
-        <div class="text-caption" style="color: #94A3B8;">Liga-te. Partilha. Aprende.</div>
+        <img src="/icons/meet-us-logo.png" style="height: 58px; max-width: 240px; object-fit: contain;" alt="MEET-US" />
       </router-link>
     </div>
 

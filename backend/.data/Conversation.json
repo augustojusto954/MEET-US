@@ -28,5 +28,25 @@
     "id": "3",
     "createdAt": "2026-11-05T03:27:13.219Z",
     "updatedAt": "2026-11-05T03:27:13.219Z"
+  },
+  {
+    "user_a": "2",
+    "user_b": "6af1d6be52b0f644e45428d2",
+    "last_message": "",
+    "last_message_at": "2026-11-11T19:31:17.867Z",
+    "_id": "e8b54bf840574ad1a6f6c93e",
+    "id": "e8b54bf840574ad1a6f6c93e",
+    "createdAt": "2026-11-11T19:31:17.867Z",
+    "updatedAt": "2026-11-11T19:31:17.867Z"
+  },
+  {
+    "user_a": "6af1ba1c0ec46c9383b9e9f0",
+    "user_b": "6af1d6be52b0f644e45428d2",
+    "last_message": "",
+    "last_message_at": "2026-11-11T19:56:54.569Z",
+    "_id": "b10f60da905ccd503030c365",
+    "id": "b10f60da905ccd503030c365",
+    "createdAt": "2026-11-11T19:56:54.569Z",
+    "updatedAt": "2026-11-11T19:56:54.569Z"
   }
 ]

@@ -15,8 +15,9 @@
       </div>
       <q-space />
       <div v-if="inCall" class="row items-center q-gutter-xs">
-        <q-chip dense color="deep-purple" text-color="white" size="sm" class="gt-xs">
-          <q-icon name="lock" color="positive" size="14px" class="q-mr-xs" /> P2P WebRTC Seguro
+        <q-chip dense :color="isAudioOnlyCall ? 'positive' : 'deep-purple'" text-color="white" size="sm" class="gt-xs">
+          <q-icon :name="isAudioOnlyCall ? 'call' : 'videocam'" size="14px" class="q-mr-xs" />
+          {{ isAudioOnlyCall ? 'Chamada de Voz WhatsApp' : 'Chamada de Vídeo' }}
         </q-chip>
         <q-chip dense color="primary" text-color="white" size="sm">
           {{ formattedDuration }}
@@ -73,19 +74,31 @@
             v-show="hasRemoteVideo"
           />
 
-          <!-- Fallback de Avatar se o participante remoto não tiver câmara ativa -->
+          <!-- Fallback de Avatar se o participante remoto não tiver câmara ativa ou se for chamada de voz -->
           <div v-show="!hasRemoteVideo" class="column items-center text-center q-pa-md">
-            <q-avatar size="140px" class="shadow-5 relative-position" :class="{ 'pulse-ring': isSpeaking }">
-              <img :src="targetUser?.avatar || 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&fit=crop'" />
-            </q-avatar>
-            <div class="text-h6 text-weight-bold q-mt-md">{{ targetUser?.name }}</div>
-            <div class="text-caption text-grey-4">
-              {{ isPeerConnected ? 'Conectado em tempo real' : 'A estabelecer ligação P2P...' }}
+            <div class="relative-position q-mb-md">
+              <q-avatar size="140px" class="shadow-5 relative-position" :class="{ 'pulse-ring': isSpeaking || inCall }">
+                <img :src="targetUser?.avatar || 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&fit=crop'" />
+              </q-avatar>
+              <q-badge color="positive" floating rounded class="q-pa-xs">
+                <q-icon name="phone_in_talk" color="white" size="16px" />
+              </q-badge>
+            </div>
+            <div class="text-h5 text-weight-bolder">{{ targetUser?.name }}</div>
+            <div class="text-subtitle2 text-emerald-300 q-mt-xs">
+              <q-icon :name="isAudioOnlyCall ? 'call' : 'videocam'" size="16px" class="q-mr-xs" />
+              {{ isAudioOnlyCall ? 'Chamada de Voz WhatsApp' : 'Chamada de Estudo MEET-US' }}
+            </div>
+            <div class="text-caption text-grey-4 q-mt-xs">
+              {{ isPeerConnected ? `Conectado em tempo real • ${formattedDuration}` : 'A estabelecer ligação segura...' }}
             </div>
           </div>
 
-          <!-- Video Local Picture-in-Picture (PiP) -->
-          <div class="absolute-bottom-right q-ma-sm q-ma-md-md local-pip bg-grey-9 shadow-4 rounded-borders overflow-hidden">
+          <!-- Video Local Picture-in-Picture (PiP) apenas quando o vídeo estiver ativo -->
+          <div
+            v-if="videoEnabled || hasRemoteVideo"
+            class="absolute-bottom-right q-ma-sm q-ma-md-md local-pip bg-grey-9 shadow-4 rounded-borders overflow-hidden"
+          >
             <video
               ref="localVideoEl"
               autoplay
@@ -229,6 +242,7 @@ const videoEnabled = ref(true)
 const screenSharing = ref(false)
 const isSpeaking = ref(false)
 const showInCallChat = ref(false)
+const isAudioOnlyCall = ref(false)
 
 const durationSeconds = ref(0)
 const timerInterval = ref(null)
@@ -626,6 +640,7 @@ onMounted(async () => {
   const partnerNameFromQuery = route.query.partner
   const isIncoming = route.query.incoming === '1' || route.query.incoming === 'true'
   const isVideo = route.query.video !== '0' && route.query.video !== 'false'
+  isAudioOnlyCall.value = !isVideo
   const autoStart = route.query.autostart === '1' || route.query.autostart === 'true'
 
   // Resolver utilizador alvo

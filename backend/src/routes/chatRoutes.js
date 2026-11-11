@@ -9,5 +9,6 @@ router.post('/conversations', authMiddleware, chatController.getOrCreate);
 router.get('/conversations/:id/messages', authMiddleware, chatController.listMessages);
 router.put('/conversations/:id/read', authMiddleware, chatController.markRead);
 router.post('/messages', authMiddleware, chatController.sendMessage);
+router.post('/upload', authMiddleware, chatController.uploadMiddleware, chatController.uploadFile);
 
 module.exports = router;

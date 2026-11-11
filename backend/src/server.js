@@ -21,6 +21,7 @@ const chatRoutes = require('./routes/chatRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
 const postRoutes = require('./routes/postRoutes');
+const sessionRoutes = require('./routes/sessionRoutes');
 
 const app = express();
 const server = http.createServer(app);
@@ -64,14 +65,25 @@ app.use('/api/chat', chatRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/posts', postRoutes);
+app.use('/api/sessions', sessionRoutes);
 
-// Servir Frontend SPA em Produção se já estiver compilado
-const frontendDist = path.join(__dirname, '../../frontend/dist/spa');
-if (fs.existsSync(frontendDist)) {
-  console.log('[Production] Frontend SPA ativo a partir de:', frontendDist);
+// Servir uploads estáticos para ficheiros multimédia (áudio, vídeo, PDFs, imagens)
+const uploadsDir = path.join(__dirname, '../uploads');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
+app.use('/uploads', express.static(uploadsDir));
+
+// Servir Frontend PWA / SPA em Produção se já estiver compilado
+const frontendPwa = path.join(__dirname, '../../frontend/dist/pwa');
+const frontendSpa = path.join(__dirname, '../../frontend/dist/spa');
+const frontendDist = fs.existsSync(frontendPwa) ? frontendPwa : (fs.existsSync(frontendSpa) ? frontendSpa : null);
+
+if (frontendDist) {
+  console.log('[Production] Frontend ativo a partir de:', frontendDist);
   app.use(express.static(frontendDist));
   app.get('*', (req, res, next) => {
-    if (req.path.startsWith('/api') || req.path.startsWith('/socket.io')) {
+    if (req.path.startsWith('/api') || req.path.startsWith('/socket.io') || req.path.startsWith('/uploads')) {
       return next();
     }
     res.sendFile(path.join(frontendDist, 'index.html'));

@@ -9,15 +9,18 @@ import { useAuthStore } from 'src/stores/auth'
 import { useChatStore } from 'src/stores/chat'
 import { useNotificationsStore } from 'src/stores/notifications'
 import { useMeetUsStore } from 'src/stores/meetus'
+import { useSessionsStore } from 'src/stores/sessions'
 
 const auth = useAuthStore()
 const chat = useChatStore()
 const notifs = useNotificationsStore()
 const meetusStore = useMeetUsStore()
+const sessionsStore = useSessionsStore()
 
 onMounted(async () => {
   chat.bindSocket?.()
   notifs.bindSocket?.()
+  sessionsStore.fetchSessions?.()
 
   if (socket) {
     if (auth.isAuthenticated && auth.userId) {

@@ -116,6 +116,8 @@ const messageSchema = new mongoose.Schema({
   type: { type: String, enum: ['text', 'image', 'file', 'audio', 'video'], default: 'text' },
   content: { type: String, default: '' },
   file_url: { type: String, default: '' },
+  file_name: { type: String, default: '' },
+  file_size: { type: Number, default: 0 },
   status: { type: String, enum: ['sent', 'delivered', 'read'], default: 'sent' }
 }, {
   timestamps: true,
@@ -229,6 +231,59 @@ const postSchema = new mongoose.Schema({
   toObject: { virtuals: true }
 });
 
+// --- Session Schema (Aulas em Directo e Mentorias) ---
+const sessionSchema = new mongoose.Schema({
+  _id: { type: String, default: () => new mongoose.Types.ObjectId().toString() },
+  title: { type: String, required: true },
+  subject: { type: String, default: '' },
+  description: { type: String, default: '' },
+  host_id: { type: String, required: true },
+  host_name: { type: String, required: true },
+  host_avatar: { type: String, default: '' },
+  host_course: { type: String, default: '' },
+  status: {
+    type: String,
+    enum: ['SCHEDULED', 'WAITING', 'LIVE', 'ENDED', 'CANCELLED'],
+    default: 'SCHEDULED'
+  },
+  scheduled_at: { type: String, default: () => new Date().toISOString() },
+  started_at: { type: String, default: null },
+  ended_at: { type: String, default: null },
+  max_participants: { type: Number, default: 50 },
+  participants: [
+    {
+      user_id: { type: String, required: true },
+      user_name: { type: String, default: '' },
+      user_avatar: { type: String, default: '' },
+      user_course: { type: String, default: '' },
+      status: { type: String, enum: ['WAITING', 'JOINED', 'LEFT', 'KICKED'], default: 'JOINED' },
+      is_muted: { type: Boolean, default: false },
+      video_active: { type: Boolean, default: true },
+      hand_raised: { type: Boolean, default: false },
+      joined_at: { type: String, default: () => new Date().toISOString() }
+    }
+  ],
+  chat_messages: [
+    {
+      _id: { type: String, default: () => new mongoose.Types.ObjectId().toString() },
+      sender_id: { type: String, required: true },
+      sender_name: { type: String, required: true },
+      sender_avatar: { type: String, default: '' },
+      text: { type: String, required: true },
+      time: { type: String, default: () => new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }
+    }
+  ],
+  settings: {
+    allow_mic: { type: Boolean, default: true },
+    allow_camera: { type: Boolean, default: true },
+    allow_chat: { type: Boolean, default: true }
+  }
+}, {
+  timestamps: true,
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
+});
+
 // Smart Model Resolver
 function getModel(name, schema) {
   return new Proxy({}, {
@@ -256,5 +311,6 @@ module.exports = {
   Swipe: getModel('Swipe', swipeSchema),
   Block: getModel('Block', blockSchema),
   Report: getModel('Report', reportSchema),
-  Post: getModel('Post', postSchema)
+  Post: getModel('Post', postSchema),
+  Session: getModel('Session', sessionSchema)
 };
