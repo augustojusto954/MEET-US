@@ -8,7 +8,7 @@ async function connectDB() {
   try {
     console.log(`[Database] Attempting connection to MongoDB at: ${uri}`);
     await mongoose.connect(uri, {
-      serverSelectionTimeoutMS: 2000
+      serverSelectionTimeoutMS: 10000
     });
     isConnected = true;
     global.__USE_MONGOOSE__ = true;
